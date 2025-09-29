@@ -9,7 +9,7 @@ const DEFAULT_SETTINGS: ValidatedSettings = {
   extendedResult: true,
   autoIncrement: false,
   roleAmount: {
-    tank: 1,
+    tank: 2,
     dps: 2,
     heal: 2,
   },

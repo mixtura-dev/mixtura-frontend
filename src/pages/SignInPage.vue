@@ -1,6 +1,6 @@
 <template>
   <AuthForm formKey="form.signIn" linkTo="/sign-up" :isLoading="isLoading" :isFieldDirty="isFieldDirty"
-    :onSubmit="onSubmit" />
+    :onSubmit="onSubmit" :showForgotPassword="true" />
 </template>
 
 <script setup lang="ts">

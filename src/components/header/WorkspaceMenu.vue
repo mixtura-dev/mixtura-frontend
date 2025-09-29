@@ -69,7 +69,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { Box, Check, ChevronsUpDown, PlusIcon } from 'lucide-vue-next';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '../ui/button';
 import { CommandEmpty, Command, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from '../ui/command';
 import { Skeleton } from '@/components/ui/skeleton'
@@ -91,7 +91,7 @@ const statuses: Status[] = [
 
 const isLoading = ref(true);
 const open = ref(false);
-const selectedStatus = ref<Status>(statuses[0]);
+const selectedStatus = ref<Status>(statuses[2]);
 
 onMounted(() => {
     setTimeout(() => {

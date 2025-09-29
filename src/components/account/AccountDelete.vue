@@ -13,7 +13,7 @@
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogTitle>{{$t('common.absolutelySure')}}</AlertDialogTitle>
                         <AlertDialogDescription>
                             This action cannot be undone. This will permanently reset your settings.
                         </AlertDialogDescription>

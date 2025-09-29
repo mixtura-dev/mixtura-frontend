@@ -1,5 +1,5 @@
 <template>
-    <div class="flex px-4 dot-pattern flex-col h-full w-full items-center justify-center">
+    <div class="flex px-4 flex-col h-full w-full items-center justify-center">
         <div class="flex flex-col gap-3 items-center">
             <span class="text-center text-2xl font-bold">Access Denied</span>
             <p class="text-center text-muted-foreground text-sm">

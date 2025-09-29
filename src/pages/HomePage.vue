@@ -8,9 +8,9 @@
                         {{ settings.state.teams.teamA.name }}
                     </h2>
                     <draggable v-model="teamAPlayers" group="teams" :swap="true" item-key="id">
-                        <template #item="{ element }">
+                        <template #item="{ element, index }">
                             <PlayerItem :name="element.name" :roles="element.roles" :rankPoints="element.rankPoints"
-                                :teamColor="settings.state.teams.teamA.color" />
+                                :teamColor="settings.state.teams.teamA.color" :slotIndex="index" />
                         </template>
                     </draggable>
                 </div>
@@ -22,17 +22,28 @@
                         {{ settings.state.teams.teamB.name }}
                     </h2>
                     <draggable v-model="teamBPlayers" group="teams" item-key="id">
-                        <template #item="{ element }">
+                        <template #item="{ element, index }">
                             <PlayerItem :name="element.name" :roles="element.roles" :rankPoints="element.rankPoints"
-                                :teamColor="settings.state.teams.teamB.color" />
+                                :teamColor="settings.state.teams.teamB.color" :slotIndex="index" />
                         </template>
                     </draggable>
                 </div>
             </div>
 
-            <pre class="text-xs">
-    {{ teamAPlayers }}
-</pre>
+            <Sheet>
+                <SheetTrigger>Open</SheetTrigger>
+                <SheetContent class="w-full">
+                    <SheetHeader>
+                        <SheetTitle>Match History</SheetTitle>
+
+                    </SheetHeader>
+                    <div class="p-4 pt-0 flex flex-col gap-4 overflow-y-scroll">
+                        <WorkspaceCardBase class="border p-4 rounded bg-accent " v-for="i in 100" :key="i">
+                            Match {{ i }}
+                        </WorkspaceCardBase>
+                    </div>
+                </SheetContent>
+            </Sheet>
             <div class="flex gap-3 flex-row py-4">
                 <Button variant="secondary">
                     Balance teams
@@ -58,7 +69,15 @@ import { useLanguage } from '@/composables/useLanguage';
 import PlayerItem from '@/components/balancer/PlayerItem.vue';
 import type { PlayerRole, GameRole } from '@/types/balancer';
 import draggable from 'vuedraggable'
-
+import {
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from '@/components/ui/sheet'
+import WorkspaceCardBase from '@/components/workspace/WorkspaceCardBase.vue';
 const { currentLocale } = useLanguage();
 
 const screenshotRef = ref<HTMLElement | null>(null);

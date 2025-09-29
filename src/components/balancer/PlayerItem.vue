@@ -2,7 +2,7 @@
     <div class="player-card" draggable="false">
         <div class="player-card__content" tabindex="0">
             <div :style="{ '--team-color': teamColor }" class="player-card__team-color">
-                <TankIcon class="player-card__bg-icon" />
+                <component :is="bgIconComponent" class="player-card__bg-icon" />
                 <div class="player-card__rank ">
                     <img class="player-card__rank-icon" draggable="false" :src="`/img/ranks/${rankIconSrc}`"
                         alt="Rank" />
@@ -33,6 +33,7 @@
 import type { GameRole, PlayerRole } from '@/types/balancer';
 import { computed, defineAsyncComponent } from 'vue';
 import { RANK_THRESHOLDS } from '@/constants/rank';
+import { useSettingsStore } from '@/stores/settingsStore.store';
 
 const TankIcon = defineAsyncComponent(() => import('@/components/icons/TankIcon.vue'));
 const DpsIcon = defineAsyncComponent(() => import('@/components/icons/DpsIcon.vue'));
@@ -46,25 +47,29 @@ interface Props {
     roles: PlayerRole[];
     rankPoints: number
     teamColor: string;
+    slotIndex: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
     warn: false,
 });
 
-const sortedRoles = computed(() => {
-    return [...props.roles].sort((a, b) => {
-        if (a.isPrimary === b.isPrimary) return 0;
-        return a.isPrimary ? 1 : -1;
-    });
+const sortedRoles = computed(() =>
+    [...props.roles].sort((a, b) => Number(b.isPrimary) - Number(a.isPrimary))
+);
+const settings = useSettingsStore();
+
+const bgRole = computed(() => {
+    const { tank, dps } = settings.state.roleAmount;
+    if (props.slotIndex < tank) return 'T';
+    if (props.slotIndex < tank + dps) return 'D';
+    return 'H';
 });
+const bgIconComponent = computed(() => getRoleIcon(bgRole.value));
 
-const rankIconSrc = computed(() => getRankIcon(props.rankPoints));
-
-const getRankIcon = (points: number): string => {
-    const rank = RANK_THRESHOLDS.find(r => points < r.max);
-    return rank?.icon ?? 'gm.png';
-};
+const rankIconSrc = computed(() =>
+    RANK_THRESHOLDS.find(r => props.rankPoints < r.max)?.icon ?? 'gm.png'
+);
 
 const getRoleIcon = (role: GameRole) => {
     switch (role) {
@@ -97,7 +102,6 @@ const getRoleIcon = (role: GameRole) => {
 }
 
 .player-card__team-color {
-
     display: flex;
     align-items: center;
     justify-content: center;
@@ -108,10 +112,11 @@ const getRoleIcon = (role: GameRole) => {
 
 .player-card__bg-icon {
     position: absolute;
-    top: 0.25rem;
     opacity: 0.7;
-    width: 2.3rem;
-    height: 2.3rem;
+
+    top: 0.25rem;
+    width: 2.3em;
+    height: 2.3em;
 }
 
 .player-card__rank {
@@ -119,6 +124,7 @@ const getRoleIcon = (role: GameRole) => {
     display: flex;
     flex-direction: column;
     align-items: center;
+    line-height: 1;
 }
 
 .player-card__rank-icon {
@@ -131,7 +137,7 @@ const getRoleIcon = (role: GameRole) => {
     color: #FFFFFF;
     font-size: 0.875rem;
     font-weight: 600;
-    margin-top: -0.26rem;
+
 }
 
 .player-card__name {
@@ -157,13 +163,14 @@ const getRoleIcon = (role: GameRole) => {
 
 .player-card__role--primary {
 
-    height: 1.5rem;
-    width: 1.5rem;
+    height: 1.5em;
+    width: 1.5em;
 }
 
 .player-card__role--secondary {
-    height: 1rem;
-    width: 1rem;
+    height: 1em;
+    width: 1em;
     opacity: 0.7;
+
 }
 </style>

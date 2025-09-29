@@ -11,6 +11,7 @@ const SignUpPage = () => import('@/pages/SignUpPage.vue')
 const NotFoundPage = () => import('@/pages/NotFoundPage.vue')
 const NotHavePermissionPage = () => import('@/pages/403.vue')
 const AccountPage = () => import('@/pages/AccountPage.vue')
+const ForgotPasswordPage = () => import('@/pages/ForgotPasswordPage.vue')
 const routes: ParentAppRoute[] = [
   {
     path: '/',
@@ -20,6 +21,7 @@ const routes: ParentAppRoute[] = [
       {
         path: '',
         component: HomePage,
+
         meta: {
           title: 'Home',
         },
@@ -79,6 +81,13 @@ const routes: ParentAppRoute[] = [
         component: SignInPage,
         meta: {
           title: 'Sign In',
+        },
+      },
+      {
+        path: 'forgot-password',
+        component: ForgotPasswordPage,
+        meta: {
+          title: 'Forgot Password',
         },
       },
       {

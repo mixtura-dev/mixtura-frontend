@@ -24,11 +24,11 @@
                 </RouterLink>
 
             </DropdownMenuItem>
-            <DropdownMenuLabel class=" text-muted-foreground">Theme</DropdownMenuLabel>
+            <DropdownMenuLabel class=" text-muted-foreground">{{ $t('theme.title') }}</DropdownMenuLabel>
 
-            <DropdownMenuRadioGroup v-model="mode">
+            <DropdownMenuRadioGroup v-model="store">
                 <DropdownMenuRadioItem v-for="theme in THEMES" :value="theme.value" :key="theme.value">
-                    <span class="text-xs"> {{ theme.label }}</span>
+                    <span class="text-xs"> {{ $t(theme.label) }}</span>
                 </DropdownMenuRadioItem>
 
             </DropdownMenuRadioGroup>
@@ -36,7 +36,7 @@
             <DropdownMenuSeparator />
             <DropdownMenuItem @click="authStore.logout">
                 <span class="text-xs">
-                    Log out
+                    {{ $t('common.logout') }}
                 </span>
             </DropdownMenuItem>
         </DropdownMenuContent>
@@ -63,7 +63,7 @@ import DropdownMenuRadioItem from '@/components/ui/dropdown-menu/DropdownMenuRad
 import { THEMES } from '@/constants/theme'
 import { useAuthStore } from '@/stores/authStore.store'
 import { useTheme } from '@/composables/useTheme'
-const { mode } = useTheme()
+const { store } = useTheme()
 const authStore = useAuthStore()
 
 </script>

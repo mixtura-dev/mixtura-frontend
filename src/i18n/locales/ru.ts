@@ -10,6 +10,14 @@ export default {
     add: 'Добавить',
     search: 'Поиск',
     connect: 'Подключить',
+    absolutelySure: 'Вы уверены?',
+    logout: 'Выйти',
+  },
+  theme: {
+    title: 'Тема',
+    light: 'Светлая',
+    dark: 'Темная',
+    system: 'Автоматическая',
   },
   validation: {
     username: {
@@ -52,6 +60,14 @@ export default {
       linkText: 'Уже есть аккаунт?',
       linkLabel: 'Войти',
     },
+    forgotPassword: {
+      title: 'Забыли пароль?',
+      subtitle: 'Введите вашу почту, и мы вышлем вам код для сброса пароля',
+      submit: 'Отправить код сброса',
+      linkText: 'Уже есть аккаунт?',
+      linkLabel: 'Войти',
+    },
+    email: 'Почта',
     username: 'Имя пользователя',
     password: 'Пароль',
     repeatPassword: 'Повторите пароль',

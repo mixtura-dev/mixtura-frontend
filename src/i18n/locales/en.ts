@@ -10,6 +10,14 @@ export default {
     add: 'Add',
     search: 'Search',
     connect: 'Connect',
+    absolutelySure: 'Are you absolutely sure?',
+    logout: 'Log Out',
+  },
+  theme: {
+    title: 'Theme',
+    light: 'Light',
+    dark: 'Dark',
+    system: 'System',
   },
   validation: {
     username: {
@@ -52,12 +60,22 @@ export default {
       linkText: 'Already have an account?',
       linkLabel: 'Sign In',
     },
+
+    forgotPassword: {
+      title: 'Forgot your password?',
+      subtitle: "Type in your email and we'll send you a reset the password",
+      submit: 'Send reset code',
+      linkText: 'Aleady have an account?',
+      linkLabel: 'Sign In',
+    },
+    email: 'Email',
     username: 'Username',
     password: 'Password',
     repeatPassword: 'Repeat password',
     terms:
       'By continuing, you agree to the Terms of Service and Privacy Policy, and to receive periodic emails with updates.',
   },
+
   error: {
     notFound: 'No results found',
     noResults: 'Your search did not return any results',

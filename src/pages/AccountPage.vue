@@ -11,7 +11,6 @@
                     </div>
                 </div>
                 <div class="px-6 py-4 space-y-6 border-b last:border-none">
-                    <!-- Username Field -->
                     <FormField v-slot="{ componentField }" name="username">
                         <FormItem>
                             <FormLabel>{{ $t('form.username') }}</FormLabel>
@@ -22,7 +21,7 @@
                             <FormMessage class="text-xs text-destructive" />
                         </FormItem>
                     </FormField>
-
+                    
 
                 </div>
 
@@ -32,7 +31,7 @@
                     </Button>
                 </div>
             </div>
-            
+
             <div class=" border bg-card rounded  overflow-auto">
                 <div class="px-6 py-4 border-b">
                     <div class="font-semibold">

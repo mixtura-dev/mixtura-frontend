@@ -8,8 +8,9 @@
                     <FormLabel>{{ $t('form.repeatPassword') }}</FormLabel>
                     <div class="relative">
                         <FormControl>
-                            <Input autocomplete="current-password" :type="showConfirmPassword ? 'text' : 'password'"
-                                class="!bg-card pr-10" v-bind="componentField" />
+                            <Input :placeholder="$t('form.repeatPassword')" autocomplete="current-password"
+                                :type="showConfirmPassword ? 'text' : 'password'" class="!bg-card pr-10"
+                                v-bind="componentField" />
                         </FormControl>
                         <button type="button" @click="showConfirmPassword = !showConfirmPassword"
                             class="absolute right-0 top-1/2 h-full -translate-y-1/2 px-3 flex items-center text-muted-foreground hover:text-foreground">

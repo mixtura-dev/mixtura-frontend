@@ -14,7 +14,7 @@
 
 <script lang="ts" setup>
 import type { GroupType, Id, Match, Participant, Round, Stage } from '@/types/tournament/tournament'
-import { onMounted, provide, ref } from 'vue'
+import {  provide, ref } from 'vue'
 import BracketRound from './BracketRound.vue';
 import { HoveredParticipantIdKey, SetHoveredParticipantKey } from './injection-keys';
 
@@ -25,7 +25,6 @@ const props = defineProps<{
     participants: Participant[]
 }>()
 
-
 const hoveredParticipantId = ref<Id | null>(null)
 
 const setHoveredParticipant = (participantId: Id | null) => {
@@ -34,8 +33,6 @@ const setHoveredParticipant = (participantId: Id | null) => {
 
 provide(HoveredParticipantIdKey, hoveredParticipantId)
 provide(SetHoveredParticipantKey, setHoveredParticipant)
-
-
 
 const getMatchesForRound = (roundId: Id, bracket: GroupType = 'winner_bracket') => {
     const matches = bracket === 'winner_bracket' ? props.matches : []

@@ -1,9 +1,6 @@
 <template>
     <div class="p-4 flex flex-col w-full h-full ">
-
-        <Bracket :stage="stage" :rounds="rounds" :matches="matches" :participants="participants" />
-
-
+        <Bracket :stage :matches :rounds :participants />
     </div>
 </template>
 <script lang="ts" setup>

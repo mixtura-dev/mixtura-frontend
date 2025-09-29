@@ -1,4 +1,4 @@
-import { BoxesIcon, ChartColumnIcon, HouseIcon, Settings } from 'lucide-vue-next'
+import { BoxesIcon, ChartColumnIcon, HouseIcon, Settings, Users } from 'lucide-vue-next'
 import type { Component } from 'vue'
 
 interface NavItem {
@@ -6,6 +6,13 @@ interface NavItem {
   labelKey: string
   icon: Component
 }
+
+export interface NavGroup {
+  id: string
+  match?: RegExp
+  items: NavItem[]
+}
+
 export const MAIN_NAV: NavItem[] = [
   {
     path: '/',
@@ -26,5 +33,14 @@ export const MAIN_NAV: NavItem[] = [
     path: '/settings',
     labelKey: 'menu.settings',
     icon: Settings,
+  },
+]
+
+export const NAV_GROUPS: NavGroup[] = [
+  { id: 'main', items: MAIN_NAV },
+  {
+    id: 'workspace',
+    match: /^\/workspace/,
+    items: [{ path: '/workspace/team', labelKey: 'nav.team', icon: Users }],
   },
 ]
