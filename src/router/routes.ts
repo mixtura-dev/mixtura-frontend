@@ -12,6 +12,8 @@ const NotFoundPage = () => import('@/pages/NotFoundPage.vue')
 const NotHavePermissionPage = () => import('@/pages/403.vue')
 const AccountPage = () => import('@/pages/AccountPage.vue')
 const ForgotPasswordPage = () => import('@/pages/ForgotPasswordPage.vue')
+const SignUpVerifyPage = () => import('@/pages/SignUpVerifyPage.vue')
+const SignUpConfirmPage = () => import('@/pages/SignUpConfirmPage.vue')
 const routes: ParentAppRoute[] = [
   {
     path: '/',
@@ -24,6 +26,7 @@ const routes: ParentAppRoute[] = [
 
         meta: {
           title: 'Home',
+          requiresAuth: true,
         },
       },
       {
@@ -31,6 +34,7 @@ const routes: ParentAppRoute[] = [
         component: WorkspacePage,
         meta: {
           title: 'Workspace',
+          requiresAuth: true,
         },
       },
       {
@@ -39,6 +43,7 @@ const routes: ParentAppRoute[] = [
         meta: {
           title: 'New Workspace',
           hideSidebar: true,
+          requiresAuth: true,
         },
       },
       {
@@ -46,6 +51,7 @@ const routes: ParentAppRoute[] = [
         component: SettingPage,
         meta: {
           title: 'Settings',
+          requiresAuth: true,
         },
       },
       {
@@ -53,6 +59,7 @@ const routes: ParentAppRoute[] = [
         component: AccountPage,
         meta: {
           title: 'Account',
+          requiresAuth: true,
         },
       },
       {
@@ -60,6 +67,7 @@ const routes: ParentAppRoute[] = [
         component: BalancerPage,
         meta: {
           title: 'Balancer',
+          requiresAuth: true,
         },
       },
     ],
@@ -74,6 +82,7 @@ const routes: ParentAppRoute[] = [
         component: SignUpPage,
         meta: {
           title: 'Sign Up',
+          requiresAuth: false,
         },
       },
       {
@@ -81,6 +90,7 @@ const routes: ParentAppRoute[] = [
         component: SignInPage,
         meta: {
           title: 'Sign In',
+          requiresAuth: false,
         },
       },
       {
@@ -88,13 +98,25 @@ const routes: ParentAppRoute[] = [
         component: ForgotPasswordPage,
         meta: {
           title: 'Forgot Password',
+          requiresAuth: false,
         },
+      },
+      {
+        path: 'sign-up/verify',
+        component: SignUpVerifyPage,
+        meta: { title: 'Verify Email', requiresAuth: false },
+      },
+      {
+        path: 'sign-up/confirm',
+        component: SignUpConfirmPage,
+        meta: { title: 'Complete Registration', requiresAuth: false },
       },
       {
         path: '/403',
         component: NotHavePermissionPage,
         meta: {
           title: 'You have not permission to access',
+          requiresAuth: false,
         },
       },
       {
@@ -102,6 +124,7 @@ const routes: ParentAppRoute[] = [
         component: NotFoundPage,
         meta: {
           title: 'Not found',
+          requiresAuth: false,
         },
       },
     ],

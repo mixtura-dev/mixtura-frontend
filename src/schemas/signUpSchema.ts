@@ -41,3 +41,21 @@ export const createSignUpSchema = () => {
       }
     })
 }
+
+export const createSignUpEmailSchema = () => {
+  const { t } = useI18n()
+  return z.object({
+    email: z
+      .string({ required_error: t('validation.email.required') })
+      .email(t('validation.email.invalid')),
+  })
+}
+
+export const createSignUpVerifySchema = () => {
+  const { t } = useI18n()
+  return z.object({
+    token: z
+      .string({ required_error: t('validation.token.required') })
+      .min(6, t('validation.token.invalid')),
+  })
+}

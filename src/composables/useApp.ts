@@ -11,10 +11,8 @@ export const useApp = (app: App) => {
   const pinia = createPinia()
   app.use(pinia)
   app.use(Slicksort)
-  //! Не забыть что он есть на проекте
   app.use(VueQueryPlugin)
   app.use(MotionPlugin)
-
   app.use(i18n)
   app.use(router)
 }

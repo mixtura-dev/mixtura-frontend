@@ -6,7 +6,7 @@ export const createSignInSchema = () => {
   const { t } = useI18n()
 
   return z.object({
-    username: z
+    login: z
       .string({
         required_error: t('validation.username.required'),
         invalid_type_error: t('validation.username.invalidType'),

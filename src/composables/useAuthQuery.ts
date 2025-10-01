@@ -1,0 +1,76 @@
+import {
+  confirmSignUp,
+  getProviders,
+  signIn,
+  signOut,
+  signUp,
+  verifySignUp,
+} from '@/api/endpoints/auth'
+import { getUserInfo } from '@/api/endpoints/user'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
+
+const USER_STALE_TIME = 5 * 60 * 1000 // 5 min
+const PROVIDER_STALE_TIME = 10 * 60 * 1000 // 10 min
+
+const authQueryKeys = {
+  user: () => ['auth', 'user'] as const,
+  providers: () => ['auth', 'providers'] as const,
+}
+
+export const useProvidersQuery = () => {
+  return useQuery({
+    queryKey: authQueryKeys.providers(),
+    queryFn: getProviders,
+    staleTime: PROVIDER_STALE_TIME,
+  })
+}
+
+export const useUserQuery = () => {
+  return useQuery({
+    queryKey: authQueryKeys.user(),
+    queryFn: getUserInfo,
+    staleTime: USER_STALE_TIME,
+  })
+}
+
+export const useSignInMutation = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: signIn,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: authQueryKeys.user(),
+      })
+    },
+  })
+}
+
+export const useSignOutMutation = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: signOut,
+    onSuccess: () => {
+      queryClient.clear()
+    },
+  })
+}
+
+export const useSignUpMutation = () =>
+  useMutation({
+    mutationFn: signUp,
+  })
+
+export const useVerifySignUpMutation = () =>
+  useMutation({
+    mutationFn: verifySignUp,
+  })
+
+export const useConfirmSignUpMutation = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: confirmSignUp,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: authQueryKeys.user() })
+    },
+  })
+}
