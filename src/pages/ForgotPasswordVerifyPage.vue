@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col justify-center items-center pt-32">
-        <div class=" flex flex-col px-5 max-w-lg w-full ">
-            <h1 class="text-2xl font-bold mb-2">Verify your email</h1>
+        <div class="flex flex-col px-5 max-w-lg w-full">
+            <h1 class="text-2xl font-bold mb-2">Reset Password</h1>
             <p class="text-muted-foreground mb-6">Enter the code we sent to {{ email }}</p>
 
             <form @submit="onSubmit" class="w-full space-y-4">
@@ -15,7 +15,7 @@
                                 }">
                                 <PinInputGroup>
                                     <template v-for="(id, index) in 6" :key="id">
-                                        <PinInputSlot class="rounded-md border  bg-background" :index="index" />
+                                        <PinInputSlot class="rounded-md border bg-background" :index="index" />
                                         <template v-if="index !== 5">
                                             <PinInputSeparator />
                                         </template>
@@ -32,13 +32,12 @@
                 </Button>
             </form>
             <div class="text-center text-sm mt-8">
-                {{ $t('form.forgotPassword.linkText') }}
+                {{ $t('form.signIn.linkText') }}
                 <RouterLink to="/sign-in" class="text-primary hover:underline ml-1">
-                    {{ $t('form.forgotPassword.linkLabel') }}
+                    {{ $t('form.signIn.linkLabel') }}
                 </RouterLink>
             </div>
         </div>
-
     </div>
 </template>
 
@@ -50,15 +49,16 @@ import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import { FormField, FormItem, FormControl, FormMessage } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
-import { createSignUpVerifySchema } from '@/schemas/signUpSchema';
-import { useVerifySignUpMutation } from '@/composables/useAuthQuery';
+import { useVerifyResetPasswordMutation } from '@/composables/useAuthQuery';
 import { getQueryValue } from '@/lib/utils/router';
 import {
     PinInput,
     PinInputGroup,
     PinInputSeparator,
     PinInputSlot,
-} from "@/components/ui/pin-input"
+} from "@/components/ui/pin-input";
+import { createForgotPasswordVerifySchema } from '@/schemas/forgotPasswordSchema';
+
 const route = useRoute();
 const router = useRouter();
 const email = ref('');
@@ -66,40 +66,39 @@ const email = ref('');
 onMounted(() => {
     const emailParam = getQueryValue(route.query.email);
     if (!emailParam) {
-        router.push('/sign-up');
+        router.push('/forgot-password');
         return;
     }
     email.value = emailParam;
 });
-const schema = createSignUpVerifySchema();
+
+const schema = createForgotPasswordVerifySchema();
 type FormValues = { token: string };
 
-const { mutate: verifySignUp, isPending } = useVerifySignUpMutation();
+const { mutate: verifyReset, isPending } = useVerifyResetPasswordMutation();
 const { handleSubmit, setFieldValue, isFieldDirty } = useForm<FormValues>({
     validationSchema: toTypedSchema(schema),
     initialValues: { token: '' },
-
 });
 
 const onSubmit = handleSubmit((values) => {
     if (!Array.isArray(values.token)) {
         console.error('Invalid token format:', values.token);
-        toast.error({ title: 'Invalid token format' });
+        toast.error('Invalid token format');
         return;
     }
 
-
     const tokenString = (values.token as string[]).join('');
-    verifySignUp({ email: email.value, token: tokenString }, {
+    verifyReset({ email: email.value, token: tokenString }, {
         onSuccess: (data) => {
             if (data.verified) {
-                toast.success({ title: 'Verified!', description: 'Now set your username and password' });
+                toast.success('Code verified! Now set your new password');
                 router.push({
-                    path: '/sign-up/confirm',
+                    path: '/forgot-password/confirm',
                     query: { email: email.value, token: tokenString }
                 });
             } else {
-                toast.error('Invalid code')
+                toast.error('Invalid code');
             }
         },
         onError: (error) => {

@@ -6,6 +6,7 @@ export interface RouteMeta {
   hideSidebar?: boolean
   roles?: Role[]
   requiresAuth?: boolean
+  guestOnly?: boolean
 }
 
 export type ChildAppRoute = RouteRecordRaw & {

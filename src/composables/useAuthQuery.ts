@@ -1,9 +1,12 @@
 import {
+  confirmResetPassword,
   confirmSignUp,
   getProviders,
+  resetPassword,
   signIn,
   signOut,
   signUp,
+  verifyResetPassword,
   verifySignUp,
 } from '@/api/endpoints/auth'
 import { getUserInfo } from '@/api/endpoints/user'
@@ -30,6 +33,7 @@ export const useUserQuery = () => {
     queryKey: authQueryKeys.user(),
     queryFn: getUserInfo,
     staleTime: USER_STALE_TIME,
+    retry: false,
   })
 }
 
@@ -69,6 +73,25 @@ export const useConfirmSignUpMutation = () => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: confirmSignUp,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: authQueryKeys.user() })
+    },
+  })
+}
+export const useResetPasswordMutation = () =>
+  useMutation({
+    mutationFn: resetPassword,
+  })
+
+export const useVerifyResetPasswordMutation = () =>
+  useMutation({
+    mutationFn: verifyResetPassword,
+  })
+
+export const useConfirmResetPasswordMutation = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: confirmResetPassword,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: authQueryKeys.user() })
     },

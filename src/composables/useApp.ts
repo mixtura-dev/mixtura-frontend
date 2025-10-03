@@ -8,10 +8,10 @@ import { MotionPlugin } from '@vueuse/motion'
 import { i18n } from '@/i18n'
 
 export const useApp = (app: App) => {
+  app.use(VueQueryPlugin)
   const pinia = createPinia()
   app.use(pinia)
   app.use(Slicksort)
-  app.use(VueQueryPlugin)
   app.use(MotionPlugin)
   app.use(i18n)
   app.use(router)

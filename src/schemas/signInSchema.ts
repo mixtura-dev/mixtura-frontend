@@ -12,8 +12,11 @@ export const createSignInSchema = () => {
         invalid_type_error: t('validation.username.invalidType'),
       })
       .min(3, { message: t('validation.username.min') })
-      .max(20, { message: t('validation.username.max') })
-      .regex(USERNAME_REGEX, 'Username contains invalid characters'),
+      .max(50, { message: t('validation.username.max') })
+      .refine(
+        (value) => USERNAME_REGEX.test(value) || z.string().email().safeParse(value).success,
+        t('validation.login.invalid'),
+      ),
 
     password: z
       .string({

@@ -9,4 +9,4 @@ export const updateUsername = (
 ): Promise<SuccessResponse<'/api/auth/user', 'put'>> =>
   baseApi.put('/api/auth/user', data).then((res) => res.data)
 
-export const checkUsernameTaken = () => {}
+export const checkUsernameTaken = (username: string) => {}

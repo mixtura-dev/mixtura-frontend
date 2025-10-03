@@ -14,7 +14,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
   const handleUnauthorized = () => {
     clearUser()
-    router.push({ name: 'SignIn' })
+    router.push('/sign-in')
   }
   return {
     user,

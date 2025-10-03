@@ -11,9 +11,12 @@ const SignUpPage = () => import('@/pages/SignUpPage.vue')
 const NotFoundPage = () => import('@/pages/NotFoundPage.vue')
 const NotHavePermissionPage = () => import('@/pages/403.vue')
 const AccountPage = () => import('@/pages/AccountPage.vue')
-const ForgotPasswordPage = () => import('@/pages/ForgotPasswordPage.vue')
 const SignUpVerifyPage = () => import('@/pages/SignUpVerifyPage.vue')
 const SignUpConfirmPage = () => import('@/pages/SignUpConfirmPage.vue')
+const ForgotPasswordPage = () => import('@/pages/ForgotPasswordPage.vue')
+const ForgotPasswordConfirmPage = () => import('@/pages/ForgotPasswordConfirmPage.vue')
+const ForgotPasswordVerifyPage = () => import('@/pages/ForgotPasswordVerifyPage.vue')
+
 const routes: ParentAppRoute[] = [
   {
     path: '/',
@@ -83,6 +86,7 @@ const routes: ParentAppRoute[] = [
         meta: {
           title: 'Sign Up',
           requiresAuth: false,
+          guestOnly: true,
         },
       },
       {
@@ -91,6 +95,7 @@ const routes: ParentAppRoute[] = [
         meta: {
           title: 'Sign In',
           requiresAuth: false,
+          guestOnly: true,
         },
       },
       {
@@ -99,17 +104,36 @@ const routes: ParentAppRoute[] = [
         meta: {
           title: 'Forgot Password',
           requiresAuth: false,
+          guestOnly: true,
+        },
+      },
+      {
+        path: 'forgot-password/verify',
+        component: ForgotPasswordVerifyPage,
+        meta: {
+          title: 'Verify Reset Code',
+          requiresAuth: false,
+          guestOnly: true,
+        },
+      },
+      {
+        path: 'forgot-password/confirm',
+        component: ForgotPasswordConfirmPage,
+        meta: {
+          title: 'Set New Password',
+          requiresAuth: false,
+          guestOnly: true,
         },
       },
       {
         path: 'sign-up/verify',
         component: SignUpVerifyPage,
-        meta: { title: 'Verify Email', requiresAuth: false },
+        meta: { title: 'Verify Email', requiresAuth: false, guestOnly: true },
       },
       {
         path: 'sign-up/confirm',
         component: SignUpConfirmPage,
-        meta: { title: 'Complete Registration', requiresAuth: false },
+        meta: { title: 'Complete Registration', requiresAuth: false, guestOnly: true },
       },
       {
         path: '/403',

@@ -68,6 +68,7 @@ export default {
       linkText: 'Aleady have an account?',
       linkLabel: 'Sign In',
     },
+    usernameOrEmail: 'Username or email',
     email: 'Email',
     username: 'Username',
     password: 'Password',

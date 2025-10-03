@@ -72,15 +72,12 @@ const { handleSubmit, isFieldDirty } = useForm<SignInFormValues>({
 const onSubmit = handleSubmit((values) => {
   signIn(values, {
     onSuccess: () => {
-      toast({ title: 'Success', description: 'Logged in!' });
+      toast.success('Successfully signed in');
+
       router.push(route.query.redirect?.toString() || '/');
     },
     onError: (error) => {
-      toast({
-        title: 'Error',
-        description: error.message || 'Login failed',
-        variant: 'destructive',
-      });
+      toast.error(`Error: ${error.message}`);
     },
   });
 });

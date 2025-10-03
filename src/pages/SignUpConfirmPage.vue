@@ -40,6 +40,12 @@
                     {{ isPending ? 'Creating account...' : 'Sign Up' }}
                 </Button>
             </form>
+            <div class="text-center text-sm mt-8">
+                {{ $t('form.forgotPassword.linkText') }}
+                <RouterLink to="/sign-in" class="text-primary hover:underline ml-1">
+                    {{ $t('form.forgotPassword.linkLabel') }}
+                </RouterLink>
+            </div>
         </div>
 
     </div>
@@ -55,24 +61,15 @@ import { createSignUpSchema } from '@/schemas/signUpSchema';
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useConfirmSignUpMutation } from '@/composables/useAuthQuery';
+import { useConfirmSignUpMutation, useSignInMutation } from '@/composables/useAuthQuery';
 import { getQueryValue } from '@/lib/utils/router';
 
 const route = useRoute();
 const router = useRouter();
 const email = ref('');
 const token = ref('');
+const { mutate: signIn } = useSignInMutation();
 
-onMounted(() => {
-    const emailParam = getQueryValue(route.query.email);
-    const tokenParam = getQueryValue(route.query.token);
-    if (!emailParam || !tokenParam) {
-        router.push('/sign-up');
-        return;
-    }
-    email.value = emailParam;
-    token.value = tokenParam;
-});
 
 const schema = createSignUpSchema();
 type FormValues = {
@@ -97,10 +94,21 @@ const onSubmit = handleSubmit((values) => {
     }, {
         onSuccess: (data) => {
             if (data.verified) {
-                toast({ title: 'Success!', description: 'Account created. Redirecting...' });
-                router.push('/');
+                toast.success('Account created! Logging you in...');
+                signIn(
+                    { login: email.value, password: values.password },
+                    {
+                        onSuccess: () => {
+                            router.push('/');
+                        },
+                        onError: () => {
+                            toast.error('Login failed. Please sign in manually.');
+                            router.push('/sign-in');
+                        },
+                    }
+                );
             } else {
-                toast({ title: 'Failed', description: 'Verification failed', variant: 'destructive' });
+                toast.error('Verification failed');
             }
         },
         onError: (error) => {
@@ -108,4 +116,17 @@ const onSubmit = handleSubmit((values) => {
         },
     });
 });
+
+onMounted(() => {
+    const emailParam = getQueryValue(route.query.email);
+    const tokenParam = getQueryValue(route.query.token);
+    if (!emailParam || !tokenParam) {
+        router.push('/sign-up');
+        return;
+    }
+    email.value = emailParam;
+    token.value = tokenParam;
+});
+
+
 </script>

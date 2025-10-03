@@ -52,10 +52,7 @@ export const createSignUpEmailSchema = () => {
 }
 
 export const createSignUpVerifySchema = () => {
-  const { t } = useI18n()
   return z.object({
-    token: z
-      .string({ required_error: t('validation.token.required') })
-      .min(6, t('validation.token.invalid')),
+    token: z.array(z.coerce.string()).length(6, { message: 'Enter the 6 digit code' }),
   })
 }

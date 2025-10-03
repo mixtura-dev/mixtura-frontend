@@ -9,9 +9,9 @@
         </DropdownMenuTrigger>
         <DropdownMenuContent class="w-64" align="end" side="bottom" :alignOffset="4">
             <DropdownMenuLabel class="px-2 py-1 flex flex-col gap-0">
-                <span class="w-full text-left text-foreground truncate">Eg0r0k</span>
+                <span class="w-full text-left text-foreground truncate">{{ authStore.user?.username }}</span>
                 <span class="w-full text-left text-muted-foreground text-xs truncate">
-                    egokakill@gmail.com
+                    {{ authStore.user?.email }}
                 </span>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
@@ -34,7 +34,7 @@
             </DropdownMenuRadioGroup>
 
             <DropdownMenuSeparator />
-            <DropdownMenuItem @click="authStore.logout">
+            <DropdownMenuItem @click="handleLogout">
                 <span class="text-xs">
                     {{ $t('common.logout') }}
                 </span>
@@ -46,7 +46,7 @@
 
 <script setup lang="ts">
 
-//TODO: Add fetch user data from API
+
 
 import { SettingsIcon } from 'lucide-vue-next'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -63,7 +63,15 @@ import DropdownMenuRadioItem from '@/components/ui/dropdown-menu/DropdownMenuRad
 import { THEMES } from '@/constants/theme'
 import { useAuthStore } from '@/stores/authStore.store'
 import { useTheme } from '@/composables/useTheme'
+import { useSignOutMutation } from '@/composables/useAuthQuery'
+import router from '@/router'
 const { store } = useTheme()
 const authStore = useAuthStore()
+const signOutMutation = useSignOutMutation()
 
+const handleLogout = async () => {
+    await signOutMutation.mutateAsync()
+    authStore.clearUser()
+    router.push('/sign-in')
+}
 </script>

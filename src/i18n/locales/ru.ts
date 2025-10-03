@@ -67,6 +67,7 @@ export default {
       linkText: 'Уже есть аккаунт?',
       linkLabel: 'Войти',
     },
+    usernameOrEmail: 'Почта или логин',
     email: 'Почта',
     username: 'Имя пользователя',
     password: 'Пароль',
