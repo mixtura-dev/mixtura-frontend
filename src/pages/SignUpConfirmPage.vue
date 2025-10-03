@@ -1,15 +1,16 @@
 <template>
     <div class="flex flex-col justify-center items-center pt-32">
         <div class=" flex flex-col px-5 max-w-lg w-full ">
-            <h1 class="text-2xl font-bold mb-2">Complete registration</h1>
-            <p class="text-muted-foreground mb-6">Set your username and password</p>
+            <h1 class="text-2xl font-bold mb-2">{{ $t('form.completeRegistration.title') }}</h1>
+            <p class="text-muted-foreground mb-6">{{ $t('form.completeRegistration.subtitle') }}</p>
 
             <form @submit="onSubmit" class="w-full space-y-4">
                 <FormField v-slot="{ componentField }" name="username">
                     <FormItem>
-                        <FormLabel>Username</FormLabel>
+                        <FormLabel>{{ $t('common.forms.username') }}</FormLabel>
                         <FormControl>
-                            <Input v-bind="componentField" placeholder="Your username" class="!bg-card" />
+                            <Input v-bind="componentField" :placeholder="$t('common.forms.username')"
+                                class="!bg-card" />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -17,9 +18,10 @@
 
                 <FormField v-slot="{ componentField }" name="password">
                     <FormItem>
-                        <FormLabel>Password</FormLabel>
+                        <FormLabel>{{ $t('common.forms.password') }}</FormLabel>
                         <FormControl>
-                            <Input type="password" v-bind="componentField" placeholder="Password" class="!bg-card" />
+                            <Input type="password" v-bind="componentField" :placeholder="$t('common.forms.password')"
+                                class="!bg-card" />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -27,17 +29,18 @@
 
                 <FormField v-slot="{ componentField }" name="repeatPassword">
                     <FormItem>
-                        <FormLabel>Confirm Password</FormLabel>
+                        <FormLabel>{{ $t('common.forms.repeatPassword') }}</FormLabel>
                         <FormControl>
-                            <Input type="password" v-bind="componentField" placeholder="Confirm password"
-                                class="!bg-card" />
+                            <Input type="password" v-bind="componentField"
+                                :placeholder="$t('common.forms.repeatPassword')" class="!bg-card" />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
                 </FormField>
 
                 <Button type="submit" :disabled="isPending" class="w-full">
-                    {{ isPending ? 'Creating account...' : 'Sign Up' }}
+                    {{ isPending ? $t('form.completeRegistration.creatingAccount') :
+                        $t('form.completeRegistration.submit') }}
                 </Button>
             </form>
             <div class="text-center text-sm mt-8">
@@ -47,7 +50,6 @@
                 </RouterLink>
             </div>
         </div>
-
     </div>
 </template>
 
@@ -55,6 +57,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { toast } from 'vue-sonner';
+import { useI18n } from 'vue-i18n';
 import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import { createSignUpSchema } from '@/schemas/signUpSchema';
@@ -64,12 +67,12 @@ import { Button } from '@/components/ui/button';
 import { useConfirmSignUpMutation, useSignInMutation } from '@/composables/useAuthQuery';
 import { getQueryValue } from '@/lib/utils/router';
 
+const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const email = ref('');
 const token = ref('');
 const { mutate: signIn } = useSignInMutation();
-
 
 const schema = createSignUpSchema();
 type FormValues = {
@@ -94,7 +97,7 @@ const onSubmit = handleSubmit((values) => {
     }, {
         onSuccess: (data) => {
             if (data.verified) {
-                toast.success('Account created! Logging you in...');
+                toast.success(t('form.completeRegistration.title'));
                 signIn(
                     { login: email.value, password: values.password },
                     {
@@ -102,17 +105,17 @@ const onSubmit = handleSubmit((values) => {
                             router.push('/');
                         },
                         onError: () => {
-                            toast.error('Login failed. Please sign in manually.');
+                            toast.error(t('common.errors.loginFailed', { message: t('common.failed') }));
                             router.push('/sign-in');
                         },
                     }
                 );
             } else {
-                toast.error('Verification failed');
+                toast.error(t('common.failed'));
             }
         },
         onError: (error) => {
-            toast({ title: 'Error', description: error.message, variant: 'destructive' });
+            toast.error(t('common.errors.signupFailed', { message: error.message }));
         },
     });
 });
@@ -127,6 +130,4 @@ onMounted(() => {
     email.value = emailParam;
     token.value = tokenParam;
 });
-
-
 </script>

@@ -12,6 +12,34 @@ export default {
     connect: 'Connect',
     absolutelySure: 'Are you absolutely sure?',
     logout: 'Log Out',
+    invalidCode: 'Invalid code',
+    sending: 'Sending...',
+    verifying: 'Verifying...',
+    creating: 'Creating...',
+
+    actions: {
+      submit: 'Submit',
+      continue: 'Continue',
+      send: 'Send',
+      signOut: 'Sign Out',
+    },
+    forms: {
+      email: 'Email',
+      password: 'Password',
+      repeatPassword: 'Repeat password',
+      username: 'Username',
+      usernameOrEmail: 'Username or email',
+    },
+    messages: {
+      checkEmail: 'Check your email for a code',
+      enterCode: 'Enter the code we sent to {email}',
+      setCredentials: 'Set your username and password',
+    },
+    errors: {
+      loginFailed: 'Login failed: {message}',
+      signupFailed: 'Failed to sign you up: {message}',
+      resetFailed: 'Password reset failed: {message}',
+    },
   },
   theme: {
     title: 'Theme',
@@ -20,9 +48,12 @@ export default {
     system: 'System',
   },
   validation: {
+    token: {
+      invalid: 'Code must be 6 digits',
+    },
     username: {
       required: 'Username is required',
-      invalidType: ' Username must be a string',
+      invalidType: 'Username must be a string',
       min: 'Username must be at least 3 characters',
       max: 'Username must be at most 20 characters',
       invalid: 'Username contains invalid characters',
@@ -60,27 +91,36 @@ export default {
       linkText: 'Already have an account?',
       linkLabel: 'Sign In',
     },
-
     forgotPassword: {
       title: 'Forgot your password?',
-      subtitle: "Type in your email and we'll send you a reset the password",
-      submit: 'Send reset code',
-      linkText: 'Aleady have an account?',
+      subtitle: "Enter your email and we'll send you a reset code",
+      submit: 'Send Reset Code',
+      linkText: 'Already have an account?',
       linkLabel: 'Sign In',
     },
-    usernameOrEmail: 'Username or email',
-    email: 'Email',
-    username: 'Username',
-    password: 'Password',
-    repeatPassword: 'Repeat password',
+    completeRegistration: {
+      title: 'Complete registration',
+      subtitle: 'Set your username and password',
+      submit: 'Sign Up',
+      creatingAccount: 'Creating account...',
+    },
+    verifyEmail: {
+      title: 'Verify your email',
+      subtitle: 'Enter the code we sent to {email}',
+      submit: 'Continue',
+      verifying: 'Verifying...',
+    },
+    verifyPasswordReset: {
+      title: 'Reset Password',
+      subtitle: 'Enter the code we sent to {email}',
+      submit: 'Continue',
+      verifying: 'Verifying...',
+    },
     terms:
       'By continuing, you agree to the Terms of Service and Privacy Policy, and to receive periodic emails with updates.',
   },
-
   error: {
     notFound: 'No results found',
     noResults: 'Your search did not return any results',
-    loginFailed: 'Login failed: {message}',
-    signupFailed: 'Failed to sign you up: {message}',
   },
 }

@@ -3,9 +3,9 @@
     <!-- Поля формы -->
     <FormField v-slot="{ componentField }" name="login" :validate-on-blur="!isFieldDirty('login')">
       <FormItem>
-        <FormLabel>{{ $t('form.usernameOrEmail') }}</FormLabel>
+        <FormLabel>{{ $t('common.forms.usernameOrEmail') }}</FormLabel>
         <FormControl>
-          <Input v-bind="componentField" :placeholder="$t('form.usernameOrEmail')" autocomplete="username"
+          <Input v-bind="componentField" :placeholder="$t('common.forms.usernameOrEmail')" autocomplete="username"
             class="!bg-card" />
         </FormControl>
         <FormMessage class="text-xs text-destructive" />
@@ -15,14 +15,14 @@
     <FormField v-slot="{ componentField }" name="password" :validate-on-blur="!isFieldDirty('password')">
       <FormItem>
         <div class="flex justify-between items-center">
-          <FormLabel class="h-5">{{ $t('form.password') }}</FormLabel>
+          <FormLabel class="h-5">{{ $t('common.forms.password') }}</FormLabel>
           <RouterLink to="/forgot-password" class="text-xs text-primary hover:underline">
             {{ $t('form.forgotPassword.title') }}
           </RouterLink>
         </div>
         <div class="relative">
           <FormControl>
-            <Input v-bind="componentField" :placeholder="$t('form.password')" autocomplete="current-password"
+            <Input v-bind="componentField" :placeholder="$t('common.forms.password')" autocomplete="current-password"
               class="!bg-card pr-10" :type="showPassword ? 'text' : 'password'" />
           </FormControl>
           <button type="button" @click="showPassword = !showPassword"

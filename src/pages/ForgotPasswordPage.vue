@@ -1,15 +1,15 @@
 <template>
     <div class="flex flex-col justify-center items-center pt-32">
         <div class="flex flex-col px-5 max-w-lg w-full">
-            <h1 class="text-2xl font-bold mb-2">Forgot your password?</h1>
-            <p class="text-muted-foreground mb-6">Enter your email and we'll send you a reset code</p>
+            <h1 class="text-2xl font-bold mb-2">{{ $t('form.forgotPassword.title') }}</h1>
+            <p class="text-muted-foreground mb-6">{{ $t('form.forgotPassword.subtitle') }}</p>
 
             <form @submit="onSubmit" class="w-full space-y-4">
                 <FormField v-slot="{ componentField }" name="email" :validate-on-blur="!isFieldDirty('email')">
                     <FormItem>
-                        <FormLabel>Email</FormLabel>
+                        <FormLabel>{{ $t('common.forms.email') }}</FormLabel>
                         <FormControl>
-                            <Input v-bind="componentField" :placeholder="$t('form.email')" type="email"
+                            <Input v-bind="componentField" :placeholder="$t('common.forms.email')" type="email"
                                 autocomplete="email" class="!bg-card" />
                         </FormControl>
                         <FormMessage class="text-xs text-destructive" />
@@ -17,7 +17,7 @@
                 </FormField>
 
                 <Button type="submit" :disabled="isPending" class="w-full">
-                    {{ isPending ? 'Sending...' : 'Send Reset Code' }}
+                    {{ isPending ? $t('common.sending') : $t('form.forgotPassword.submit') }}
                 </Button>
             </form>
 
@@ -34,6 +34,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import { toast } from 'vue-sonner';
+import { useI18n } from 'vue-i18n';
 import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import { createForgotPasswordEmailSchema } from '@/schemas/forgotPasswordSchema';
@@ -42,6 +43,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useResetPasswordMutation } from '@/composables/useAuthQuery';
 
+const { t } = useI18n();
 const router = useRouter();
 const schema = createForgotPasswordEmailSchema();
 type FormValues = { email: string };
@@ -55,11 +57,11 @@ const { handleSubmit, isFieldDirty } = useForm<FormValues>({
 const onSubmit = handleSubmit((values) => {
     resetPassword(values, {
         onSuccess: () => {
-            toast.success('Check your email for a reset code');
+            toast.success(t('common.messages.checkEmail'));
             router.push({ path: '/forgot-password/verify', query: { email: values.email } });
         },
         onError: (error) => {
-            toast.error(`Error: ${error.message}`);
+            toast.error(t('common.errors.resetFailed', { message: error.message }));
         },
     });
 });

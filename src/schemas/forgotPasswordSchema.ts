@@ -10,8 +10,9 @@ export const createForgotPasswordEmailSchema = () => {
 }
 
 export const createForgotPasswordVerifySchema = () => {
+  const { t } = useI18n()
   return z.object({
-    token: z.array(z.coerce.string()).length(6, { message: 'Enter the 6 digit code' }),
+    token: z.array(z.coerce.string()).length(6, { message: t('validation.token.invalid') }),
   })
 }
 

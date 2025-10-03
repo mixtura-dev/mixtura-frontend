@@ -12,6 +12,34 @@ export default {
     connect: 'Подключить',
     absolutelySure: 'Вы уверены?',
     logout: 'Выйти',
+    invalidCode: 'Неверный код',
+    sending: 'Отправка...',
+    verifying: 'Проверка...',
+    creating: 'Создание...',
+
+    actions: {
+      submit: 'Отправить',
+      continue: 'Продолжить',
+      send: 'Отправить',
+      signOut: 'Выйти',
+    },
+    forms: {
+      email: 'Почта',
+      password: 'Пароль',
+      repeatPassword: 'Повторите пароль',
+      username: 'Имя пользователя',
+      usernameOrEmail: 'Почта или логин',
+    },
+    messages: {
+      checkEmail: 'Проверьте вашу почту для получения кода',
+      enterCode: 'Введите код, который мы отправили на {email}',
+      setCredentials: 'Установите имя пользователя и пароль',
+    },
+    errors: {
+      loginFailed: 'Ошибка входа: {message}',
+      signupFailed: 'Не удалось зарегистрироваться: {message}',
+      resetFailed: 'Ошибка сброса пароля: {message}',
+    },
   },
   theme: {
     title: 'Тема',
@@ -20,6 +48,9 @@ export default {
     system: 'Автоматическая',
   },
   validation: {
+    token: {
+      invalid: 'Код должен содержать 6 цифр',
+    },
     username: {
       required: 'Требуется имя пользователя',
       invalidType: 'Имя пользователя должно быть строкой',
@@ -67,18 +98,29 @@ export default {
       linkText: 'Уже есть аккаунт?',
       linkLabel: 'Войти',
     },
-    usernameOrEmail: 'Почта или логин',
-    email: 'Почта',
-    username: 'Имя пользователя',
-    password: 'Пароль',
-    repeatPassword: 'Повторите пароль',
+    completeRegistration: {
+      title: 'Завершите регистрацию',
+      subtitle: 'Установите имя пользователя и пароль',
+      submit: 'Зарегистрироваться',
+      creatingAccount: 'Создание аккаунта...',
+    },
+    verifyEmail: {
+      title: 'Подтвердите вашу почту',
+      subtitle: 'Введите код, который мы отправили на {email}',
+      submit: 'Продолжить',
+      verifying: 'Проверка...',
+    },
+    verifyPasswordReset: {
+      title: 'Сброс пароля',
+      subtitle: 'Введите код, который мы отправили на {email}',
+      submit: 'Продолжить',
+      verifying: 'Проверка...',
+    },
     terms:
       'Продолжая, вы соглашаетесь с Условиями использования и Политикой конфиденциальности, а также на получение периодических писем с обновлениями.',
   },
   error: {
     notFound: 'Результаты не найдены',
     noResults: 'Ваш поиск не дал результатов',
-    loginFailed: 'Ошибка входа: {message}',
-    signupFailed: 'Не удалось зарегистрироваться: {message}',
   },
 }

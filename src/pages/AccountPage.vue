@@ -13,7 +13,7 @@
                 <div class="px-6 py-4 space-y-6 border-b last:border-none">
                     <FormField v-slot="{ componentField }" name="username">
                         <FormItem>
-                            <FormLabel>{{ $t('form.username') }}</FormLabel>
+                            <FormLabel>{{ $t('forms.username') }}</FormLabel>
                             <FormControl>
                                 <Input autocomplete="username" class="!bg-card" v-bind="componentField" type="text"
                                     placeholder="Enter your username" />

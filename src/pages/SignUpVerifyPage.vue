@@ -1,8 +1,8 @@
 <template>
     <div class="flex flex-col justify-center items-center pt-32">
         <div class=" flex flex-col px-5 max-w-lg w-full ">
-            <h1 class="text-2xl font-bold mb-2">Verify your email</h1>
-            <p class="text-muted-foreground mb-6">Enter the code we sent to {{ email }}</p>
+            <h1 class="text-2xl font-bold mb-2">{{ $t('form.verifyEmail.title') }}</h1>
+            <p class="text-muted-foreground mb-6">{{ $t('form.verifyEmail.subtitle', { email }) }}</p>
 
             <form @submit="onSubmit" class="w-full space-y-4">
                 <FormField v-slot="{ componentField, value }" name="token" :validate-on-blur="!isFieldDirty('token')">
@@ -28,7 +28,7 @@
                 </FormField>
 
                 <Button type="submit" :disabled="isPending" class="w-full">
-                    {{ isPending ? 'Verifying...' : 'Continue' }}
+                    {{ isPending ? $t('common.verifying') : $t('form.verifyEmail.submit') }}
                 </Button>
             </form>
             <div class="text-center text-sm mt-8">
@@ -38,7 +38,6 @@
                 </RouterLink>
             </div>
         </div>
-
     </div>
 </template>
 
@@ -46,6 +45,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { toast } from 'vue-sonner';
+import { useI18n } from 'vue-i18n';
 import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import { FormField, FormItem, FormControl, FormMessage } from '@/components/ui/form';
@@ -59,6 +59,8 @@ import {
     PinInputSeparator,
     PinInputSlot,
 } from "@/components/ui/pin-input"
+
+const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const email = ref('');
@@ -71,6 +73,7 @@ onMounted(() => {
     }
     email.value = emailParam;
 });
+
 const schema = createSignUpVerifySchema();
 type FormValues = { token: string };
 
@@ -78,32 +81,30 @@ const { mutate: verifySignUp, isPending } = useVerifySignUpMutation();
 const { handleSubmit, setFieldValue, isFieldDirty } = useForm<FormValues>({
     validationSchema: toTypedSchema(schema),
     initialValues: { token: '' },
-
 });
 
 const onSubmit = handleSubmit((values) => {
     if (!Array.isArray(values.token)) {
         console.error('Invalid token format:', values.token);
-        toast.error({ title: 'Invalid token format' });
+        toast.error(t('validation.token.invalid'));
         return;
     }
-
 
     const tokenString = (values.token as string[]).join('');
     verifySignUp({ email: email.value, token: tokenString }, {
         onSuccess: (data) => {
             if (data.verified) {
-                toast.success({ title: 'Verified!', description: 'Now set your username and password' });
+                toast.success(t('common.messages.setCredentials'));
                 router.push({
                     path: '/sign-up/confirm',
                     query: { email: email.value, token: tokenString }
                 });
             } else {
-                toast.error('Invalid code')
+                toast.error(t('common.invalidCode'));
             }
         },
         onError: (error) => {
-            toast.error(`Error: ${error.message}`);
+            toast.error(t('common.errors.signupFailed', { message: error.message }));
         },
     });
 });

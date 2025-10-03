@@ -2,10 +2,10 @@
     <AuthForm formKey="form.signUp" linkTo="/sign-in" :isLoading="isPending" :onSubmit="onSubmit">
         <FormField v-slot="{ componentField }" name="email" :validate-on-blur="!isFieldDirty('email')">
             <FormItem>
-                <FormLabel>{{ $t('form.email') }}</FormLabel>
+                <FormLabel>{{ $t('common.forms.email') }}</FormLabel>
                 <FormControl>
-                    <Input v-bind="componentField" :placeholder="$t('form.email')" type="email" autocomplete="email"
-                        class="!bg-card" />
+                    <Input v-bind="componentField" :placeholder="$t('common.forms.email')" type="email"
+                        autocomplete="email" class="!bg-card" />
                 </FormControl>
                 <FormMessage class="text-xs text-destructive" />
             </FormItem>
