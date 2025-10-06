@@ -46,6 +46,7 @@ export default {
     light: 'Light',
     dark: 'Dark',
     system: 'System',
+    solar: "Solar"
   },
   validation: {
     token: {
@@ -57,6 +58,7 @@ export default {
       min: 'Username must be at least 3 characters',
       max: 'Username must be at most 20 characters',
       invalid: 'Username contains invalid characters',
+      busy: 'Username is busy',
     },
     password: {
       required: 'Password is required',
@@ -118,6 +120,21 @@ export default {
     },
     terms:
       'By continuing, you agree to the Terms of Service and Privacy Policy, and to receive periodic emails with updates.',
+  },
+  account: {
+    title: 'Account Preferences',
+    profile: {
+      title: 'Profile Information',
+  
+    },
+    connections: {
+      title: 'Connections',
+      description: 'Connect your account with other services',
+      connectAccount: 'Connect your {provider} account',
+      connect: 'Connect',
+      connectAnother: 'Connect another',
+      maxAccounts: 'Max {limit} account | Max {limit} accounts',
+    },
   },
   error: {
     notFound: 'No results found',

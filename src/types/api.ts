@@ -21,6 +21,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/auth/check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Check */
+        post: operations["check_api_auth_check_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/reset/confirm": {
         parameters: {
             query?: never;
@@ -196,6 +213,19 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** BusyResponse */
+        BusyResponse: {
+            /**
+             * Status
+             * @default ok
+             */
+            status: string;
+            /**
+             * Busy
+             * @default true
+             */
+            busy: boolean;
+        };
         /** EmailRequest */
         EmailRequest: {
             /**
@@ -252,6 +282,8 @@ export interface components {
             redirect_uri: string;
             /** Use In Auth */
             use_in_auth: boolean;
+            /** Limit */
+            limit: number;
         };
         /** ProviderModel */
         ProviderModel: {
@@ -313,11 +345,6 @@ export interface components {
              */
             updated: boolean;
         };
-        /** UpdateUserRequest */
-        UpdateUserRequest: {
-            /** Username */
-            username: string;
-        };
         /** UserModel */
         UserModel: {
             /**
@@ -336,6 +363,11 @@ export interface components {
             registration_date: string;
             /** Providers */
             providers: components["schemas"]["ProviderModel"][];
+        };
+        /** UsernameRequest */
+        UsernameRequest: {
+            /** Username */
+            username: string;
         };
         /** ValidationError */
         ValidationError: {
@@ -388,6 +420,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    check_api_auth_check_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UsernameRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BusyResponse"];
                 };
             };
             /** @description Validation Error */
@@ -496,7 +561,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateUserRequest"];
+                "application/json": components["schemas"]["UsernameRequest"];
             };
         };
         responses: {

@@ -1,4 +1,5 @@
 import {
+  callbackProviders,
   confirmResetPassword,
   confirmSignUp,
   getProviders,
@@ -92,6 +93,16 @@ export const useConfirmResetPasswordMutation = () => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: confirmResetPassword,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: authQueryKeys.user() })
+    },
+  })
+}
+
+export const useCallbackProvidersMutation = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: callbackProviders,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: authQueryKeys.user() })
     },

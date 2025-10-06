@@ -4,7 +4,9 @@
         <DropdownMenuTrigger asChild>
             <Avatar class="cursor-pointer">
                 <AvatarImage draggable="false" src="https://github.com/unovue.png" alt="@unovue" />
-                <AvatarFallback class=" text-sm">CN</AvatarFallback>
+                <AvatarFallback class=" text-sm">
+                    <Loader2 class=" animate-spin" />
+                </AvatarFallback>
             </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent class="w-64" align="end" side="bottom" :alignOffset="4">
@@ -19,7 +21,7 @@
                 <RouterLink to="/account">
                     <span class="text-xs flex items-center gap-2 ">
                         <SettingsIcon class=" size-3.5" />
-                        Account Preferences
+                        {{ $t('account.title') }}
                     </span>
                 </RouterLink>
 
@@ -45,10 +47,7 @@
 </template>
 
 <script setup lang="ts">
-
-
-
-import { SettingsIcon } from 'lucide-vue-next'
+import { Loader2, SettingsIcon } from 'lucide-vue-next'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
     DropdownMenu,
@@ -64,14 +63,12 @@ import { THEMES } from '@/constants/theme'
 import { useAuthStore } from '@/stores/authStore.store'
 import { useTheme } from '@/composables/useTheme'
 import { useSignOutMutation } from '@/composables/useAuthQuery'
-import router from '@/router'
 const { store } = useTheme()
 const authStore = useAuthStore()
 const signOutMutation = useSignOutMutation()
 
 const handleLogout = async () => {
     await signOutMutation.mutateAsync()
-    authStore.clearUser()
-    router.push('/sign-in')
+    authStore.handleUnauthorized()
 }
 </script>

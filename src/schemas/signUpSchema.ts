@@ -1,6 +1,7 @@
 import { PASSWORD_REGEX, USERNAME_REGEX } from '@/lib/utils/validation'
 import { useI18n } from 'vue-i18n'
 import { z } from 'zod'
+import { uniqueUsername } from './checkUsernameRule'
 
 export const createSignUpSchema = () => {
   const { t } = useI18n()
@@ -14,7 +15,16 @@ export const createSignUpSchema = () => {
         })
         .min(3, { message: t('validation.username.min') })
         .max(20, { message: t('validation.username.max') })
-        .regex(USERNAME_REGEX, { message: t('validation.username.invalid') }),
+        .regex(USERNAME_REGEX, { message: t('validation.username.invalid') })
+        .refine(
+          async (value) => {
+            const result = await uniqueUsername(value)
+            return result === true
+          },
+          {
+            message: t('validation.username.busy'),
+          },
+        ),
 
       password: z
         .string({

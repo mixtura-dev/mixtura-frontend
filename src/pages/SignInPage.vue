@@ -1,18 +1,18 @@
 <template>
   <AuthForm formKey="form.signIn" linkTo="/sign-up" :isLoading="isPending" :onSubmit="onSubmit">
-    <!-- Поля формы -->
-    <FormField v-slot="{ componentField }" name="login" :validate-on-blur="!isFieldDirty('login')">
+
+    <FormField v-slot="{ componentField }" name="login">
       <FormItem>
         <FormLabel>{{ $t('common.forms.usernameOrEmail') }}</FormLabel>
         <FormControl>
           <Input v-bind="componentField" :placeholder="$t('common.forms.usernameOrEmail')" autocomplete="username"
             class="!bg-card" />
         </FormControl>
-        <FormMessage class="text-xs text-destructive" />
+        <FormMessage class=" text-xs text-destructive" />
       </FormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="password" :validate-on-blur="!isFieldDirty('password')">
+    <FormField v-slot="{ componentField }" name="password">
       <FormItem>
         <div class="flex justify-between items-center">
           <FormLabel class="h-5">{{ $t('common.forms.password') }}</FormLabel>
@@ -67,6 +67,7 @@ const { mutate: signIn, isPending } = useSignInMutation();
 const { handleSubmit, isFieldDirty } = useForm<SignInFormValues>({
   validationSchema: toTypedSchema(schema),
   initialValues: { login: '', password: '' },
+
 });
 
 const onSubmit = handleSubmit((values) => {

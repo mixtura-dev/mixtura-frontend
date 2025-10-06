@@ -16,7 +16,7 @@ const SignUpConfirmPage = () => import('@/pages/SignUpConfirmPage.vue')
 const ForgotPasswordPage = () => import('@/pages/ForgotPasswordPage.vue')
 const ForgotPasswordConfirmPage = () => import('@/pages/ForgotPasswordConfirmPage.vue')
 const ForgotPasswordVerifyPage = () => import('@/pages/ForgotPasswordVerifyPage.vue')
-
+const OAuthCallbackPage = () => import('@/pages/OAuthCallbackPage.vue')
 const routes: ParentAppRoute[] = [
   {
     path: '/',
@@ -140,6 +140,14 @@ const routes: ParentAppRoute[] = [
         component: NotHavePermissionPage,
         meta: {
           title: 'You have not permission to access',
+          requiresAuth: false,
+        },
+      },
+      {
+        path: '/oauth/callback/:provider',
+        component: OAuthCallbackPage,
+        meta: {
+          title: 'OAuth Callback',
           requiresAuth: false,
         },
       },

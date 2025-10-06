@@ -5,9 +5,9 @@
         </div>
 
         <div class="space-y-6">
-            <div class=" px-6 py-4  grid grid-cols-12 gap-6 bg-card  border rounded  ">
-                <h3 class="col-span-12 lg:col-span-5  font-semibold ">General Settings</h3>
-                <div class="col-span-12 lg:col-span-7 space-y-4">
+            <Card class="rid grid-cols-12 gap-6  ">
+                <h3 class="col-span-12 lg:col-span-5  font-semibold pl-4 ">General Settings</h3>
+                <CardContent class="col-span-12 lg:col-span-7 space-y-4">
                     <div class="flex flex-wrap items-center justify-between">
                         <Label class="flex items-start flex-col gap-1.5">
                             <span>Custom Auto Choice</span>
@@ -43,13 +43,13 @@
                         <Switch v-model="settings.state.autoIncrement"
                             @update:model-value="(value) => settings.updateSettings('autoIncrement', value)" />
                     </div>
-                </div>
-            </div>
+                </CardContent>
+            </Card>
 
             <h2 class="col-span-12 lg:col-span-5  text-2xl font-bold mb-4">Role Distribution</h2>
-            <div class=" px-6 py-4  grid grid-cols-12 gap-6 bg-card  border rounded  ">
-                <h3 class="col-span-12 lg:col-span-5  font-semibold ">Roles amount</h3>
-                <div class="col-span-12 lg:col-span-7 space-y-4">
+            <Card class="grid grid-cols-12 gap-6 ">
+                <h3 class="col-span-12 lg:col-span-5  font-semibold pl-4 ">Roles amount</h3>
+                <CardContent class="col-span-12 lg:col-span-7 space-y-4">
                     <NumberField :min="0" :max="10" v-model="settings.state.roleAmount.tank"
                         @update:model-value="(value) => settings.updateSettings('roleAmount', { ...settings.state.roleAmount, tank: Number(value) })">
                         <Label>Tank amount</Label>
@@ -77,8 +77,8 @@
                             <NumberFieldIncrement />
                         </NumberFieldContent>
                     </NumberField>
-                </div>
-            </div>
+                </CardContent>
+            </Card>
             <SettingsReset />
 
         </div>
@@ -98,6 +98,8 @@ import {
     NumberFieldInput,
 } from '@/components/ui/number-field'
 import SettingsReset from '@/components/settings/SettingsReset.vue'
+import Card from '@/components/ui/card/Card.vue'
+import CardContent from '@/components/ui/card/CardContent.vue'
 const settings = useSettingsStore()
 
 

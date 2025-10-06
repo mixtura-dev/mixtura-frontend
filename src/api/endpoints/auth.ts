@@ -41,3 +41,8 @@ export const confirmResetPassword = (
   data: RequestBody<'/api/auth/reset/confirm', 'post'>,
 ): Promise<SuccessResponse<'/api/auth/reset/confirm', 'post'>> =>
   baseApi.post('/api/auth/reset/confirm', data).then((res) => res.data)
+
+export const callbackProviders = (
+  data: RequestBody<'/api/auth/callback', 'post'>,
+): Promise<SuccessResponse<'/api/auth/callback', 'post'>> =>
+  baseApi.post('/api/auth/callback', data).then((res) => res.data)
