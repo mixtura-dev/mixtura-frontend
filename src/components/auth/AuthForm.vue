@@ -12,15 +12,18 @@
                     </h2>
                 </div>
 
-                <div class="flex gap-4 mb-6">
-                    <Button variant="outline" size="icon">
-                        <DiscrodIcon />
+                <div class="flex gap-4">
+                    <Button variant="outline" size="icon" asChild>
+                        <a
+                            href="https://discord.com/api/oauth2/authorize?client_id=443050669079920640&response_type=code&scope=identify&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Foauth%2Fcallback%2Fdiscord">
+                            <DiscrodIcon />
+                        </a>
                     </Button>
-                    <Button variant="outline" size="icon">
-                        <TwitchIcon />
-                    </Button>
-                    <Button variant="outline" size="icon">
-                        <BlizzardIcon />
+                    <Button variant="outline" size="icon" asChild>
+                        <a
+                            href="https://id.twitch.tv/oauth2/authorize?client_id=9vaajcndpjuw2hcxzcglzjcppxisv7&response_type=code&scope=&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Foauth%2Fcallback%2Ftwitch">
+                            <TwitchIcon />
+                        </a>
                     </Button>
                 </div>
 
@@ -66,7 +69,6 @@
 import { Button } from '@/components/ui/button';
 import { RouterLink } from 'vue-router';
 import DiscrodIcon from '@/components/icons/DiscordIcon.vue';
-import BlizzardIcon from '@/components/icons/BlizzardIcon.vue';
 import { TwitchIcon } from 'lucide-vue-next';
 
 defineProps<{

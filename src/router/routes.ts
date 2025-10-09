@@ -94,7 +94,6 @@ const routes: ParentAppRoute[] = [
         component: SignInPage,
         meta: {
           title: 'Sign In',
-          requiresAuth: false,
           guestOnly: true,
         },
       },
@@ -136,7 +135,7 @@ const routes: ParentAppRoute[] = [
         meta: { title: 'Complete Registration', requiresAuth: false, guestOnly: true },
       },
       {
-        path: '/403',
+        path: '403',
         component: NotHavePermissionPage,
         meta: {
           title: 'You have not permission to access',
@@ -144,7 +143,7 @@ const routes: ParentAppRoute[] = [
         },
       },
       {
-        path: '/oauth/callback/:provider',
+        path: 'oauth/callback/:provider',
         component: OAuthCallbackPage,
         meta: {
           title: 'OAuth Callback',

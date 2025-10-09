@@ -21,21 +21,27 @@ const route = useRoute()
 const router = useRouter()
 const { mutateAsync } = useCallbackProvidersMutation()
 onMounted(async () => {
+    console.log('OAuth callback started')
+    console.log('Params:', route.params)
+    console.log('Query:', route.query)
+
     try {
         const provider = getQueryValue(route.params.provider)
         const code = getQueryValue(route.query.code)
 
         if (!provider || !code) {
+            console.error('Missing provider or code')
             throw new Error('Missing provider or code')
         }
-
         await mutateAsync({ provider, code })
-
+        console.log('OAuth success!')
         toast.success(`Successfully connected ${provider} account!`)
+        console.log('Redirecting to /account')
         router.push('/account')
     } catch (error) {
         console.error('OAuth callback error:', error)
         toast.error('Failed to connect account. Please try again.')
+        console.log('Redirecting to /account (error)')
         router.push('/account')
     }
 })

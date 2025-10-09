@@ -11,11 +11,14 @@ export const authMiddleware = async (
   const authStore = useAuthStore()
   const queryClient = useQueryClient()
 
-  if (!to.meta.guestOnly && !authStore.isAuthenticated) {
+  const isOAuthCallback = to.path.startsWith('/oauth/callback/')
+
+  if (!isOAuthCallback && authStore.isAuthenticated === false) {
     try {
       const user = await queryClient.fetchQuery({
         queryKey: ['auth', 'user'],
         queryFn: getUserInfo,
+        staleTime: 5 * 60 * 1000,
       })
       authStore.setUser(user)
     } catch {
@@ -23,16 +26,16 @@ export const authMiddleware = async (
     }
   }
 
+  if (to.meta.guestOnly && authStore.isAuthenticated) {
+    next({ path: '/' })
+    return
+  }
+
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     next({
       path: '/sign-in',
       query: { redirect: to.fullPath },
     })
-    return
-  }
-
-  if (to.meta.guestOnly && authStore.isAuthenticated) {
-    next({ path: '/' })
     return
   }
 

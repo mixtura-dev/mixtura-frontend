@@ -1,6 +1,58 @@
 <template>
     <div class="p-4 flex flex-col w-full h-full ">
         <Bracket :stage :matches :rounds :participants />
+        <div class="grid w-full max-w-sm gap-6">
+            <InputGroup>
+                <InputGroupInput placeholder="Search..." />
+                <InputGroupAddon>
+                    <Search />
+                </InputGroupAddon>
+                <InputGroupAddon align="inline-end">12 results</InputGroupAddon>
+            </InputGroup>
+            <InputGroup>
+                <InputGroupInput placeholder="example.com" />
+                <InputGroupAddon>
+                    <InputGroupText>https://</InputGroupText>
+                </InputGroupAddon>
+
+            </InputGroup>
+
+
+            <InputGroup>
+                <InputGroupTextarea placeholder="Ask, Search or Chat..." />
+                <InputGroupAddon align="block-end">
+                    <InputGroupButton variant="outline" class="rounded-full" size='icon-xs'>
+                        <Plus />
+                    </InputGroupButton>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>Profile</DropdownMenuItem>
+                            <DropdownMenuItem>Billing</DropdownMenuItem>
+                            <DropdownMenuItem>Team</DropdownMenuItem>
+                            <DropdownMenuItem>Subscription</DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                    <InputGroupText className="ml-auto">52% used</InputGroupText>
+                    <Separator orientation="vertical" className="!h-4" />
+                    <InputGroupButton variant="default" className="rounded-full" size="icon-xs" disabled>
+                        <ArrowUpIcon />
+                        <span className="sr-only">Send</span>
+                    </InputGroupButton>
+                </InputGroupAddon>
+            </InputGroup>
+            <InputGroup>
+                <InputGroupInput placeholder="@shadcn" />
+                <InputGroupAddon align="inline-end">
+                    <div
+                        className="bg-primary text-primary-foreground flex size-4 items-center justify-center rounded-full">
+                        <Check className="size-3" />
+                    </div>
+                </InputGroupAddon>
+            </InputGroup>
+        </div>
     </div>
 </template>
 <script lang="ts" setup>
@@ -13,7 +65,23 @@ const stage: Stage = {
     type: 'single_elim',
     number: 1,
 }
+import {
+    InputGroup,
+    InputGroupAddon,
+    InputGroupButton,
+    InputGroupText,
+    InputGroupInput,
+    InputGroupTextarea
+} from '@/components/ui/input-group'
 
+import { ArrowUpIcon, Check, Plus, Search } from 'lucide-vue-next';
+import DropdownMenu from '@/components/ui/dropdown-menu/DropdownMenu.vue';
+import DropdownMenuTrigger from '@/components/ui/dropdown-menu/DropdownMenuTrigger.vue';
+import DropdownMenuContent from '@/components/ui/dropdown-menu/DropdownMenuContent.vue';
+import DropdownMenuItem from '@/components/ui/dropdown-menu/DropdownMenuItem.vue';
+import Separator from '@/components/ui/separator/Separator.vue';
+import DropdownMenuLabel from '@/components/ui/dropdown-menu/DropdownMenuLabel.vue';
+import DropdownMenuSeparator from '@/components/ui/dropdown-menu/DropdownMenuSeparator.vue';
 const rounds: Round[] = [
     { id: 1, stageId: 1, groupId: 1, number: 1 }, // Round of 16
     { id: 2, stageId: 1, groupId: 1, number: 2 }, // Quarterfinals
