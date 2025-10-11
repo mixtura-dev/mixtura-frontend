@@ -239,6 +239,25 @@
     @apply bg-background text-foreground;
   }
 }
+@layer utilities {
+  .no-search-icon::-webkit-search-decoration,
+  .no-search-icon::-webkit-search-cancel-button,
+  .no-search-icon::-webkit-search-results-button,
+  .no-search-icon::-webkit-search-results-decoration {
+    display: none;
+  }
+  .hidden-visually {
+    position: absolute;
+    overflow: hidden;
+    white-space: nowrap;
+    margin: 0;
+    padding: 0;
+    height: 1px;
+    width: 1px;
+    clip: rect(0 0 0 0);
+    clip-path: inset(100%);
+  }
+}
 
 /* Turn off animations if browser prefers to off it */
 @media (prefers-reduced-motion: reduce) {

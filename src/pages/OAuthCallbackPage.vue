@@ -21,10 +21,6 @@ const route = useRoute()
 const router = useRouter()
 const { mutateAsync } = useCallbackProvidersMutation()
 onMounted(async () => {
-    console.log('OAuth callback started')
-    console.log('Params:', route.params)
-    console.log('Query:', route.query)
-
     try {
         const provider = getQueryValue(route.params.provider)
         const code = getQueryValue(route.query.code)

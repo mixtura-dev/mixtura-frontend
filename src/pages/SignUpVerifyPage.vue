@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col justify-center items-center pt-32">
         <div class=" flex flex-col px-5 max-w-lg w-full ">
-            <h1 class="text-2xl font-bold mb-2">{{ $t('form.verifyEmail.title') }}</h1>
+            <h1 class="lg:text-3xl text-2xl tracking-tight font-bold mb-2">{{ $t('form.verifyEmail.title') }}</h1>
             <p class="text-muted-foreground mb-6">{{ $t('form.verifyEmail.subtitle', { email }) }}</p>
 
             <form @submit="onSubmit" class="w-full space-y-4">

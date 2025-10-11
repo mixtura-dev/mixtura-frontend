@@ -8,16 +8,7 @@
                     <CardTitle>{{ $t('account.profile.title') }}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <FormField v-slot="{ componentField }" name="username">
-                        <FormItem>
-                            <FormLabel>{{ $t('common.forms.username') }}</FormLabel>
-                            <FormControl>
-                                <Input autocomplete="username" class="!bg-card" v-bind="componentField" type="text"
-                                    :placeholder="$t('common.forms.username')" />
-                            </FormControl>
-                            <FormMessage class="text-xs text-destructive" />
-                        </FormItem>
-                    </FormField>
+
                 </CardContent>
                 <CardFooter>
                     <Button size="sm">
@@ -32,8 +23,6 @@
 </template>
 
 <script setup lang="ts">
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 
 import { Button } from '@/components/ui/button';
 import AccountDelete from '@/components/account/AccountDelete.vue';

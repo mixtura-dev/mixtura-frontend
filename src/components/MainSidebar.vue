@@ -1,10 +1,9 @@
 <template>
     <aside class="items-center bg-background hidden w-12 border-r md:flex flex-col gap-4">
-        <nav class="overflow-auto w-full">
+        <nav class="overflow-auto w-full" v-motion="{ initial: { opacity: 0, y: -40 }, enter: { opacity: 1, y: 0 } }">
             <template v-for="(group, gIndex) in groups" :key="group.id">
                 <ul class="text flex w-full flex-col p-2 gap-1">
-                    <li v-for="item in group.items" :key="item.path"
-                        v-motion="{ initial: { opacity: 0, y: -40 }, enter: { opacity: 1, y: 0 } }">
+                    <li v-for="item in group.items" :key="item.path">
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>

@@ -31,6 +31,7 @@ export default {
       usernameOrEmail: 'Почта или логин',
     },
     messages: {
+      passwordUpdate: 'Пароль успешно обновлен',
       checkEmail: 'Проверьте вашу почту для получения кода',
       enterCode: 'Введите код, который мы отправили на {email}',
       setCredentials: 'Установите имя пользователя и пароль',

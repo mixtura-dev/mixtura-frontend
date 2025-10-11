@@ -8,8 +8,7 @@ const SettingPage = () => import('@/pages/SettingsPage.vue')
 const BalancerPage = () => import('@/pages/BalancerPage.vue')
 const SignInPage = () => import('@/pages/SignInPage.vue')
 const SignUpPage = () => import('@/pages/SignUpPage.vue')
-const NotFoundPage = () => import('@/pages/NotFoundPage.vue')
-const NotHavePermissionPage = () => import('@/pages/403.vue')
+const ErrorPage = () => import('@/pages/ErrorPage.vue')
 const AccountPage = () => import('@/pages/AccountPage.vue')
 const SignUpVerifyPage = () => import('@/pages/SignUpVerifyPage.vue')
 const SignUpConfirmPage = () => import('@/pages/SignUpConfirmPage.vue')
@@ -81,7 +80,7 @@ const routes: ParentAppRoute[] = [
 
     children: [
       {
-        path: 'sign-up',
+        path: '/sign-up',
         component: SignUpPage,
         meta: {
           title: 'Sign Up',
@@ -90,15 +89,16 @@ const routes: ParentAppRoute[] = [
         },
       },
       {
-        path: 'sign-in',
+        path: '/sign-in',
         component: SignInPage,
         meta: {
           title: 'Sign In',
+          requiresAuth: false,
           guestOnly: true,
         },
       },
       {
-        path: 'forgot-password',
+        path: '/forgot-password',
         component: ForgotPasswordPage,
         meta: {
           title: 'Forgot Password',
@@ -107,7 +107,7 @@ const routes: ParentAppRoute[] = [
         },
       },
       {
-        path: 'forgot-password/verify',
+        path: '/forgot-password/verify',
         component: ForgotPasswordVerifyPage,
         meta: {
           title: 'Verify Reset Code',
@@ -116,7 +116,7 @@ const routes: ParentAppRoute[] = [
         },
       },
       {
-        path: 'forgot-password/confirm',
+        path: '/forgot-password/confirm',
         component: ForgotPasswordConfirmPage,
         meta: {
           title: 'Set New Password',
@@ -125,34 +125,46 @@ const routes: ParentAppRoute[] = [
         },
       },
       {
-        path: 'sign-up/verify',
+        path: '/sign-up/verify',
         component: SignUpVerifyPage,
-        meta: { title: 'Verify Email', requiresAuth: false, guestOnly: true },
+        meta: {
+          title: 'Verify Email',
+          requiresAuth: false,
+          guestOnly: true,
+        },
       },
       {
-        path: 'sign-up/confirm',
+        path: '/sign-up/confirm',
         component: SignUpConfirmPage,
-        meta: { title: 'Complete Registration', requiresAuth: false, guestOnly: true },
+        meta: {
+          title: 'Complete Registration',
+          requiresAuth: false,
+          guestOnly: true,
+        },
       },
       {
-        path: '403',
-        component: NotHavePermissionPage,
+        path: '/oauth/callback/:provider',
+        component: OAuthCallbackPage,
+        meta: {
+          title: 'OAuth Callback',
+          requiresAuth: false,
+          guestOnly: false,
+        },
+      },
+      {
+        path: '/403',
+        component: ErrorPage,
+        props: { statusCode: 403, message: "You don't have permission to access this page." },
         meta: {
           title: 'You have not permission to access',
           requiresAuth: false,
         },
       },
       {
-        path: 'oauth/callback/:provider',
-        component: OAuthCallbackPage,
-        meta: {
-          title: 'OAuth Callback',
-          requiresAuth: false,
-        },
-      },
-      {
         path: '/:pathMatch(.*)*',
-        component: NotFoundPage,
+        component: ErrorPage,
+        props: { statusCode: 404, message: "We can't find this page." },
+
         meta: {
           title: 'Not found',
           requiresAuth: false,

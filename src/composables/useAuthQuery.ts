@@ -13,10 +13,10 @@ import {
 import { getUserInfo } from '@/api/endpoints/user'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 
-const USER_STALE_TIME = 5 * 60 * 1000 // 5 min
+export const USER_STALE_TIME = 5 * 60 * 1000 // 5 min
 const PROVIDER_STALE_TIME = 10 * 60 * 1000 // 10 min
 
-const authQueryKeys = {
+export const authQueryKeys = {
   user: () => ['auth', 'user'] as const,
   providers: () => ['auth', 'providers'] as const,
 }

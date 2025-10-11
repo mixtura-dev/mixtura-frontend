@@ -16,8 +16,8 @@
                     class="grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] gap-4 items-center py-2">
                     <div class="flex items-center gap-4 col-span-full sm:col-span-1">
                         <Image v-if="item.iconUrl" :src="item.iconUrl" :alt="item.name" width="32" height="32"
-                            class="w-8 h-8 aspect-square shrink-0" />
-                        <div>
+                            class="size-8 aspect-square shrink-0" />
+                        <div class=" cursor-auto">
                             <p class="font-medium text-muted-foreground text-sm">{{ item.name }}</p>
 
                             <div v-if="item.connectedCount > 0" class="mt-1 space-y-1">

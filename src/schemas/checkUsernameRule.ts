@@ -1,15 +1,24 @@
 import { checkUsername } from '@/api/endpoints/user'
 import { useDebounceFn } from '@vueuse/core'
 
-const debouncedCheck = useDebounceFn(async (value: string) => {
-  const res = await checkUsername({ username: value })
-  if (res.status === 'ok' && res.busy) {
-    return false
+export const useUsernameValidator = () => {
+  const validate = async (username: string): Promise<boolean> => {
+    if (!username) return false
+    try {
+      const { busy } = await checkUsername({ username })
+      return !busy
+    } catch {
+      return false
+    }
   }
-  return true
-}, 200)
 
-export const uniqueUsername = async (value: string) => {
-  if (!value) return true
-  return await debouncedCheck(value)
+  const debouncedValidate = (() => {
+    const handler = useDebounceFn((resolve: (v: boolean) => void, name: string) => {
+      validate(name).then(resolve)
+    }, 500)
+
+    return (name: string): Promise<boolean> => new Promise((resolve) => handler(resolve, name))
+  })()
+
+  return debouncedValidate
 }

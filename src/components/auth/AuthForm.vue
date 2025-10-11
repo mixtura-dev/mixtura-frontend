@@ -1,4 +1,4 @@
-<!-- components/auth/AuthForm.vue -->
+
 <template>
     <div class="flex flex-1 h-full">
         <div class="flex flex-col items-center flex-1 flex-shrink-0 px-5 pt-16 pb-8 border-r shadow-lg bg-background">

@@ -1,15 +1,15 @@
 <template>
-    <div class="p-4 flex flex-col w-full h-full ">
+    <div class="p-4 flex flex-col w-fi min-h-full ">
         <Bracket :stage :matches :rounds :participants />
         <div class="grid w-full max-w-sm gap-6">
-            <InputGroup>
+            <InputGroup class="bg-background">
                 <InputGroupInput placeholder="Search..." />
                 <InputGroupAddon>
                     <Search />
                 </InputGroupAddon>
                 <InputGroupAddon align="inline-end">12 results</InputGroupAddon>
             </InputGroup>
-            <InputGroup>
+            <InputGroup class="bg-background">
                 <InputGroupInput placeholder="example.com" />
                 <InputGroupAddon>
                     <InputGroupText>https://</InputGroupText>
@@ -17,15 +17,20 @@
 
             </InputGroup>
 
-
-            <InputGroup>
+            <InputPassword v-model="search" placeholder="asdasd" />
+            {{ search }}
+            <InputGroup class="bg-background">
                 <InputGroupTextarea placeholder="Ask, Search or Chat..." />
                 <InputGroupAddon align="block-end">
                     <InputGroupButton variant="outline" class="rounded-full" size='icon-xs'>
                         <Plus />
                     </InputGroupButton>
                     <DropdownMenu>
-                        <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+                        <DropdownMenuTrigger asChild>
+                            <InputGroupButton size="sm" variant="link">
+                                Open
+                            </InputGroupButton>
+                        </DropdownMenuTrigger>
                         <DropdownMenuContent>
                             <DropdownMenuLabel>My Account</DropdownMenuLabel>
                             <DropdownMenuSeparator />
@@ -35,20 +40,33 @@
                             <DropdownMenuItem>Subscription</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <InputGroupText className="ml-auto">52% used</InputGroupText>
-                    <Separator orientation="vertical" className="!h-4" />
-                    <InputGroupButton variant="default" className="rounded-full" size="icon-xs" disabled>
+                    <InputGroupText class="ml-auto">52% used</InputGroupText>
+                    <Separator orientation="vertical" class="!h-4" />
+                    <InputGroupButton variant="default" size="icon-xs">
                         <ArrowUpIcon />
-                        <span className="sr-only">Send</span>
+                        <span class="sr-only">Send</span>
                     </InputGroupButton>
                 </InputGroupAddon>
             </InputGroup>
-            <InputGroup>
+            <Kbd>
+                Ctrl
+            </Kbd>
+
+            <KbdGroup>
+                <Kbd>
+                    Ctrl
+                </Kbd>
+                +
+                <Kbd>
+                    C
+                </Kbd>
+            </KbdGroup>
+            <InputGroup class="bg-background">
                 <InputGroupInput placeholder="@shadcn" />
                 <InputGroupAddon align="inline-end">
                     <div
-                        className="bg-primary text-primary-foreground flex size-4 items-center justify-center rounded-full">
-                        <Check className="size-3" />
+                        class="bg-primary text-primary-foreground flex size-4 items-center justify-center rounded-full">
+                        <Check class="size-3" />
                     </div>
                 </InputGroupAddon>
             </InputGroup>
@@ -74,7 +92,7 @@ import {
     InputGroupTextarea
 } from '@/components/ui/input-group'
 
-import { ArrowUpIcon, Check, Plus, Search } from 'lucide-vue-next';
+import { ArrowUpIcon, Check, Eye, EyeOff, Plus, Search } from 'lucide-vue-next';
 import DropdownMenu from '@/components/ui/dropdown-menu/DropdownMenu.vue';
 import DropdownMenuTrigger from '@/components/ui/dropdown-menu/DropdownMenuTrigger.vue';
 import DropdownMenuContent from '@/components/ui/dropdown-menu/DropdownMenuContent.vue';
@@ -82,12 +100,18 @@ import DropdownMenuItem from '@/components/ui/dropdown-menu/DropdownMenuItem.vue
 import Separator from '@/components/ui/separator/Separator.vue';
 import DropdownMenuLabel from '@/components/ui/dropdown-menu/DropdownMenuLabel.vue';
 import DropdownMenuSeparator from '@/components/ui/dropdown-menu/DropdownMenuSeparator.vue';
+import Button from '@/components/ui/button/Button.vue';
+import Kbd from '@/components/ui/kbd/Kbd.vue';
+import KbdGroup from '@/components/ui/kbd/KbdGroup.vue';
+import { ref } from 'vue';
+import InputPassword from '@/components/ui/input/InputPassword.vue';
 const rounds: Round[] = [
     { id: 1, stageId: 1, groupId: 1, number: 1 }, // Round of 16
     { id: 2, stageId: 1, groupId: 1, number: 2 }, // Quarterfinals
     { id: 3, stageId: 1, groupId: 1, number: 3 }, // Semifinals
     { id: 4, stageId: 1, groupId: 1, number: 4 }, // Final
 ]
+const search = ref('')
 
 const participants: Participant[] = [
     { id: 1, tournamentId: 1, name: 'Игрок A' },

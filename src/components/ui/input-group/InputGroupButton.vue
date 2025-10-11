@@ -1,5 +1,6 @@
 <template>
-    <Button v-bind="buttonProps" :variant="variant" :data-size="size" :class="buttonClasses">
+    <Button v-bind="{ ...buttonProps, ...$attrs }" :type="type" :variant="variant" :data-size="size"
+        :class="buttonClasses">
         <slot />
     </Button>
 </template>

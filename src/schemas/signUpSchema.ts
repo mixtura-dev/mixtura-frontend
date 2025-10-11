@@ -1,11 +1,12 @@
 import { PASSWORD_REGEX, USERNAME_REGEX } from '@/lib/utils/validation'
 import { useI18n } from 'vue-i18n'
 import { z } from 'zod'
-import { uniqueUsername } from './checkUsernameRule'
+import { useUsernameValidator } from './checkUsernameRule'
 
 export const createSignUpSchema = () => {
   const { t } = useI18n()
 
+  const validateUsername = useUsernameValidator()
   return z
     .object({
       username: z
@@ -18,12 +19,10 @@ export const createSignUpSchema = () => {
         .regex(USERNAME_REGEX, { message: t('validation.username.invalid') })
         .refine(
           async (value) => {
-            const result = await uniqueUsername(value)
-            return result === true
+            const isAvailable = await validateUsername(value)
+            return isAvailable
           },
-          {
-            message: t('validation.username.busy'),
-          },
+          { message: t('validation.username.busy') },
         ),
 
       password: z
@@ -51,7 +50,6 @@ export const createSignUpSchema = () => {
       }
     })
 }
-
 export const createSignUpEmailSchema = () => {
   const { t } = useI18n()
   return z.object({

@@ -31,6 +31,7 @@ export default {
       usernameOrEmail: 'Username or email',
     },
     messages: {
+      passwordUpdate: 'Password updated successfully',
       checkEmail: 'Check your email for a code',
       enterCode: 'Enter the code we sent to {email}',
       setCredentials: 'Set your username and password',
@@ -46,7 +47,7 @@ export default {
     light: 'Light',
     dark: 'Dark',
     system: 'System',
-    solar: "Solar"
+    solar: 'Solar',
   },
   validation: {
     token: {
@@ -125,7 +126,6 @@ export default {
     title: 'Account Preferences',
     profile: {
       title: 'Profile Information',
-  
     },
     connections: {
       title: 'Connections',

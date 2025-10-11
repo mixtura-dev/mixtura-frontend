@@ -1,7 +1,8 @@
 <template>
     <div class="flex flex-col justify-center items-center pt-32">
         <div class=" flex flex-col px-5 max-w-lg w-full ">
-            <h1 class="text-2xl font-bold mb-2">{{ $t('form.completeRegistration.title') }}</h1>
+            <h1 class="lg:text-3xl text-2xl tracking-tight font-bold mb-2">{{ $t('form.completeRegistration.title') }}
+            </h1>
             <p class="text-muted-foreground mb-6">{{ $t('form.completeRegistration.subtitle') }}</p>
 
             <form @submit="onSubmit" class="w-full space-y-4">
@@ -20,8 +21,8 @@
                     <FormItem>
                         <FormLabel>{{ $t('common.forms.password') }}</FormLabel>
                         <FormControl>
-                            <Input type="password" v-bind="componentField" :placeholder="$t('common.forms.password')"
-                                class="!bg-card" />
+                            <InputPassword class="bg-card" v-bind="componentField"
+                                :placeholder="$t('common.forms.password')" autocomplete="current-password" />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -31,8 +32,8 @@
                     <FormItem>
                         <FormLabel>{{ $t('common.forms.repeatPassword') }}</FormLabel>
                         <FormControl>
-                            <Input type="password" v-bind="componentField"
-                                :placeholder="$t('common.forms.repeatPassword')" class="!bg-card" />
+                            <InputPassword class="bg-card" v-bind="componentField"
+                                :placeholder="$t('common.forms.repeatPassword')" autocomplete="current-password" />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -62,7 +63,7 @@ import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import { createSignUpSchema } from '@/schemas/signUpSchema';
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { InputPassword } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useConfirmSignUpMutation, useSignInMutation } from '@/composables/useAuthQuery';
 import { getQueryValue } from '@/lib/utils/router';
