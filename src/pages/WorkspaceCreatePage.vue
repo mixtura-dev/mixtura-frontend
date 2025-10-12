@@ -1,14 +1,10 @@
 <template>
   <div class="max-w-2xl w-full mx-auto py-6 sm:p-4">
-
     <Card>
       <CardHeader>
-        <CardTitle>
-          Create New Workspace
-        </CardTitle>
+        <CardTitle> Create New Workspace </CardTitle>
         <CardDescription>
-          Here you can create new workspace with new players, and set them your
-          rank.
+          Here you can create new workspace with new players, and set them your rank.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -23,10 +19,7 @@
         </Button>
       </CardFooter>
     </Card>
-
-
   </div>
-
 </template>
 
 <script setup lang="ts">

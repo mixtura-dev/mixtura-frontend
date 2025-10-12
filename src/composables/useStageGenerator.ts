@@ -8,7 +8,7 @@ import { ref } from 'vue'
 
 export type ParticipantSlot = { id: Id | null; position?: number } | null
 
-export const useStageGenerator = (stage: InputStage, storage: ) => {
+export const useStageGenerator = (stage: InputStage) => {
   const stageRef = ref<InputStage>(stage)
 
   const roundRobin = () => {}
@@ -51,39 +51,34 @@ export const useStageGenerator = (stage: InputStage, storage: ) => {
     }
     ensureNoDuplicates(seeding)
     seeding = fixSeeding(seeding, size)
-  if (stageRef.value.type !== 'round_robin' && stageRef.value.settings.balanceByes) {
-    seeding = balanceByes(seeding, stageRef.value.settings.size)
-  }
-
-  const getSlotsUsingName = (seeding: Seeding, positions: number[]) => {
-    const participants = extractParticipantsFromSeeding(stageRef.value.tournamentId, seeding)
-
-
-
-  }
-
-  const registerParticipants = (participants: OmitId<Participant>[]) => {
-  }
-
-  const run = () => {
-    switch (stageRef.value.type) {
-      case 'round_robin':
-        roundRobin()
-        break
-      case 'single_elim':
-        singleElimination()
-        break
-      case 'double_elim':
-        doubleElimination()
-        break
-      default:
-        throw Error('Unknown stage type.')
+    if (stageRef.value.type !== 'round_robin' && stageRef.value.settings.balanceByes) {
+      seeding = balanceByes(seeding, stageRef.value.settings.size)
     }
-    
-  }
-  return {
-    run,
-    getSlots,
+
+    const getSlotsUsingName = (seeding: Seeding, positions: number[]) => {
+      const participants = extractParticipantsFromSeeding(stageRef.value.tournamentId, seeding)
+    }
+
+    const registerParticipants = (participants: OmitId<Participant>[]) => {}
+
+    const run = () => {
+      switch (stageRef.value.type) {
+        case 'round_robin':
+          roundRobin()
+          break
+        case 'single_elim':
+          singleElimination()
+          break
+        case 'double_elim':
+          doubleElimination()
+          break
+        default:
+          throw Error('Unknown stage type.')
+      }
+    }
+    return {
+      run,
+      getSlots,
+    }
   }
 }
-

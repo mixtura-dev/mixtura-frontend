@@ -5,7 +5,6 @@ export const IS_APPLE = navigator.userAgent.search(/OS X|iPhone|iPad|iOS/i) !== 
 export const IS_ANDROID = navigator.userAgent.toLowerCase().indexOf('android') !== -1
 export const IS_CHROMIUM = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor)
 
-
 // https://stackoverflow.com/a/58065241
 export const IS_APPLE_MOBILE =
   (/iPad|iPhone|iPod/.test(navigator.platform) ||
@@ -20,7 +19,7 @@ export const IS_SAFARI =
   )
 
 export const IS_FIREFOX = navigator.userAgent.toLowerCase().indexOf('firefox') > -1
-export const IS_MOBILE_SAFARI = IS_SAFARI && IS_APPLE_MOBILE;
+export const IS_MOBILE_SAFARI = IS_SAFARI && IS_APPLE_MOBILE
 export const IS_MOBILE =
   (navigator.maxTouchPoints === undefined || navigator.maxTouchPoints > 0) &&
   navigator.userAgent.search(

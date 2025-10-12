@@ -23,7 +23,7 @@ export function useRipple() {
   function addClick(x: number, y: number, pointerId: number) {
     const now = Date.now()
     clicks.value = [
-      ...clicks.value.filter(c => c.date + WAVE_LIFETIME > now),
+      ...clicks.value.filter((c) => c.date + WAVE_LIFETIME > now),
       { x, y, date: now, pointerId },
     ]
     clearClicks()
@@ -35,7 +35,10 @@ export function useRipple() {
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
 
-    timers.set(e.pointerId, setTimeout(() => addClick(x, y, e.pointerId), RIPPLE_DELAY))
+    timers.set(
+      e.pointerId,
+      setTimeout(() => addClick(x, y, e.pointerId), RIPPLE_DELAY),
+    )
   }
 
   function onPointerCancel(e: PointerEvent) {
@@ -45,7 +48,7 @@ export function useRipple() {
   }
 
   onUnmounted(() => {
-    timers.forEach(t => clearTimeout(t))
+    timers.forEach((t) => clearTimeout(t))
     if (clearTimer) clearTimeout(clearTimer)
   })
 

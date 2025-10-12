@@ -7,11 +7,12 @@ import { visualizer } from 'rollup-plugin-visualizer'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 // https://vite.dev/config/
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ mode = 'development' }) => {
   const env = loadEnv(mode, process.cwd())
   return {
     plugins: [vue(), vueDevTools(), tailwindcss(), visualizer()],
     define: {
+      //Also add type to '/env.d.ts'
       __APP_VERSION__: JSON.stringify(version),
     },
     build: {
@@ -20,7 +21,7 @@ export default defineConfig(({ mode }) => {
           manualChunks: {
             vue: ['vue', 'vue-router', 'pinia', 'vue-i18n', '@vueuse/core'],
             validation: ['vee-validate', 'zod'],
-            ui: ['reka-ui', 'vue-sonner', 'vue-slicksort'],
+            ui: ['reka-ui', 'vue-sonner'],
           },
         },
       },

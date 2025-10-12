@@ -74,6 +74,7 @@ export default {
     },
   },
   menu: {
+    menu: 'Menu',
     home: 'Home',
     settings: 'Settings',
     balancer: 'Balancer',

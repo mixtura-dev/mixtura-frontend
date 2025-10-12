@@ -8,4 +8,3 @@ export const messages = {
 export type SupportedLocale = keyof typeof messages
 
 export const SUPPORTED_LOCALES = Object.keys(messages) as SupportedLocale[]
-
