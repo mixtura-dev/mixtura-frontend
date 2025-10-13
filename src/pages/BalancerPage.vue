@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 flex flex-col w-fi min-h-full">
+  <section class="p-4 flex flex-col w-fi min-h-full">
     <!-- <Bracket :stage :matches :rounds :participants /> -->
     <Image
       src="https://wallpapers.com/images/featured-full/4k-lake-dxz0letfst501hgv.jpg"
@@ -71,7 +71,7 @@
         </InputGroupAddon>
       </InputGroup>
     </div>
-  </div>
+  </section>
 </template>
 <script lang="ts" setup>
 import Bracket from '@/components/bracket/Bracket.vue'

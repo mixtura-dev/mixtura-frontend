@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col md:flex-row min-h-full">
+  <section class="flex flex-col md:flex-row min-h-full">
     <div class="w-full mx-auto max-w-[1200px] p-4 md:p-8 space-y-6">
       <h2 class="text-2xl font-bold">{{ $t('account.title') }}</h2>
       {{ appVersion }}
@@ -27,7 +27,7 @@
       <AccountProviders />
       <AccountDelete />
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">

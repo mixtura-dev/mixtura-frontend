@@ -16,7 +16,6 @@ export default {
     sending: 'Sending...',
     verifying: 'Verifying...',
     creating: 'Creating...',
-
     actions: {
       submit: 'Submit',
       continue: 'Continue',
@@ -67,6 +66,8 @@ export default {
       min: 'Password must be at least 6 characters',
       max: 'Password must be at most 32 characters',
       invalid: 'Password must include at least one letter and one number',
+      hide: 'Hide password',
+      show: 'Show password',
     },
     repeatPassword: {
       required: 'Please confirm your password',
@@ -133,6 +134,7 @@ export default {
       description: 'Connect your account with other services',
       connectAccount: 'Connect your {provider} account',
       connect: 'Connect',
+      connectingAccount: 'Connecting your account...',
       connectAnother: 'Connect another',
       maxAccounts: 'Max {limit} account | Max {limit} accounts',
     },

@@ -1,8 +1,6 @@
 <template>
-  <div class="flex flex-1 h-full">
-    <div
-      class="flex flex-col items-center flex-1 flex-shrink-0 px-5 pt-16 pb-8 border-r shadow-lg bg-background"
-    >
+  <section class="flex flex-1 h-full" :aria-labelledby="`${formKey}-title`">
+    <div class="flex flex-col items-center flex-1 flex-shrink-0 px-5 pt-16 pb-8 border-r shadow-lg bg-background">
       <div class="flex-1 flex flex-col justify-center max-w-[400px] w-full">
         <div class="mb-6">
           <h1 class="mt-8 mb-2 text-2xl lg:text-3xl font-bold">
@@ -15,16 +13,14 @@
 
         <div class="flex gap-4">
           <Button variant="outline" size="icon" asChild>
-            <a
-              href="https://discord.com/api/oauth2/authorize?client_id=443050669079920640&response_type=code&scope=identify&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Foauth%2Fcallback%2Fdiscord"
-            >
+            <a aria-label="Войти через Discord"
+              href="https://discord.com/api/oauth2/authorize?client_id=443050669079920640&response_type=code&scope=identify&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Foauth%2Fcallback%2Fdiscord">
               <DiscrodIcon />
             </a>
           </Button>
           <Button variant="outline" size="icon" asChild>
-            <a
-              href="https://id.twitch.tv/oauth2/authorize?client_id=9vaajcndpjuw2hcxzcglzjcppxisv7&response_type=code&scope=&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Foauth%2Fcallback%2Ftwitch"
-            >
+            <a aria-label="Войти через Twitch"
+              href="https://id.twitch.tv/oauth2/authorize?client_id=9vaajcndpjuw2hcxzcglzjcppxisv7&response_type=code&scope=&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Foauth%2Fcallback%2Ftwitch">
               <TwitchIcon />
             </a>
           </Button>
@@ -42,7 +38,8 @@
         <form @submit="onSubmit" class="space-y-4 flex flex-col">
           <slot />
 
-          <Button type="submit" :disabled="isLoading">
+          <Button type="submit" :disabled="isLoading" :aria-disabled="isLoading">
+
             {{ $t(`${formKey}.submit`) }}
           </Button>
 
@@ -62,10 +59,11 @@
 
     <aside class="flex-col items-center justify-center flex-1 flex-shrink hidden basis-1/4 xl:flex">
       <blockquote class="text-3xl font-light italic max-w-md text-center">
-        “The only true wisdom is in knowing you know nothing.” — Socrates
+        “The only true wisdom is in knowing you know nothing.”
+        <cite class="block mt-2 text-sm font-normal">— Socrates</cite>
       </blockquote>
     </aside>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">

@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-2xl w-full mx-auto py-6 sm:p-4">
+  <section class="max-w-2xl w-full mx-auto py-6 sm:p-4">
     <Card>
       <CardHeader>
         <CardTitle> Create New Workspace </CardTitle>
@@ -19,7 +19,7 @@
         </Button>
       </CardFooter>
     </Card>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">

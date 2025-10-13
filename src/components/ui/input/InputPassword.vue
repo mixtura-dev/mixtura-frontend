@@ -1,28 +1,16 @@
 <template>
   <InputGroup :class="cn('w-full', props.class)">
-    <InputGroupInput
-      v-model="modelValue"
-      :type="showPassword ? 'text' : 'password'"
-      :disabled="props.disabled"
-      v-bind="$attrs"
-    />
+    <InputGroupInput v-model="modelValue" :type="showPassword ? 'text' : 'password'" :disabled="props.disabled"
+      v-bind="$attrs" />
     <InputGroupAddon align="inline-end">
-      <InputGroupButton
-        v-if="modelValue"
-        type="button"
-        size="icon-xs"
-        @click="clearInput"
-        :disabled="props.disabled"
-      >
+      <InputGroupButton v-if="modelValue" type="button" size="icon-xs" @click="clearInput" :disabled="props.disabled">
         <X />
       </InputGroupButton>
-      <InputGroupButton
-        type="button"
-        size="icon-xs"
-        @click="togglePassword"
-        :disabled="props.disabled"
-      >
-        <component :is="showPassword ? EyeOff : Eye" class="h-4 w-4" />
+      <InputGroupButton type="button" size="icon-xs" @click="togglePassword" :disabled="props.disabled">
+        <component :is="showPassword ? EyeOff : Eye" aria-hidden="true" />
+        <span class="hidden-visually">
+          {{ showPassword ? $t('validation.password.hide') : $t('validation.passwod.show') }}
+        </span>
       </InputGroupButton>
     </InputGroupAddon>
   </InputGroup>

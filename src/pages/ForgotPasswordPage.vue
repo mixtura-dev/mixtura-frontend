@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col justify-center items-center pt-32">
+  <section class="flex flex-col justify-center items-center pt-32">
     <div class="flex flex-col px-5 max-w-lg w-full">
       <h1 class="lg:text-3xl text-2xl tracking-tight font-bold mb-2">
         {{ $t('form.forgotPassword.title') }}
@@ -39,7 +39,7 @@
         </RouterLink>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">
