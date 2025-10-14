@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  mixweb.dependencies:
+    container_name: mixweb.dependencies
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile_dependencies
+    command: pnpm install 
+  mixweb.develop:
+    container_name: mixweb.develop
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile_develop
+    volumes:
+      - './:/app'
+      - '/app/node_modules'
+    ports:
+      - '8080:8080'
+    depends_on:
+      - mixweb.dependencies
+    command: pnpm start-in-docker
+
+  mixweb.production:
+    container_name: mixweb.production
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile_production
+    ports:
+      - 80:80
