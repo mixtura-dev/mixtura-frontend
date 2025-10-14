@@ -1,3 +1,4 @@
+import { copy } from '@/helpers/object/copy'
 import { SettingsSchema, type ValidatedSettings } from '@/schemas/settingsSchema'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
@@ -37,7 +38,7 @@ const DEFAULT_SETTINGS: ValidatedSettings = {
 }
 
 export const useSettingsStore = defineStore('settings', () => {
-  const state = ref<ValidatedSettings>(structuredClone(DEFAULT_SETTINGS))
+  const state = ref<ValidatedSettings>(copy(DEFAULT_SETTINGS))
 
   const updateSettings = <K extends keyof ValidatedSettings>(
     key: K,
@@ -53,7 +54,7 @@ export const useSettingsStore = defineStore('settings', () => {
   }
 
   const resetSettings = () => {
-    state.value = structuredClone(DEFAULT_SETTINGS)
+    state.value = copy(DEFAULT_SETTINGS)
   }
   return {
     state,

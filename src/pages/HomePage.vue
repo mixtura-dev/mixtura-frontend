@@ -1,29 +1,46 @@
 <template>
   <section class="flex flex-row min-h-full">
     <div class="max-w-[1200px] w-full ml-auto p-4">
-      <div ref="screenshotRef" class="grid bg-background w-full h-fit grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-5">
-        <div class="team-container flex flex-col gap-2 p-4 border-2 border-dashed rounded-lg min-w-3xs">
+      <div
+        ref="screenshotRef"
+        class="grid bg-background w-full h-fit grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-5"
+      >
+        <div
+          class="team-container flex flex-col gap-2 p-4 border-2 border-dashed rounded-lg min-w-3xs"
+        >
           <h2 class="text-xl font-semibold md:text-right">
             {{ settings.state.teams.teamA.name }}
           </h2>
           <draggable v-model="teamAPlayers" group="teams" :swap="true" item-key="id">
             <template #item="{ element, index }">
-              <PlayerItem :name="element.name" :roles="element.roles" :rankPoints="element.rankPoints"
-                :teamColor="settings.state.teams.teamA.color" :slotIndex="index" />
+              <PlayerItem
+                :name="element.name"
+                :roles="element.roles"
+                :rankPoints="element.rankPoints"
+                :teamColor="settings.state.teams.teamA.color"
+                :slotIndex="index"
+              />
             </template>
           </draggable>
         </div>
 
         <span class="italic font-black text-2xl self-center justify-self-center">VS</span>
 
-        <div class="team-container flex flex-col gap-2 p-4 border-2 border-dashed rounded-lg min-w-3xs">
+        <div
+          class="team-container flex flex-col gap-2 p-4 border-2 border-dashed rounded-lg min-w-3xs"
+        >
           <h2 class="text-xl font-semibold">
             {{ settings.state.teams.teamB.name }}
           </h2>
           <draggable v-model="teamBPlayers" group="teams" item-key="id">
             <template #item="{ element, index }">
-              <PlayerItem :name="element.name" :roles="element.roles" :rankPoints="element.rankPoints"
-                :teamColor="settings.state.teams.teamB.color" :slotIndex="index" />
+              <PlayerItem
+                :name="element.name"
+                :roles="element.roles"
+                :rankPoints="element.rankPoints"
+                :teamColor="settings.state.teams.teamB.color"
+                :slotIndex="index"
+              />
             </template>
           </draggable>
         </div>
@@ -48,7 +65,10 @@
         <Button @click="makeScreenshot" size="icon" variant="outline">
           <ClipboardIcon />
         </Button>
-        <Button @click="currentLocale === 'en' ? (currentLocale = 'ru') : (currentLocale = 'en')" variant="secondary">
+        <Button
+          @click="currentLocale === 'en' ? (currentLocale = 'ru') : (currentLocale = 'en')"
+          variant="secondary"
+        >
           Change language
         </Button>
       </div>

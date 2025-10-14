@@ -1,13 +1,10 @@
 <template>
-  <RouterView
-    class="test"
-    :style="{
-      paddingTop: top,
-      paddingRight: right,
-      paddingBottom: bottom,
-      paddingLeft: left,
-    }"
-  />
+  <RouterView class="dot-pattern  " :style="{
+    paddingTop: top,
+    paddingRight: right,
+    paddingBottom: bottom,
+    paddingLeft: left,
+  }" />
   <Toaster position="top-right" class="pointer-events-auto" />
 </template>
 

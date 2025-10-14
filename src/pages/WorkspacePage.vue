@@ -3,14 +3,23 @@
     <h1 class="text-2xl font-bold">Workspaces</h1>
     <div class="flex justify-between my-8 flex-col gap-2 md:gap-3 md:flex-row">
       <InputGroup class="w-full bg-card md:w-64">
-        <InputGroupInput type="search" v-model="search" :aria-describedby="search ? 'clear-search' : undefined"
-          placeholder="Search..." />
+        <InputGroupInput
+          type="search"
+          v-model="search"
+          :aria-describedby="search ? 'clear-search' : undefined"
+          placeholder="Search..."
+        />
         <InputGroupAddon>
           <Search />
         </InputGroupAddon>
         <InputGroupAddon align="inline-end">
-          <InputGroupButton v-show="search" id="clear-search" size="icon-xs" @click="search = ''"
-            aria-label="Clear search">
+          <InputGroupButton
+            v-show="search"
+            id="clear-search"
+            size="icon-xs"
+            @click="search = ''"
+            aria-label="Clear search"
+          >
             <X aria-hidden="true" />
           </InputGroupButton>
         </InputGroupAddon>
@@ -22,8 +31,12 @@
       </Button>
     </div>
     <template v-if="isLoading">
-      <ul role="status" aria-live="polite" aria-busy="true"
-        class="mx-auto grid grid-cols-1 gap-2 md:gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
+      <ul
+        role="status"
+        aria-live="polite"
+        aria-busy="true"
+        class="mx-auto grid grid-cols-1 gap-2 md:gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3"
+      >
         <WorkspaceSkeleton v-for="n in 2" :key="n" />
       </ul>
     </template>
@@ -39,15 +52,21 @@
     </template>
 
     <template v-else-if="isEmptyResponse">
-      <div role="status" aria-live="polite" class="space-y-4 bg-card rounded-lg border border-dashed p-6 text-center">
+      <div
+        role="status"
+        aria-live="polite"
+        class="space-y-4 bg-card rounded-lg border border-dashed p-6 text-center"
+      >
         <div class="flex flex-col max-w-sm items-center gap-2 mx-auto">
           <div
-            class="[&_svg]:pointer-events-none [&_svg]:shrink-0 bg-muted text-foreground flex size-10 shrink-0 items-center justify-center rounded-lg [&_svg:not([class*='size-'])]:size-6">
+            class="[&_svg]:pointer-events-none [&_svg]:shrink-0 bg-muted text-foreground flex size-10 shrink-0 items-center justify-center rounded-lg [&_svg:not([class*='size-'])]:size-6"
+          >
             <Folder aria-hidden="true" />
           </div>
           <p class="text-lg font-medium tracking-tight">No projects</p>
-          <p class="text-sm text-muted-foreground">You haven't created any projects yet. Get started by creating your
-            first project</p>
+          <p class="text-sm text-muted-foreground">
+            You haven't created any projects yet. Get started by creating your first project
+          </p>
         </div>
 
         <Button @click="goToCreateWorkspace">
@@ -58,10 +77,17 @@
     </template>
 
     <template v-else>
-      <ul role="list"
-        class="mx-auto grid grid-cols-1 gap-2 md:gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
-        <WorkspaceCard v-for="workspace in filteredWorkspaces" role="listitem" :key="workspace.id"
-          :title="workspace.title" :subtitle="workspace.subtitle" />
+      <ul
+        role="list"
+        class="mx-auto grid grid-cols-1 gap-2 md:gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3"
+      >
+        <WorkspaceCard
+          v-for="workspace in filteredWorkspaces"
+          role="listitem"
+          :key="workspace.id"
+          :title="workspace.title"
+          :subtitle="workspace.subtitle"
+        />
       </ul>
     </template>
   </section>

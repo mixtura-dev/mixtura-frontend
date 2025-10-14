@@ -5,6 +5,7 @@ import { ref, watchEffect } from 'vue'
 export const useAppStore = defineStore('app', () => {
   const state = ref({
     isDrawerOpen: false,
+    disabledAnimations: false,
   })
 
   const isLargeScreen = useMediaQuery('(min-width: 768px)')

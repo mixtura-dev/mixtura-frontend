@@ -225,7 +225,7 @@
   --shadow-2xl: var(--shadow-2xl);
 }
 
-.test {
+.dot-pattern {
   background-color: var(--color-accent);
   background-image: radial-gradient(transparent 1px, var(--color-background) 1px);
   background-size: 17px 17px;
@@ -258,12 +258,21 @@
     clip-path: inset(100%);
   }
 }
+.no-animations,
+.no-animations [data-state],
+.no-animations [data-side] {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
 
 /* Turn off animations if browser prefers to off it */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
-  *::after {
+  *::after,
+  [data-state],
+  [data-side] {
     animation: none !important;
     transition: none !important;
     transform: none !important;
@@ -285,6 +294,16 @@ body {
 button {
   @apply !cursor-pointer;
 }
+
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+img,
+video {
+  -webkit-user-drag: none;
+}
+
 #main {
   scrollbar-width: thin;
 }

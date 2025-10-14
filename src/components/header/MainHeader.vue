@@ -1,9 +1,15 @@
 <template>
-  <header role="banner" class="flex z-20 bg-background h-12 items-center flex-shrink-0 border-b w-full">
+  <header
+    role="banner"
+    class="flex z-20 bg-background h-12 items-center flex-shrink-0 border-b w-full"
+  >
     <div class="flex h-full items-center justify-between px-3 flex-1 overflow-x-auto gap-x-8">
       <div class="flex items-center">
-        <RouterLink to="/" class="flex-shrink-0 hidden md:flex items-center justify-center"
-          :aria-label="$t('menu.home')">
+        <RouterLink
+          to="/"
+          class="flex-shrink-0 hidden md:flex items-center justify-center"
+          :aria-label="$t('menu.home')"
+        >
           <Scale aria-hidden="true" />
         </RouterLink>
         <div class="flex items-center md:pl-2">
@@ -19,13 +25,13 @@
             <TooltipTrigger asChild>
               <Button variant="ghost" size="icon" class="!p-1 size-7">
                 <HelpCircleIcon aria-hidden="true" />
-                <span class="hidden-visually">Help</span>
+                <span class="hidden-visually"> {{ $t('menu.help') }}</span>
               </Button>
             </TooltipTrigger>
             <TooltipContent class="bg-card shadow-lg border" side="bottom">
-              <p class="font-medium text-xs text-muted-foreground">
-                Help
-              </p>
+              <span class="font-medium text-xs text-muted-foreground">
+                {{ $t('menu.help') }}
+              </span>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -43,5 +49,4 @@ import { HelpCircleIcon, Scale } from 'lucide-vue-next'
 import WorkspaceMenu from './WorkspaceMenu.vue'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-
 </script>

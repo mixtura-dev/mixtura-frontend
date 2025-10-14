@@ -1,5 +1,5 @@
 <template>
-  <Alert class="bg-destructive/15" variant="destructive">
+  <Alert variant="destructive">
     <AlertTriangleIcon />
     <AlertTitle>Request for account deletion</AlertTitle>
     <AlertDescription>

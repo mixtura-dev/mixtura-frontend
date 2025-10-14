@@ -15,7 +15,9 @@
     "types": ["vite/client"],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@/components": ["./src/components/*"],
+      "@/stores": ["./src/stores/*"]
     }
   }
 }

@@ -25,6 +25,7 @@ const props = withDefaults(
       /**
        * Function to sort the segment
        */
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       sortFunction?: (a: any, b: any) => number | undefined
       /**
        * Controls the formatting for the label.
