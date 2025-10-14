@@ -1,5 +1,5 @@
 <template>
-    <main class=" h-full w-full ">
-        <RouterView />
-    </main>
+  <main class="h-full w-full">
+    <RouterView />
+  </main>
 </template>

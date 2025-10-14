@@ -1,61 +1,53 @@
 <template>
-    <AuthForm formKey="form.signUp" linkTo="/sign-in" :isLoading="isLoading" :isFieldDirty="isFieldDirty"
-        :onSubmit="onSubmit">
-        <template #extra-fields>
-            <FormField v-slot="{ componentField }" name="repeatPassword"
-                :validate-on-blur="!isFieldDirty('repeatPassword')">
-                <FormItem>
-                    <FormLabel>{{ $t('form.repeatPassword') }}</FormLabel>
-                    <div class="relative">
-                        <FormControl>
-                            <Input autocomplete="current-password" :type="showConfirmPassword ? 'text' : 'password'"
-                                class="!bg-card pr-10" v-bind="componentField" />
-                        </FormControl>
-                        <button type="button" @click="showConfirmPassword = !showConfirmPassword"
-                            class="absolute right-0 top-1/2 h-full -translate-y-1/2 px-3 flex items-center text-muted-foreground hover:text-foreground">
-                            <EyeIcon v-if="showConfirmPassword" class="h-4 w-4" />
-                            <EyeOffIcon v-else class="h-4 w-4" />
-                        </button>
-                    </div>
-                    <FormMessage class="text-xs text-destructive" />
-                </FormItem>
-            </FormField>
-        </template>
-    </AuthForm>
+  <AuthForm formKey="form.signUp" linkTo="/sign-in" :isLoading="isPending" :onSubmit="onSubmit">
+    <FormField v-slot="{ componentField }" name="email" :validate-on-blur="!isFieldDirty('email')">
+      <FormItem>
+        <FormLabel>{{ $t('common.forms.email') }}</FormLabel>
+        <FormControl>
+          <Input
+            v-bind="componentField"
+            :placeholder="$t('common.forms.email')"
+            type="email"
+            autocomplete="email"
+            class="!bg-card"
+          />
+        </FormControl>
+        <FormMessage class="text-xs text-destructive" />
+      </FormItem>
+    </FormField>
+  </AuthForm>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useAuthStore } from '@/stores/authStore.store'
-import { createSignUpSchema } from '@/schemas/signUpSchema'
-import { useAuthForm } from '@/composables/useAuthForm'
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { useRouter } from 'vue-router'
+import { toast } from 'vue-sonner'
+import { useForm } from 'vee-validate'
+import { toTypedSchema } from '@vee-validate/zod'
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { EyeIcon, EyeOffIcon } from 'lucide-vue-next'
-import type { z } from 'zod'
 import AuthForm from '@/components/auth/AuthForm.vue'
-import { useI18n } from 'vue-i18n'
+import { createSignUpEmailSchema } from '@/schemas/signUpSchema'
+import { useSignUpMutation } from '@/composables/useAuthQuery'
 
-const { t: $t } = useI18n()
+const router = useRouter()
+const schema = createSignUpEmailSchema()
+type FormValues = { email: string }
 
-const showConfirmPassword = ref(false)
-const authStore = useAuthStore()
-const schema = createSignUpSchema()
-type SignUpFormValues = z.infer<typeof schema>
+const { mutate: signUp, isPending } = useSignUpMutation()
+const { handleSubmit, isFieldDirty } = useForm<FormValues>({
+  validationSchema: toTypedSchema(schema),
+  initialValues: { email: '' },
+})
 
-const { isFieldDirty, isLoading, onSubmit } = useAuthForm<SignUpFormValues>(
-    schema,
-    {
-        username: '',
-        password: '',
-        repeatPassword: ''
+const onSubmit = handleSubmit((values) => {
+  signUp(values, {
+    onSuccess: () => {
+      toast.success('Check your email for a verification code')
+      router.push({ path: '/sign-up/verify', query: { email: values.email } })
     },
-    (values) => authStore.signup({ password_again: values.repeatPassword, password: values.password, username: values.username }),
-    {
-        loading: 'toast.signup.loading',
-        success: 'toast.signup.success',
-        error: (err: Error) => $t('error.signupFailed', { message: err.message })
+    onError: (error) => {
+      toast.error(`Error: ${error.message}`)
     },
-    'sign-up'
-)
+  })
+})
 </script>

@@ -1,31 +1,74 @@
 <template>
-  <AuthForm formKey="form.signIn" linkTo="/sign-up" :isLoading="isLoading" :isFieldDirty="isFieldDirty"
-    :onSubmit="onSubmit" />
+  <AuthForm formKey="form.signIn" linkTo="/sign-up" :isLoading="isPending" :onSubmit="onSubmit">
+    <FormField v-slot="{ componentField }" name="login">
+      <FormItem>
+        <FormLabel>{{ $t('common.forms.usernameOrEmail') }}</FormLabel>
+        <FormControl>
+          <Input
+            v-bind="componentField"
+            :placeholder="$t('common.forms.usernameOrEmail')"
+            autocomplete="username"
+            class="!bg-card"
+          />
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    </FormField>
+    <FormField v-slot="{ componentField }" name="password">
+      <FormItem>
+        <div class="flex justify-between items-center">
+          <FormLabel class="h-5">{{ $t('common.forms.password') }}</FormLabel>
+          <RouterLink to="/forgot-password" class="text-xs text-primary hover:underline">
+            {{ $t('form.forgotPassword.title') }}
+          </RouterLink>
+        </div>
+        <FormControl>
+          <InputPassword
+            v-bind="componentField"
+            :placeholder="$t('common.forms.password')"
+            autocomplete="current-password"
+          />
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    </FormField>
+  </AuthForm>
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from '@/stores/authStore.store'
+import { useRouter, useRoute } from 'vue-router'
+import { toast } from 'vue-sonner'
+import { useForm } from 'vee-validate'
+import { toTypedSchema } from '@vee-validate/zod'
 import { createSignInSchema } from '@/schemas/signInSchema'
-import { useAuthForm } from '@/composables/useAuthForm'
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import AuthForm from '@/components/auth/AuthForm.vue'
-import type { z } from 'zod'
+import { useSignInMutation } from '@/composables/useAuthQuery'
+import InputPassword from '@/components/ui/input/InputPassword.vue'
 
-const authStore = useAuthStore()
+const router = useRouter()
+const route = useRoute()
+
 const schema = createSignInSchema()
-type SignInFormValues = z.infer<typeof schema>
+type SignInFormValues = { login: string; password: string }
 
-const { isFieldDirty, isLoading, onSubmit } = useAuthForm<SignInFormValues>(
-  schema,
-  {
-    username: '',
-    password: ''
-  },
-  (values) => authStore.login({ password: values.password, username: values.username }),
-  {
-    loading: 'Logging in...',
-    success: 'Logged in successfully!',
-    error: (err: Error) => `Login failed: ${err.message}`
-  },
-  'sign-in'
-)
+const { mutate: signIn, isPending } = useSignInMutation()
+const { handleSubmit } = useForm<SignInFormValues>({
+  validationSchema: toTypedSchema(schema),
+  initialValues: { login: '', password: '' },
+})
+
+const onSubmit = handleSubmit((values) => {
+  signIn(values, {
+    onSuccess: () => {
+      toast.success('Successfully signed in')
+
+      router.push(route.query.redirect?.toString() || '/')
+    },
+    onError: (error) => {
+      toast.error(`Error: ${error.message}`)
+    },
+  })
+})
 </script>

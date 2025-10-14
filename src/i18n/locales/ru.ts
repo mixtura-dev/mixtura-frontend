@@ -10,14 +10,56 @@ export default {
     add: 'Добавить',
     search: 'Поиск',
     connect: 'Подключить',
+    absolutelySure: 'Вы уверены?',
+    logout: 'Выйти',
+    invalidCode: 'Неверный код',
+    sending: 'Отправка...',
+    verifying: 'Проверка...',
+    creating: 'Создание...',
+
+    actions: {
+      submit: 'Отправить',
+      continue: 'Продолжить',
+      send: 'Отправить',
+      signOut: 'Выйти',
+    },
+    forms: {
+      email: 'Почта',
+      password: 'Пароль',
+      repeatPassword: 'Повторите пароль',
+      username: 'Имя пользователя',
+      usernameOrEmail: 'Почта или логин',
+    },
+    messages: {
+      passwordUpdate: 'Пароль успешно обновлен',
+      checkEmail: 'Проверьте вашу почту для получения кода',
+      enterCode: 'Введите код, который мы отправили на {email}',
+      setCredentials: 'Установите имя пользователя и пароль',
+    },
+    errors: {
+      loginFailed: 'Ошибка входа: {message}',
+      signupFailed: 'Не удалось зарегистрироваться: {message}',
+      resetFailed: 'Ошибка сброса пароля: {message}',
+    },
+  },
+  theme: {
+    title: 'Тема',
+    light: 'Светлая',
+    dark: 'Темная',
+    system: 'Автоматическая',
+    solar: 'Solar',
   },
   validation: {
+    token: {
+      invalid: 'Код должен содержать 6 цифр',
+    },
     username: {
       required: 'Требуется имя пользователя',
       invalidType: 'Имя пользователя должно быть строкой',
       min: 'Имя пользователя должно быть не менее 3 символов',
       max: 'Имя пользователя должно быть не более 20 символов',
       invalid: 'Имя пользователя содержит недопустимые символы',
+      busy: 'Имя пользователя занято',
     },
     password: {
       required: 'Требуется пароль',
@@ -32,7 +74,9 @@ export default {
     },
   },
   menu: {
+    menu: 'Меню',
     home: 'Главная',
+    help: 'Помощь',
     settings: 'Настройки',
     balancer: 'Балансер',
     workspace: 'Пространство',
@@ -52,16 +96,52 @@ export default {
       linkText: 'Уже есть аккаунт?',
       linkLabel: 'Войти',
     },
-    username: 'Имя пользователя',
-    password: 'Пароль',
-    repeatPassword: 'Повторите пароль',
+    forgotPassword: {
+      title: 'Забыли пароль?',
+      subtitle: 'Введите вашу почту, и мы вышлем вам код для сброса пароля',
+      submit: 'Отправить код сброса',
+      linkText: 'Уже есть аккаунт?',
+      linkLabel: 'Войти',
+    },
+    completeRegistration: {
+      title: 'Завершите регистрацию',
+      subtitle: 'Установите имя пользователя и пароль',
+      submit: 'Зарегистрироваться',
+      creatingAccount: 'Создание аккаунта...',
+    },
+    verifyEmail: {
+      title: 'Подтвердите вашу почту',
+      subtitle: 'Введите код, который мы отправили на {email}',
+      submit: 'Продолжить',
+      verifying: 'Проверка...',
+    },
+    verifyPasswordReset: {
+      title: 'Сброс пароля',
+      subtitle: 'Введите код, который мы отправили на {email}',
+      submit: 'Продолжить',
+      verifying: 'Проверка...',
+    },
     terms:
       'Продолжая, вы соглашаетесь с Условиями использования и Политикой конфиденциальности, а также на получение периодических писем с обновлениями.',
+  },
+  account: {
+    title: 'Настройки аккаунта',
+    profile: {
+      title: 'Информация профиля',
+    },
+    connections: {
+      title: 'Подключения',
+      description: 'Подключите свой аккаунт к другим сервисам',
+      connectAccount: 'Подключите ваш {provider} аккаунт',
+      connect: 'Подключить',
+      connectingAccount: 'Подключаем ваш аккаунт...',
+      connectAnother: 'Подключить ещё',
+      maxAccounts:
+        'Максимум {limit} аккаунт | Максимум {limit} аккаунт | Максимум {limit} аккаунтов',
+    },
   },
   error: {
     notFound: 'Результаты не найдены',
     noResults: 'Ваш поиск не дал результатов',
-    loginFailed: 'Ошибка входа: {message}',
-    signupFailed: 'Не удалось зарегистрироваться: {message}',
   },
 }

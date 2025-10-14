@@ -6,6 +6,7 @@ defineProps<{
   data: {
     name: string
     color: string
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     value: any
   }[]
 }>()

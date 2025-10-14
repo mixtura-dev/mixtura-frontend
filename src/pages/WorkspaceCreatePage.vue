@@ -1,25 +1,25 @@
 <template>
-  <div class="max-w-2xl w-full mx-auto py-6 sm:p-4">
-    <div class=" bg-card border  rounded ">
-      <div class=" px-4 md:px-6 py-4 border-b">
-        <h1 class="text-lg font-semibold ">Create New Workspace</h1>
-        <p class=" text-muted-foreground text-sm">Here you can create new workspace with new players, and set them your
-          rank.</p>
-      </div>
-      <div class="px-4 md:px-6 py-4 border-b">
+  <section class="max-w-2xl w-full mx-auto py-6 sm:p-4">
+    <Card>
+      <CardHeader>
+        <CardTitle> Create New Workspace </CardTitle>
+        <CardDescription>
+          Here you can create new workspace with new players, and set them your rank.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
         <Input />
-      </div>
-      <div class="flex sm:flex-row flex-col  px-4 md:px-6 py-4 justify-end gap-2">
+      </CardContent>
+      <CardFooter class="flex sm:flex-row flex-col justify-end gap-2">
         <Button variant="outline" size="sm" @click="router.back()">
           {{ $t('common.cancel') }}
         </Button>
         <Button size="sm" @click="handleSubmit">
           {{ $t('common.add') }}
         </Button>
-      </div>
-    </div>
-  </div>
-
+      </CardFooter>
+    </Card>
+  </section>
 </template>
 
 <script setup lang="ts">
@@ -27,6 +27,12 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Card } from '@/components/ui/card'
+import CardHeader from '@/components/ui/card/CardHeader.vue'
+import CardTitle from '@/components/ui/card/CardTitle.vue'
+import CardDescription from '@/components/ui/card/CardDescription.vue'
+import CardContent from '@/components/ui/card/CardContent.vue'
+import CardFooter from '@/components/ui/card/CardFooter.vue'
 const title = ref('')
 const subtitle = ref('')
 const router = useRouter()
