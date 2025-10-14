@@ -1,21 +1,29 @@
 import { useMediaQuery } from '@vueuse/core'
 import { defineStore } from 'pinia'
-import { ref, watchEffect } from 'vue'
+import { reactive, watchEffect } from 'vue'
+
+type AnimationLevels = 'level-0' | 'level-1' | 'level-2' 
+
+interface AppState {
+  isDrawerOpen: boolean  
+  animationLevel: AnimationLevels
+}
 
 export const useAppStore = defineStore('app', () => {
-  const state = ref({
+  const state = reactive<AppState>({
     isDrawerOpen: false,
+    animationLevel: "level-2"
   })
 
   const isLargeScreen = useMediaQuery('(min-width: 768px)')
 
   const closeDrawer = () => {
-    state.value.isDrawerOpen = false
+    state.isDrawerOpen = false
   }
 
   watchEffect(() => {
     if (isLargeScreen.value) {
-      state.value.isDrawerOpen = false
+      state.isDrawerOpen = false
     }
   })
 
