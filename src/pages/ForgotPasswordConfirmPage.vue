@@ -11,12 +11,8 @@
           <FormItem>
             <FormLabel>{{ $t('common.forms.password') }}</FormLabel>
             <FormControl>
-              <InputPassword
-                class="bg-card"
-                v-bind="componentField"
-                :placeholder="$t('common.forms.password')"
-                autocomplete="current-password"
-              />
+              <InputPassword class="bg-card" v-bind="componentField" :placeholder="$t('common.forms.password')"
+                autocomplete="current-password" />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -26,12 +22,8 @@
           <FormItem>
             <FormLabel>{{ $t('common.forms.repeatPassword') }}</FormLabel>
             <FormControl>
-              <InputPassword
-                class="bg-card"
-                v-bind="componentField"
-                :placeholder="$t('common.forms.repeatPassword')"
-                autocomplete="current-password"
-              />
+              <InputPassword class="bg-card" v-bind="componentField" :placeholder="$t('common.forms.repeatPassword')"
+                autocomplete="current-password" />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -43,9 +35,9 @@
       </form>
       <div class="text-center text-sm mt-8">
         {{ $t('form.signIn.linkText') }}
-        <RouterLink to="/sign-in" class="text-primary hover:underline ml-1">
-          {{ $t('form.signIn.linkLabel') }}
-        </RouterLink>
+        <Link to="/sign-in" class="text-primary hover:underline ml-1">
+        {{ $t('form.signIn.linkLabel') }}
+        </Link>
       </div>
     </div>
   </section>
@@ -64,6 +56,7 @@ import { Button } from '@/components/ui/button'
 import { useConfirmResetPasswordMutation } from '@/composables/useAuthQuery'
 import { getQueryValue } from '@/lib/utils/router'
 import { InputPassword } from '@/components/ui/input'
+import { Link } from '@/components/ui/link'
 
 const { t } = useI18n()
 const route = useRoute()

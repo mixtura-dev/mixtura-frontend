@@ -4,12 +4,8 @@
       <FormItem>
         <FormLabel>{{ $t('common.forms.usernameOrEmail') }}</FormLabel>
         <FormControl>
-          <Input
-            v-bind="componentField"
-            :placeholder="$t('common.forms.usernameOrEmail')"
-            autocomplete="username"
-            class="!bg-card"
-          />
+          <Input v-bind="componentField" :placeholder="$t('common.forms.usernameOrEmail')" autocomplete="username"
+            class="!bg-card" />
         </FormControl>
         <FormMessage />
       </FormItem>
@@ -18,16 +14,13 @@
       <FormItem>
         <div class="flex justify-between items-center">
           <FormLabel class="h-5">{{ $t('common.forms.password') }}</FormLabel>
-          <RouterLink to="/forgot-password" class="text-xs text-primary hover:underline">
-            {{ $t('form.forgotPassword.title') }}
-          </RouterLink>
+          <Link to="/forgot-password" class="text-xs text-primary hover:underline">
+          {{ $t('form.forgotPassword.title') }}
+          </Link>
         </div>
         <FormControl>
-          <InputPassword
-            v-bind="componentField"
-            :placeholder="$t('common.forms.password')"
-            autocomplete="current-password"
-          />
+          <InputPassword v-bind="componentField" :placeholder="$t('common.forms.password')"
+            autocomplete="current-password" />
         </FormControl>
         <FormMessage />
       </FormItem>
@@ -43,9 +36,11 @@ import { toTypedSchema } from '@vee-validate/zod'
 import { createSignInSchema } from '@/schemas/signInSchema'
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import AuthForm from '@/components/auth/AuthForm.vue'
 import { useSignInMutation } from '@/composables/useAuthQuery'
-import InputPassword from '@/components/ui/input/InputPassword.vue'
+import { InputPassword } from '@/components/ui/input'
+import { Link } from '@/components/ui/link'
+import AuthForm from '@/components/auth/AuthForm.vue'
+
 
 const router = useRouter()
 const route = useRoute()

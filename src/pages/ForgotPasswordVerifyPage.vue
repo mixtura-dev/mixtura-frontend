@@ -9,27 +9,16 @@
       </p>
 
       <form @submit="onSubmit" class="w-full space-y-4">
-        <FormField
-          v-slot="{ componentField, value }"
-          name="token"
-          :validate-on-blur="!isFieldDirty('token')"
-        >
+        <FormField v-slot="{ componentField, value }" name="token" :validate-on-blur="!isFieldDirty('token')">
           <FormItem>
             <FormControl>
-              <PinInput
-                id="pin-input"
-                :model-value="value"
-                placeholder="○"
-                class="flex items-center justify-center mb-1"
-                otp
-                type="number"
-                :name="componentField.name"
+              <PinInput id="pin-input" :model-value="value" placeholder="○"
+                class="flex items-center justify-center mb-1" otp type="number" :name="componentField.name"
                 @update:model-value="
                   (arrStr) => {
                     setFieldValue('token', arrStr as unknown as string)
                   }
-                "
-              >
+                ">
                 <PinInputGroup>
                   <template v-for="(id, index) in 6" :key="id">
                     <PinInputSlot class="rounded-md border bg-background" :index="index" />
@@ -50,9 +39,9 @@
       </form>
       <div class="text-center text-sm mt-8">
         {{ $t('form.signIn.linkText') }}
-        <RouterLink to="/sign-in" class="text-primary hover:underline ml-1">
-          {{ $t('form.signIn.linkLabel') }}
-        </RouterLink>
+        <Link to="/sign-in" class="text-primary hover:underline ml-1">
+        {{ $t('form.signIn.linkLabel') }}
+        </Link>
       </div>
     </div>
   </section>
@@ -71,6 +60,7 @@ import { useVerifyResetPasswordMutation } from '@/composables/useAuthQuery'
 import { getQueryValue } from '@/lib/utils/router'
 import { PinInput, PinInputGroup, PinInputSeparator, PinInputSlot } from '@/components/ui/pin-input'
 import { createForgotPasswordVerifySchema } from '@/schemas/forgotPasswordSchema'
+import { Link } from '@/components/ui/link'
 
 const { t } = useI18n()
 const route = useRoute()

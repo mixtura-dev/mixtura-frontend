@@ -15,23 +15,14 @@
           <DrawerHeader>
             <div class="flex flex-col mt-2 gap-2">
               <template v-for="group in visibleGroups" :key="group.id">
-                <Button
-                  v-for="item in group.items"
-                  :key="item.path"
-                  @click="appStore.closeDrawer"
-                  size="sm"
-                  class="justify-start"
-                  variant="ghost"
-                  asChild
-                >
-                  <RouterLink
-                    :to="item.path"
-                    :title="item.labelKey"
-                    class="flex items-center gap-2 text-muted-foreground/60 hover:text-foreground transition-colors"
-                  >
-                    <component :is="item.icon" class="size-5" />
-                    {{ $t(item.labelKey) }}
-                  </RouterLink>
+                <Button v-for="item in group.items" :key="item.path" @click="appStore.closeDrawer" size="sm"
+                  class="justify-start" variant="ghost" asChild>
+                  <Link :to="item.path" :title="item.labelKey" active-class="text-foreground bg-muted"
+                    inactive-class="text-muted-foreground/60 hover:text-foreground "
+                    class="flex items-center gap-2 transition-colors">
+                  <component :is="item.icon" class="size-5" />
+                  {{ $t(item.labelKey) }}
+                  </Link>
                 </Button>
               </template>
             </div>
@@ -41,10 +32,7 @@
     </div>
 
     <MainHeader />
-    <div
-      :inert="appStore.state.isDrawerOpen ? true : false"
-      class="flex flex-1 w-full overflow-y-hidden"
-    >
+    <div :inert="appStore.state.isDrawerOpen ? true : false" class="flex flex-1 w-full overflow-y-hidden">
       <MainSidebar :groups="visibleGroups" v-if="!hideSidebar" />
       <ShortcutsDialog />
       <main id="main" class="flex-grow h-full overflow-y-auto">
@@ -68,6 +56,7 @@ import { computed, defineAsyncComponent } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAppStore } from '@/stores/appStore.store'
 import { NAV_GROUPS } from '@/constants/navigation'
+import { Link } from '@/components/ui/link'
 
 const route = useRoute()
 const hideSidebar = computed(() => route.meta.hideSidebar === true)
@@ -79,9 +68,4 @@ const visibleGroups = computed(() => {
   return NAV_GROUPS.filter((group) => !group.match || group.match.test(path))
 })
 </script>
-<style scoped>
-.router-link-exact-active {
-  color: var(--foreground) !important;
-  background-color: var(--muted) !important;
-}
-</style>
+<style scoped></style>

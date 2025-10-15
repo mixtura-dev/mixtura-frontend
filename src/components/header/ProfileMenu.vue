@@ -12,19 +12,19 @@
       <DropdownMenuLabel class="px-2 py-1 flex flex-col gap-0">
         <span class="w-full text-left text-foreground truncate">{{
           authStore.user?.username
-        }}</span>
+          }}</span>
         <span class="w-full text-left text-muted-foreground text-xs truncate">
           {{ authStore.user?.email }}
         </span>
       </DropdownMenuLabel>
       <DropdownMenuSeparator />
       <DropdownMenuItem asChild>
-        <RouterLink to="/account">
-          <span class="text-xs flex items-center gap-2">
-            <SettingsIcon class="size-3.5" aria-hidden="true" />
-            {{ $t('account.title') }}
-          </span>
-        </RouterLink>
+        <Link to="/account">
+        <span class="text-xs flex items-center gap-2">
+          <SettingsIcon class="size-3.5" aria-hidden="true" />
+          {{ $t('account.title') }}
+        </span>
+        </Link>
       </DropdownMenuItem>
       <DropdownMenuLabel class="text-muted-foreground">{{ $t('theme.title') }}</DropdownMenuLabel>
 
@@ -35,8 +35,9 @@
       </DropdownMenuRadioGroup>
 
       <DropdownMenuSeparator />
-      <DropdownMenuItem @click="handleLogout">
-        <span class="text-xs">
+      <DropdownMenuItem @click="handleLogout" asChild>
+        <span class="text-xs flex items-center gap-2">
+          <LogOutIcon class="size-3.5" aria-hidden="true" />
           {{ $t('common.logout') }}
         </span>
       </DropdownMenuItem>
@@ -45,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { Loader2, SettingsIcon } from 'lucide-vue-next'
+import { Loader2, LogOutIcon, SettingsIcon } from 'lucide-vue-next'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   DropdownMenu,
@@ -61,6 +62,7 @@ import { THEMES } from '@/constants/theme'
 import { useAuthStore } from '@/stores/authStore.store'
 import { useTheme } from '@/composables/useTheme'
 import { useSignOutMutation } from '@/composables/useAuthQuery'
+import { Link } from '@/components/ui/link'
 const { store } = useTheme()
 const authStore = useAuthStore()
 const signOutMutation = useSignOutMutation()

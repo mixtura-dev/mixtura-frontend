@@ -10,8 +10,8 @@ export const authMiddleware = async (
 ) => {
   const authStore = useAuthStore()
   const queryClient = useQueryClient()
-
-  if (!to.meta.guestOnly && !authStore.isAuthenticated) {
+  const isOAuthCallback = to.path.startsWith('/oauth/callback')
+  if (!to.meta.guestOnly && !authStore.isAuthenticated && !isOAuthCallback) {
     try {
       const user = await queryClient.fetchQuery({
         queryKey: ['auth', 'user'],

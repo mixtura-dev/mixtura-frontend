@@ -1,5 +1,8 @@
 <template>
-  <RouterView class="dot-pattern  " :style="{
+  <div class="dot-pattern">
+
+  </div>
+  <RouterView :style="{
     paddingTop: top,
     paddingRight: right,
     paddingBottom: bottom,

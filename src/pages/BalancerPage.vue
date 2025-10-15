@@ -1,13 +1,15 @@
 <template>
   <section class="p-4 flex flex-col w-fi min-h-full">
     <!-- <Bracket :stage :matches :rounds :participants /> -->
-    <Image
-      src="https://wallpapers.com/images/featured-full/4k-lake-dxz0letfst501hgv.jpg"
-      loading="eager"
-      alt="Beautiful landscape with mountains and a river"
-      class="size-10"
-    >
+    <Image src="https://wallpapers.com/images/featured-full/4k-lake-dxz0letfst501hgv.jpg" loading="eager"
+      alt="Beautiful landscape with mountains and a river" class="size-10">
     </Image>
+    <div class="flex gap-4">
+      <button v-for="level in levels" :key="level" @click=" appStore.setAnimationLevel(level);"
+        class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition-colors">
+        {{ level }}
+      </button>
+    </div>
 
     <div class="grid w-full max-w-sm gap-6">
       <InputGroup class="bg-background">
@@ -54,9 +56,7 @@
       <InputGroup class="bg-background">
         <InputGroupInput placeholder="@shadcn" />
         <InputGroupAddon align="inline-end">
-          <div
-            class="bg-primary text-primary-foreground flex size-4 items-center justify-center rounded-full"
-          >
+          <div class="bg-primary text-primary-foreground flex size-4 items-center justify-center rounded-full">
             <Check class="size-3" />
           </div>
         </InputGroupAddon>
@@ -82,7 +82,9 @@ import {
   InputGroupInput,
   InputGroupTextarea,
 } from '@/components/ui/input-group'
+const appStore = useAppStore();
 
+const levels = ['level-0', 'level-1', 'level-2'] as const;
 import { ArrowUpIcon, Check, Plus, Search } from 'lucide-vue-next'
 import DropdownMenu from '@/components/ui/dropdown-menu/DropdownMenu.vue'
 import DropdownMenuTrigger from '@/components/ui/dropdown-menu/DropdownMenuTrigger.vue'
@@ -92,6 +94,7 @@ import Separator from '@/components/ui/separator/Separator.vue'
 import DropdownMenuLabel from '@/components/ui/dropdown-menu/DropdownMenuLabel.vue'
 import DropdownMenuSeparator from '@/components/ui/dropdown-menu/DropdownMenuSeparator.vue'
 import Image from '@/components/ui/image/Image.vue'
+import { useAppStore } from '@/stores/appStore.store';
 
 // const stage: Stage = {
 //   id: 1,

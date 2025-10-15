@@ -1,8 +1,6 @@
 <template>
   <section class="flex flex-1 h-full" :aria-labelledby="`${formKey}-title`">
-    <div
-      class="flex flex-col items-center flex-1 flex-shrink-0 px-5 pt-16 pb-8 border-r shadow-lg bg-background"
-    >
+    <div class="flex flex-col items-center flex-1 flex-shrink-0 px-5 pt-16 pb-8 border-r shadow-lg bg-background">
       <div class="flex-1 flex flex-col justify-center max-w-[400px] w-full">
         <div class="mb-6">
           <h1 class="mt-8 mb-2 text-2xl lg:text-3xl font-bold">
@@ -15,18 +13,14 @@
 
         <div class="flex gap-4">
           <Button variant="outline" size="icon" asChild>
-            <a
-              aria-label="Войти через Discord"
-              href="https://discord.com/api/oauth2/authorize?client_id=443050669079920640&response_type=code&scope=identify&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Foauth%2Fcallback%2Fdiscord"
-            >
+            <a aria-label="Войти через Discord"
+              href="https://discord.com/api/oauth2/authorize?client_id=443050669079920640&response_type=code&scope=identify&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Foauth%2Fcallback%2Fdiscord">
               <DiscrodIcon />
             </a>
           </Button>
           <Button variant="outline" size="icon" asChild>
-            <a
-              aria-label="Войти через Twitch"
-              href="https://id.twitch.tv/oauth2/authorize?client_id=9vaajcndpjuw2hcxzcglzjcppxisv7&response_type=code&scope=&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Foauth%2Fcallback%2Ftwitch"
-            >
+            <a aria-label="Войти через Twitch"
+              href="https://id.twitch.tv/oauth2/authorize?client_id=9vaajcndpjuw2hcxzcglzjcppxisv7&response_type=code&scope=&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Foauth%2Fcallback%2Ftwitch">
               <TwitchIcon />
             </a>
           </Button>
@@ -50,9 +44,9 @@
 
           <div class="text-center text-sm mt-2">
             {{ $t(`${formKey}.linkText`) }}
-            <RouterLink :to="linkTo" class="text-primary hover:underline ml-1">
-              {{ $t(`${formKey}.linkLabel`) }}
-            </RouterLink>
+            <Link :to="linkTo" class="text-primary hover:underline ml-1">
+            {{ $t(`${formKey}.linkLabel`) }}
+            </Link>
           </div>
         </form>
       </div>
@@ -73,7 +67,7 @@
 
 <script setup lang="ts">
 import { Button } from '@/components/ui/button'
-import { RouterLink } from 'vue-router'
+import { Link } from '@/components/ui/link'
 import DiscrodIcon from '@/components/icons/DiscordIcon.vue'
 import { TwitchIcon } from 'lucide-vue-next'
 
