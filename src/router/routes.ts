@@ -16,6 +16,7 @@ const ForgotPasswordPage = () => import('@/pages/ForgotPasswordPage.vue')
 const ForgotPasswordConfirmPage = () => import('@/pages/ForgotPasswordConfirmPage.vue')
 const ForgotPasswordVerifyPage = () => import('@/pages/ForgotPasswordVerifyPage.vue')
 const OAuthCallbackPage = () => import('@/pages/OAuthCallbackPage.vue')
+const InvitePage = () => import('@/pages/InvitePage.vue')
 const routes: ParentAppRoute[] = [
   {
     path: '/',
@@ -140,6 +141,15 @@ const routes: ParentAppRoute[] = [
           title: 'Complete Registration',
           requiresAuth: false,
           guestOnly: true,
+        },
+      },
+      {
+        path: '/invite',
+        component: InvitePage,
+        meta: {
+          title: 'Invite',
+          guestOnly: false,
+          requiresAuth: false,
         },
       },
       {
