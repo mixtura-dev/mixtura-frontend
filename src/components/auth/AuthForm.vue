@@ -90,9 +90,9 @@ const providers = computed(() => {
     name: provider.display_name,
     redirectUri: provider.redirect_uri.trim(),
     iconUrl: provider.icon_url?.trim() || null,
-  }));
+    useInAuth: provider.use_in_auth,
+  })).filter((providers) => providers.useInAuth === true);
 });
-
 
 defineProps<{
   formKey: 'form.signIn' | 'form.signUp' | 'form.forgotPassword' | 'form.signUpEmail'
