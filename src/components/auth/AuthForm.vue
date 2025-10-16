@@ -10,21 +10,28 @@
             {{ $t(`${formKey}.subtitle`) }}
           </h2>
         </div>
-
         <div class="flex gap-4">
-          <Button variant="outline" size="icon" asChild>
-            <a aria-label="Войти через Discord"
-              href="https://discord.com/api/oauth2/authorize?client_id=443050669079920640&response_type=code&scope=identify&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Foauth%2Fcallback%2Fdiscord">
-              <DiscrodIcon />
-            </a>
-          </Button>
-          <Button variant="outline" size="icon" asChild>
-            <a aria-label="Войти через Twitch"
-              href="https://id.twitch.tv/oauth2/authorize?client_id=9vaajcndpjuw2hcxzcglzjcppxisv7&response_type=code&scope=&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Foauth%2Fcallback%2Ftwitch">
-              <TwitchIcon />
-            </a>
-          </Button>
+          <template v-if="isLoadingProviders">
+            <Button variant="outline" size="icon" disabled>
+              <LoaderIcon class="animate-spin" />
+            </Button>
+          </template>
+          <template v-else-if="providers.length > 0">
+            <Button v-for="provider in providers" :key="provider.id" variant="outline" size="icon" asChild>
+              <Link target="_self" :to="provider.redirectUri">
+              <Image v-if="provider.iconUrl" :src="provider.iconUrl" :alt="provider.name" width="32" height="32"
+                class="size-5 aspect-square shrink-0" />
+              </Link>
+            </Button>
+          </template>
+          <template v-else>
+            <p class="text-sm text-muted-foreground">
+              {{ $t('common.noProvidersAvailable') }}
+            </p>
+          </template>
         </div>
+
+
 
         <div class="relative text-center text-sm my-4">
           <div class="absolute inset-0 flex items-center">
@@ -68,8 +75,24 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button'
 import { Link } from '@/components/ui/link'
-import DiscrodIcon from '@/components/icons/DiscordIcon.vue'
-import { TwitchIcon } from 'lucide-vue-next'
+import { computed } from 'vue';
+import { useProvidersQuery } from '@/composables/useAuthQuery';
+import Image from '../ui/image/Image.vue';
+import { LoaderIcon } from 'lucide-vue-next';
+
+const { data: providersData, isLoading: isLoadingProviders } = useProvidersQuery();
+
+const providers = computed(() => {
+  if (!providersData.value?.oauth_providers) return [];
+
+  return providersData.value.oauth_providers.map((provider) => ({
+    id: provider.id,
+    name: provider.display_name,
+    redirectUri: provider.redirect_uri.trim(),
+    iconUrl: provider.icon_url?.trim() || null,
+  }));
+});
+
 
 defineProps<{
   formKey: 'form.signIn' | 'form.signUp' | 'form.forgotPassword' | 'form.signUpEmail'
