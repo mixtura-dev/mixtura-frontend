@@ -1,6 +1,5 @@
 import { createPinia } from 'pinia'
 import type { App } from 'vue'
-import router from '@/router'
 import { VueQueryPlugin } from '@tanstack/vue-query'
 import { MotionPlugin } from '@vueuse/motion'
 
@@ -12,5 +11,4 @@ export const useApp = (app: App) => {
   app.use(pinia)
   app.use(MotionPlugin)
   app.use(i18n)
-  app.use(router)
 }

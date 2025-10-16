@@ -347,7 +347,6 @@
   background-repeat: repeat;
   background-position: top right;
   background-size: 510px auto;
-
   background-image: url(/img/chat-bg-pattern-dark.ad38368a9e8140d0ac7d.png);
 }
 
@@ -377,7 +376,7 @@ body {
 }
 
 button {
-  @apply !cursor-pointer;
+  cursor: pointer !important;
 }
 
 a {
@@ -389,7 +388,7 @@ video {
   -webkit-user-drag: none;
 }
 
-#main {
+.main {
   scrollbar-width: thin;
 }
 #app {

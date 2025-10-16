@@ -11,6 +11,7 @@ import {
   verifySignUp,
 } from '@/api/endpoints/auth'
 import { getUserInfo } from '@/api/endpoints/user'
+import { useAuthStore } from '@/stores/authStore.store'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 
 export const USER_STALE_TIME = 5 * 60 * 1000 // 5 min
@@ -39,13 +40,17 @@ export const useUserQuery = () => {
 }
 
 export const useSignInMutation = () => {
-  const queryClient = useQueryClient()
+  const authStore = useAuthStore() // ← получаем store
+
   return useMutation({
     mutationFn: signIn,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: authQueryKeys.user(),
-      })
+    onSuccess: async () => {
+      // Получаем данные пользователя напрямую
+      const user = await getUserInfo()
+      authStore.setUser(user) // ← ЭТО ГЛАВНОЕ — запись в стор
+    },
+    onError: () => {
+      authStore.clearUser()
     },
   })
 }

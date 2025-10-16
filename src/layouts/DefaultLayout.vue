@@ -32,10 +32,10 @@
     </div>
 
     <MainHeader />
-    <div :inert="appStore.state.isDrawerOpen ? true : false" class="flex flex-1 w-full overflow-y-hidden">
+    <div class="flex flex-1 w-full overflow-y-hidden">
       <MainSidebar :groups="visibleGroups" v-if="!hideSidebar" />
       <ShortcutsDialog />
-      <main id="main" class="flex-grow h-full overflow-y-auto">
+      <main class="main flex-grow h-full overflow-y-auto">
         <RouterView />
       </main>
     </div>

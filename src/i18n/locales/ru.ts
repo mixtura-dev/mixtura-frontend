@@ -16,7 +16,7 @@ export default {
     sending: 'Отправка...',
     verifying: 'Проверка...',
     creating: 'Создание...',
-
+    noProvidersAvailable: 'Вход через строронние сервисы вреименно приостановлен',
     actions: {
       submit: 'Отправить',
       continue: 'Продолжить',
@@ -34,7 +34,7 @@ export default {
       passwordUpdate: 'Пароль успешно обновлен',
       checkEmail: 'Проверьте вашу почту для получения кода',
       enterCode: 'Введите код, который мы отправили на {email}',
-      setCredentials: 'Установите имя пользователя и пароль',
+      setCredentials: 'Установите новый пароль',
     },
     errors: {
       loginFailed: 'Ошибка входа: {message}',

@@ -1,7 +1,5 @@
 import { useAuthStore } from '@/stores/authStore.store'
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
-import { getUserInfo } from '@/api/endpoints/user'
-import { useQueryClient } from '@tanstack/vue-query'
 
 export const authMiddleware = async (
   to: RouteLocationNormalized,
@@ -9,25 +7,11 @@ export const authMiddleware = async (
   next: NavigationGuardNext,
 ) => {
   const authStore = useAuthStore()
-  const queryClient = useQueryClient()
   const isOAuthCallback = to.path.startsWith('/oauth/callback')
-  if (!to.meta.guestOnly && !authStore.isAuthenticated && !isOAuthCallback) {
-    try {
-      const user = await queryClient.fetchQuery({
-        queryKey: ['auth', 'user'],
-        queryFn: getUserInfo,
-      })
-      authStore.setUser(user)
-    } catch {
-      authStore.clearUser()
-    }
-  }
+  console.log('Middleware:', to.path, 'isAuthenticated:', authStore.isAuthenticated)
 
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    next({
-      path: '/sign-in',
-      query: { redirect: to.fullPath },
-    })
+  if (to.meta.requiresAuth && !authStore.isAuthenticated && !isOAuthCallback) {
+    next({ path: '/sign-in', query: { redirect: to.fullPath } })
     return
   }
 

@@ -16,6 +16,7 @@ export default {
     sending: 'Sending...',
     verifying: 'Verifying...',
     creating: 'Creating...',
+    noProvidersAvailable: 'No providers avalible',
     actions: {
       submit: 'Submit',
       continue: 'Continue',
