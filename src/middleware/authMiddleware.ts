@@ -7,10 +7,10 @@ export const authMiddleware = async (
   next: NavigationGuardNext,
 ) => {
   const authStore = useAuthStore()
-  // const isOAuthCallback = to.path.startsWith('/oauth/callback')
+  const isOAuthCallback = to.path.startsWith('/oauth/callback')
   console.log('Middleware:', to.path, 'isAuthenticated:', authStore.isAuthenticated)
 
-  if (to.meta.requiresAuth && !authStore.isAuthenticated /*&& !isOAuthCallback*/) {
+  if (to.meta.requiresAuth && !authStore.isAuthenticated && !isOAuthCallback) {
     next({ path: '/sign-in', query: { redirect: to.fullPath } })
     return
   }
