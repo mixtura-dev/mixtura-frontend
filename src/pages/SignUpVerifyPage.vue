@@ -7,16 +7,27 @@
       <p class="text-muted-foreground mb-6">{{ $t('form.verifyEmail.subtitle', { email }) }}</p>
 
       <form @submit="onSubmit" class="w-full space-y-4">
-        <FormField v-slot="{ componentField, value }" name="token" :validate-on-blur="!isFieldDirty('token')">
+        <FormField
+          v-slot="{ componentField, value }"
+          name="token"
+          :validate-on-blur="!isFieldDirty('token')"
+        >
           <FormItem>
             <FormControl>
-              <PinInput id="pin-input" :model-value="value" placeholder="○"
-                class="flex items-center justify-center mb-1" otp type="number" :name="componentField.name"
+              <PinInput
+                id="pin-input"
+                :model-value="value"
+                placeholder="○"
+                class="flex items-center justify-center mb-1"
+                otp
+                type="number"
+                :name="componentField.name"
                 @update:model-value="
                   (arrStr) => {
                     setFieldValue('token', arrStr as unknown as string)
                   }
-                ">
+                "
+              >
                 <PinInputGroup>
                   <template v-for="(id, index) in 6" :key="id">
                     <PinInputSlot class="rounded-md border bg-background" :index="index" />
@@ -38,7 +49,7 @@
       <div class="text-center text-sm mt-8">
         {{ $t('form.forgotPassword.linkText') }}
         <Link to="/sign-in" class="text-primary hover:underline ml-1">
-        {{ $t('form.forgotPassword.linkLabel') }}
+          {{ $t('form.forgotPassword.linkLabel') }}
         </Link>
       </div>
     </div>

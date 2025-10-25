@@ -7,12 +7,21 @@
       <p class="text-muted-foreground mb-6">{{ $t('form.forgotPassword.subtitle') }}</p>
 
       <form @submit="onSubmit" class="w-full space-y-4">
-        <FormField v-slot="{ componentField }" name="email" :validate-on-blur="!isFieldDirty('email')">
+        <FormField
+          v-slot="{ componentField }"
+          name="email"
+          :validate-on-blur="!isFieldDirty('email')"
+        >
           <FormItem>
             <FormLabel>{{ $t('common.forms.email') }}</FormLabel>
             <FormControl>
-              <Input v-bind="componentField" :placeholder="$t('common.forms.email')" type="email" autocomplete="email"
-                class="!bg-card" />
+              <Input
+                v-bind="componentField"
+                :placeholder="$t('common.forms.email')"
+                type="email"
+                autocomplete="email"
+                class="!bg-card"
+              />
             </FormControl>
             <FormMessage class="text-xs text-destructive" />
           </FormItem>
@@ -26,7 +35,7 @@
       <div class="text-center text-sm mt-8">
         {{ $t('form.signIn.linkText') }}
         <Link to="/sign-in" class="text-primary hover:underline ml-1">
-        {{ $t('form.signIn.linkLabel') }}
+          {{ $t('form.signIn.linkLabel') }}
         </Link>
       </div>
     </div>

@@ -11,18 +11,3 @@ export type RequestBody<T extends keyof paths, M extends keyof paths[T]> = paths
 }
   ? Json
   : never
-
-export interface LoginPayload {
-  username: string
-  password: string
-}
-
-export interface SignupPayload {
-  username: string
-  password: string
-  password_again: string
-}
-
-export interface ForgotPasswordPayload {
-  email: string
-}

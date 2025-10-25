@@ -40,14 +40,13 @@ export const useUserQuery = () => {
 }
 
 export const useSignInMutation = () => {
-  const authStore = useAuthStore() // ← получаем store
+  const authStore = useAuthStore()
 
   return useMutation({
     mutationFn: signIn,
     onSuccess: async () => {
-      // Получаем данные пользователя напрямую
       const user = await getUserInfo()
-      authStore.setUser(user) // ← ЭТО ГЛАВНОЕ — запись в стор
+      authStore.setUser(user)
     },
     onError: () => {
       authStore.clearUser()

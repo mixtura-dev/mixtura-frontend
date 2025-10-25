@@ -1,5 +1,5 @@
-import ru from '@/i18n/locales/ru'
-import en from '@/i18n/locales/en'
+import ru from '@/i18n/locales/ru/index'
+import en from '@/i18n/locales/en/index'
 
 export const messages = {
   en,

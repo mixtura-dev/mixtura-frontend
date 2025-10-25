@@ -11,7 +11,11 @@
           <FormItem>
             <FormLabel>{{ $t('common.forms.username') }}</FormLabel>
             <FormControl>
-              <Input v-bind="componentField" :placeholder="$t('common.forms.username')" class="!bg-card" />
+              <Input
+                v-bind="componentField"
+                :placeholder="$t('common.forms.username')"
+                class="!bg-card"
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -21,8 +25,12 @@
           <FormItem>
             <FormLabel>{{ $t('common.forms.password') }}</FormLabel>
             <FormControl>
-              <InputPassword class="bg-card" v-bind="componentField" :placeholder="$t('common.forms.password')"
-                autocomplete="current-password" />
+              <InputPassword
+                class="bg-card"
+                v-bind="componentField"
+                :placeholder="$t('common.forms.password')"
+                autocomplete="current-password"
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -32,8 +40,12 @@
           <FormItem>
             <FormLabel>{{ $t('common.forms.repeatPassword') }}</FormLabel>
             <FormControl>
-              <InputPassword class="bg-card" v-bind="componentField" :placeholder="$t('common.forms.repeatPassword')"
-                autocomplete="current-password" />
+              <InputPassword
+                class="bg-card"
+                v-bind="componentField"
+                :placeholder="$t('common.forms.repeatPassword')"
+                autocomplete="current-password"
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -50,7 +62,7 @@
       <div class="text-center text-sm mt-8">
         {{ $t('form.forgotPassword.linkText') }}
         <Link to="/sign-in" class="text-primary hover:underline ml-1">
-        {{ $t('form.forgotPassword.linkLabel') }}
+          {{ $t('form.forgotPassword.linkLabel') }}
         </Link>
       </div>
     </div>

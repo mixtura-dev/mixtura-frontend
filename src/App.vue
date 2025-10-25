@@ -1,13 +1,13 @@
 <template>
-  <div class="dot-pattern">
-
-  </div>
-  <RouterView :style="{
-    paddingTop: top,
-    paddingRight: right,
-    paddingBottom: bottom,
-    paddingLeft: left,
-  }" />
+  <div class="dot-pattern"></div>
+  <RouterView
+    :style="{
+      paddingTop: top,
+      paddingRight: right,
+      paddingBottom: bottom,
+      paddingLeft: left,
+    }"
+  />
   <Toaster position="top-right" class="pointer-events-auto" />
 </template>
 
@@ -18,8 +18,4 @@ import { useTheme } from './composables/useTheme'
 import { useScreenSafeArea } from '@vueuse/core'
 const { top, right, bottom, left } = useScreenSafeArea()
 useTheme()
-
-
-
-
 </script>

@@ -4,8 +4,12 @@
       <FormItem>
         <FormLabel>{{ $t('common.forms.usernameOrEmail') }}</FormLabel>
         <FormControl>
-          <Input v-bind="componentField" :placeholder="$t('common.forms.usernameOrEmail')" autocomplete="username"
-            class="!bg-card" />
+          <Input
+            v-bind="componentField"
+            :placeholder="$t('common.forms.usernameOrEmail')"
+            autocomplete="username"
+            class="!bg-card"
+          />
         </FormControl>
         <FormMessage />
       </FormItem>
@@ -15,12 +19,15 @@
         <div class="flex justify-between items-center">
           <FormLabel class="h-5">{{ $t('common.forms.password') }}</FormLabel>
           <Link to="/forgot-password" class="text-xs text-primary hover:underline">
-          {{ $t('form.forgotPassword.title') }}
+            {{ $t('form.forgotPassword.title') }}
           </Link>
         </div>
         <FormControl>
-          <InputPassword v-bind="componentField" :placeholder="$t('common.forms.password')"
-            autocomplete="current-password" />
+          <InputPassword
+            v-bind="componentField"
+            :placeholder="$t('common.forms.password')"
+            autocomplete="current-password"
+          />
         </FormControl>
         <FormMessage />
       </FormItem>
@@ -40,7 +47,6 @@ import { useSignInMutation } from '@/composables/useAuthQuery'
 import { InputPassword } from '@/components/ui/input'
 import { Link } from '@/components/ui/link'
 import AuthForm from '@/components/auth/AuthForm.vue'
-
 
 const router = useRouter()
 const route = useRoute()

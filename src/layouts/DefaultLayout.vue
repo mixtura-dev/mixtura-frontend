@@ -15,13 +15,24 @@
           <DrawerHeader>
             <div class="flex flex-col mt-2 gap-2">
               <template v-for="group in visibleGroups" :key="group.id">
-                <Button v-for="item in group.items" :key="item.path" @click="appStore.closeDrawer" size="sm"
-                  class="justify-start" variant="ghost" asChild>
-                  <Link :to="item.path" :title="item.labelKey" active-class="text-foreground bg-muted"
+                <Button
+                  v-for="item in group.items"
+                  :key="item.path"
+                  @click="appStore.closeDrawer"
+                  size="sm"
+                  class="justify-start"
+                  variant="ghost"
+                  asChild
+                >
+                  <Link
+                    :to="item.path"
+                    :title="item.labelKey"
+                    active-class="text-foreground bg-muted"
                     inactive-class="text-muted-foreground/60 hover:text-foreground "
-                    class="flex items-center gap-2 transition-colors">
-                  <component :is="item.icon" class="size-5" />
-                  {{ $t(item.labelKey) }}
+                    class="flex items-center gap-2 transition-colors"
+                  >
+                    <component :is="item.icon" class="size-5" />
+                    {{ $t(item.labelKey) }}
                   </Link>
                 </Button>
               </template>
@@ -68,4 +79,3 @@ const visibleGroups = computed(() => {
   return NAV_GROUPS.filter((group) => !group.match || group.match.test(path))
 })
 </script>
-<style scoped></style>

@@ -26,33 +26,45 @@
             <CommandList>
               <CommandEmpty>{{ $t('error.notFound') }}</CommandEmpty>
               <CommandGroup>
-                <CommandItem v-for="status in statuses" :key="status.value" :value="status.value" @select="
-                  () => {
-                    selectedStatus = status
-                    open = false
-                  }
-                " class="flex items-center justify-between">
+                <CommandItem
+                  v-for="status in statuses"
+                  :key="status.value"
+                  :value="status.value"
+                  @select="
+                    () => {
+                      selectedStatus = status
+                      open = false
+                    }
+                  "
+                  class="flex items-center justify-between"
+                >
                   <span class="text-sm text-muted-foreground truncate">
                     {{ status.label }}
                   </span>
-                  <Check v-show="selectedStatus?.value === status.value" class="size-4 text-primary" />
+                  <Check
+                    v-show="selectedStatus?.value === status.value"
+                    class="size-4 text-primary"
+                  />
                 </CommandItem>
               </CommandGroup>
               <CommandSeparator />
               <CommandGroup>
                 <CommandItem value="" asChild>
                   <Link to="/workspace" class="text-sm text-muted-foreground" @click="open = false">
-                  All workspaces
+                    All workspaces
                   </Link>
                 </CommandItem>
               </CommandGroup>
               <CommandSeparator />
               <CommandGroup>
                 <CommandItem value="new-workspace" asChild>
-                  <Link to="/workspace/new" class="flex items-center gap-2 text-sm text-muted-foreground"
-                    @click="open = false">
-                  <PlusIcon />
-                  New workspace
+                  <Link
+                    to="/workspace/new"
+                    class="flex items-center gap-2 text-sm text-muted-foreground"
+                    @click="open = false"
+                  >
+                    <PlusIcon />
+                    New workspace
                   </Link>
                 </CommandItem>
               </CommandGroup>
