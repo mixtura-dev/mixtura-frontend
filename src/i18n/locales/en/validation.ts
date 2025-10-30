@@ -2,6 +2,9 @@ export default {
   token: {
     invalid: 'Code must be 6 digits',
   },
+  login: {
+    invalid: 'Login contains invalid characters',
+  },
   username: {
     required: 'Username is required',
     invalidType: 'Username must be a string',
@@ -18,6 +21,10 @@ export default {
     invalid: 'Password must include at least one letter and one number',
     hide: 'Hide password',
     show: 'Show password',
+  },
+  email: {
+    required: 'Email address is required',
+    invalid: 'Invalid email address',
   },
   repeatPassword: {
     required: 'Please confirm your password',

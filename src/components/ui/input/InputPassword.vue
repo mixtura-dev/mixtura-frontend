@@ -24,7 +24,7 @@
       >
         <component :is="showPassword ? EyeOff : Eye" aria-hidden="true" />
         <span class="hidden-visually">
-          {{ showPassword ? $t('validation.password.hide') : $t('validation.passwod.show') }}
+          {{ showPassword ? $t('validation.password.hide') : $t('validation.password.show') }}
         </span>
       </InputGroupButton>
     </InputGroupAddon>
