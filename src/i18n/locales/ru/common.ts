@@ -15,7 +15,7 @@ export default {
   sending: 'Отправка...',
   verifying: 'Проверка...',
   creating: 'Создание...',
-  noProvidersAvailable: 'Вход через строронние сервисы вреименно приостановлен',
+  noProvidersAvailable: 'Вход через сторонние сервисы вреименно приостановлен',
   actions: { submit: 'Отправить', continue: 'Продолжить', send: 'Отправить', signOut: 'Выйти' },
   forms: {
     email: 'Почта',
