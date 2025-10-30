@@ -18,10 +18,10 @@ const DEBUG = import.meta.env.DEV || localStorage.getItem('DEBUG') === 'true'
 const TAG_COLOR = '#20b2aa'
 
 const LEVEL_COLORS: Record<LogLevel, string> = {
-  log: '#61dafb', // светло-голубой (как React DevTools)
-  warn: '#f5a623', // тёплый янтарь (менее агрессивный, чем оранжевый)
-  error: '#e74c3c', // насыщенный красный (но не "огненный")
-  debug: '#5764f8', // серо-голубой — спокойный, не отвлекает
+  log: '#61dafb',
+  warn: '#f5a623',
+  error: '#e74c3c',
+  debug: '#5764f8',
 }
 
 export function createLogger(tag: string): Logger {

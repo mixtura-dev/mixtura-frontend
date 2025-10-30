@@ -38,9 +38,27 @@ export const getInitialLocale = (): SupportedLocale => {
   return setLocale(DEFAULT_LOCALE)
 }
 
+const customRule = (choice: number, choicesLength: number): number => {
+  if (choice === 0) {
+    return 0 // zero
+  }
+  const teen = choice > 10 && choice < 20
+  const endsWithOne = choice % 10 === 1
+  if (!teen && endsWithOne) {
+    return 1 // one
+  }
+  if (!teen && choice % 10 >= 2 && choice % 10 <= 4) {
+    return 2 // few
+  }
+  return choicesLength < 4 ? 2 : 3 // many
+}
+
 export const i18n = createI18n<[MessageSchema], SupportedLocale>({
   legacy: false,
   messages,
   locale: getInitialLocale(),
   fallbackLocale: DEFAULT_LOCALE,
+  pluralRules: {
+    ru: customRule,
+  },
 })

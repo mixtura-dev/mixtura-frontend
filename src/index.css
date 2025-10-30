@@ -326,7 +326,7 @@
   transition: none !important;
 }
 
-.dot-pattern {
+.img-pattern {
   /* background-color: var(--color-accent);
   background-image: radial-gradient(transparent 1px, var(--color-background) 1px);
   background-size: 16px 16px; */
@@ -339,7 +339,7 @@
   overflow: hidden;
   background: var(--color-background);
 }
-.dot-pattern::after {
+.img-pattern::after {
   content: '';
   position: absolute;
   top: 0;

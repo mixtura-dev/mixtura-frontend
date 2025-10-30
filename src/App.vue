@@ -1,5 +1,5 @@
 <template>
-  <div class="dot-pattern"></div>
+  <div class="img-pattern"></div>
   <RouterView :style="{
     paddingTop: top,
     paddingRight: right,

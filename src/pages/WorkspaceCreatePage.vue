@@ -11,10 +11,10 @@
         <Input />
       </CardContent>
       <CardFooter class="flex sm:flex-row flex-col justify-end gap-2">
-        <Button variant="outline" size="sm" @click="router.back()">
+        <Button variant="outline" size="sm" class="w-full sm:w-auto" @click="router.back()">
           {{ $t('common.cancel') }}
         </Button>
-        <Button size="sm" @click="handleSubmit">
+        <Button size="sm" class="w-full sm:w-auto" @click="handleSubmit">
           {{ $t('common.add') }}
         </Button>
       </CardFooter>
