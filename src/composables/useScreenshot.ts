@@ -1,5 +1,7 @@
 import { type Ref, ref } from 'vue'
 
+const QUALITY_SCREENSHOT = 0.8
+
 export function useScreenshot(targetRef: Ref<HTMLElement | null>) {
   const isLoading = ref(false)
 
@@ -8,10 +10,10 @@ export function useScreenshot(targetRef: Ref<HTMLElement | null>) {
     isLoading.value = true
     try {
       const { toBlob } = await import('html-to-image')
-      const blob = await toBlob(targetRef.value, { quality: 0.9 })
+      const blob = await toBlob(targetRef.value, { quality: QUALITY_SCREENSHOT })
 
       if (!blob) {
-        console.error('Не удалось создать скриншот (blob пустой)')
+        console.error('[useScreenshot] Не удалось создать скриншот (blob пустой)')
         return
       }
 
@@ -31,7 +33,7 @@ export function useScreenshot(targetRef: Ref<HTMLElement | null>) {
       link.click()
       URL.revokeObjectURL(link.href)
     } catch (err) {
-      console.error('[useScreenshot]: Error when do screenshot', err)
+      console.error('[useScreenshot] Error when taking screenshot', err)
     } finally {
       isLoading.value = false
     }
