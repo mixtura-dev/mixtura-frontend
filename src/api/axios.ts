@@ -17,7 +17,7 @@ baseApi.interceptors.response.use(
   (error: AxiosError<{ error?: string; message?: string }>) => {
     if (error.response?.status === 401) {
       const authStore = useAuthStore()
-      authStore.clearUser()
+      authStore.handleUnauthorized()
     }
     console.log(error)
     //TODO: Make toast to show error

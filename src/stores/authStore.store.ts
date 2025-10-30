@@ -5,19 +5,25 @@ import { computed, ref } from 'vue'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(null)
+  const isAuthLoaded = ref(false)
   const isAuthenticated = computed(() => !!user.value)
+
   const setUser = (userData: User) => {
     user.value = userData
   }
+
   const clearUser = () => {
     user.value = null
   }
+
   const handleUnauthorized = () => {
     clearUser()
     router.push('/sign-in')
   }
+
   return {
     user,
+    isAuthLoaded,
     isAuthenticated,
     handleUnauthorized,
     setUser,

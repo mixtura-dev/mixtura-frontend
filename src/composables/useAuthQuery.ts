@@ -11,11 +11,12 @@ import {
   verifySignUp,
 } from '@/api/endpoints/auth'
 import { getUserInfo } from '@/api/endpoints/user'
+import { queryClient } from '@/api/queryClient'
 import { useAuthStore } from '@/stores/authStore.store'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 
-export const USER_STALE_TIME = 5 * 60 * 1000 // 5 min
-const PROVIDER_STALE_TIME = 10 * 60 * 1000 // 10 min
+export const USER_STALE_TIME = 5 * 60 * 1000
+const PROVIDER_STALE_TIME = 10 * 60 * 1000
 
 export const authQueryKeys = {
   user: () => ['auth', 'user'] as const,
@@ -40,26 +41,31 @@ export const useUserQuery = () => {
 }
 
 export const useSignInMutation = () => {
+  const localQueryClient = useQueryClient()
   const authStore = useAuthStore()
-
   return useMutation({
     mutationFn: signIn,
     onSuccess: async () => {
-      const user = await getUserInfo()
+      await localQueryClient.invalidateQueries({ queryKey: authQueryKeys.user() })
+      const user = await queryClient.fetchQuery({
+        queryKey: authQueryKeys.user(),
+        queryFn: getUserInfo,
+      })
       authStore.setUser(user)
     },
-    onError: () => {
-      authStore.clearUser()
-    },
+    onError: () => {},
   })
 }
 
 export const useSignOutMutation = () => {
-  const queryClient = useQueryClient()
+  const localQueryClient = useQueryClient()
+  const authStore = useAuthStore()
   return useMutation({
     mutationFn: signOut,
     onSuccess: () => {
-      queryClient.clear()
+      localQueryClient.clear()
+      authStore.clearUser()
+      authStore.isAuthLoaded = true
     },
   })
 }
@@ -75,14 +81,21 @@ export const useVerifySignUpMutation = () =>
   })
 
 export const useConfirmSignUpMutation = () => {
-  const queryClient = useQueryClient()
+  const localQueryClient = useQueryClient()
+  const authStore = useAuthStore()
   return useMutation({
     mutationFn: confirmSignUp,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: authQueryKeys.user() })
+    onSuccess: async () => {
+      await localQueryClient.invalidateQueries({ queryKey: authQueryKeys.user() })
+      const user = await queryClient.fetchQuery({
+        queryKey: authQueryKeys.user(),
+        queryFn: getUserInfo,
+      })
+      authStore.setUser(user)
     },
   })
 }
+
 export const useResetPasswordMutation = () =>
   useMutation({
     mutationFn: resetPassword,
@@ -94,21 +107,33 @@ export const useVerifyResetPasswordMutation = () =>
   })
 
 export const useConfirmResetPasswordMutation = () => {
-  const queryClient = useQueryClient()
+  const localQueryClient = useQueryClient()
+  const authStore = useAuthStore()
   return useMutation({
     mutationFn: confirmResetPassword,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: authQueryKeys.user() })
+    onSuccess: async () => {
+      await localQueryClient.invalidateQueries({ queryKey: authQueryKeys.user() })
+      const user = await queryClient.fetchQuery({
+        queryKey: authQueryKeys.user(),
+        queryFn: getUserInfo,
+      })
+      authStore.setUser(user)
     },
   })
 }
 
 export const useCallbackProvidersMutation = () => {
-  const queryClient = useQueryClient()
+  const localQueryClient = useQueryClient()
+  const authStore = useAuthStore()
   return useMutation({
     mutationFn: callbackProviders,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: authQueryKeys.user() })
+    onSuccess: async () => {
+      await localQueryClient.invalidateQueries({ queryKey: authQueryKeys.user() })
+      const user = await queryClient.fetchQuery({
+        queryKey: authQueryKeys.user(),
+        queryFn: getUserInfo,
+      })
+      authStore.setUser(user)
     },
   })
 }

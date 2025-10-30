@@ -1,5 +1,8 @@
-import { useAuthStore } from '@/stores/authStore.store'
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
+import { authQueryKeys } from '@/composables/useAuthQuery'
+import { getUserInfo } from '@/api/endpoints/user'
+import { useAuthStore } from '@/stores/authStore.store'
+import { queryClient } from '@/api/queryClient'
 
 export const authMiddleware = async (
   to: RouteLocationNormalized,
@@ -9,6 +12,20 @@ export const authMiddleware = async (
   const authStore = useAuthStore()
   const isOAuthCallback = to.path.startsWith('/oauth/callback')
   console.log('Middleware:', to.path, 'isAuthenticated:', authStore.isAuthenticated)
+
+  if (!authStore.isAuthLoaded) {
+    try {
+      const user = await queryClient.ensureQueryData({
+        queryKey: authQueryKeys.user(),
+        queryFn: getUserInfo,
+      })
+      authStore.setUser(user)
+    } catch (error: unknown) {
+      authStore.clearUser()
+      console.error(error)
+    }
+    authStore.isAuthLoaded = true
+  }
 
   if (to.meta.requiresAuth && !authStore.isAuthenticated && !isOAuthCallback) {
     next({ path: '/sign-in', query: { redirect: to.fullPath } })
