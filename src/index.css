@@ -327,9 +327,6 @@
 }
 
 .img-pattern {
-  /* background-color: var(--color-accent);
-  background-image: radial-gradient(transparent 1px, var(--color-background) 1px);
-  background-size: 16px 16px; */
   position: absolute;
   z-index: -1;
   top: 0;

@@ -1,17 +1,17 @@
-import { type Ref, ref } from 'vue'
+import { type MaybeRefOrGetter, ref, toValue } from 'vue'
 
 const QUALITY_SCREENSHOT = 0.8
 
-export function useScreenshot(targetRef: Ref<HTMLElement | null>) {
+export function useScreenshot(targetRef: MaybeRefOrGetter<HTMLElement | null>) {
   const isLoading = ref(false)
 
   const makeScreenshot = async () => {
-    if (!targetRef.value) return
+    const target = toValue(targetRef)
+    if (!target) return
     isLoading.value = true
     try {
       const { toBlob } = await import('html-to-image')
-      const blob = await toBlob(targetRef.value, { quality: QUALITY_SCREENSHOT })
-
+      const blob = await toBlob(target, { quality: QUALITY_SCREENSHOT })
       if (!blob) {
         console.error('[useScreenshot] Не удалось создать скриншот (blob пустой)')
         return

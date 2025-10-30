@@ -1,6 +1,6 @@
 import ru from '@/i18n/locales/ru/index'
 import en from '@/i18n/locales/en/index'
-
+//TODO lazy loading for messages
 export const messages = {
   en,
   ru,

@@ -3,6 +3,9 @@ import { authQueryKeys } from '@/composables/useAuthQuery'
 import { getUserInfo } from '@/api/endpoints/user'
 import { useAuthStore } from '@/stores/authStore.store'
 import { queryClient } from '@/api/queryClient'
+import { createLogger } from '@/lib/logger'
+
+const logger = createLogger('authMiddleware')
 
 export const authMiddleware = async (
   to: RouteLocationNormalized,
@@ -11,8 +14,12 @@ export const authMiddleware = async (
 ) => {
   const authStore = useAuthStore()
   const isOAuthCallback = to.path.startsWith('/oauth/callback')
-  console.log('Middleware:', to.path, 'isAuthenticated:', authStore.isAuthenticated)
-
+  logger.debug('Auth middleware triggered', {
+    to: to.fullPath,
+    isOAuthCallback,
+    isAuthLoaded: authStore.isAuthLoaded,
+    isAuthenticated: authStore.isAuthenticated,
+  })
   if (!authStore.isAuthLoaded) {
     try {
       const user = await queryClient.ensureQueryData({
@@ -22,7 +29,7 @@ export const authMiddleware = async (
       authStore.setUser(user)
     } catch (error: unknown) {
       authStore.clearUser()
-      console.error(error)
+      logger.debug('No authenticated user found during auth check.', error)
     }
     authStore.isAuthLoaded = true
   }
