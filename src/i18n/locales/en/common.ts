@@ -1,5 +1,6 @@
 export default {
   or: 'or',
+  error: 'Error',
   save: 'Save',
   cancel: 'Cancel',
   loading: 'Loading...',

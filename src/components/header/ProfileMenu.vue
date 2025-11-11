@@ -2,10 +2,11 @@
   <DropdownMenu :modal="false">
     <DropdownMenuTrigger>
       <Avatar>
-        <AvatarImage draggable="false" src="https://github.com/unovue.png" alt="@unovue" />
-        <AvatarFallback class="text-sm">
-          <Loader2 class="animate-spin" />
+        <!-- <AvatarImage draggable="false" src="https://github.com/unovue.png" alt="@unovue" /> -->
+        <AvatarFallback class="text-sm font-bold" :style="avatarStyle">
+          {{ initials }}
         </AvatarFallback>
+
       </Avatar>
     </DropdownMenuTrigger>
     <DropdownMenuContent class="w-64" align="end" side="bottom" :alignOffset="4">
@@ -20,10 +21,10 @@
       <DropdownMenuSeparator />
       <DropdownMenuItem asChild>
         <Link to="/account">
-          <span class="text-xs flex items-center gap-2">
-            <SettingsIcon class="size-3.5" aria-hidden="true" />
-            {{ $t('account.title') }}
-          </span>
+        <span class="text-xs flex items-center gap-2">
+          <SettingsIcon class="size-3.5" aria-hidden="true" />
+          {{ $t('account.title') }}
+        </span>
         </Link>
       </DropdownMenuItem>
       <DropdownMenuLabel class="text-muted-foreground">{{ $t('theme.title') }}</DropdownMenuLabel>
@@ -46,8 +47,9 @@
 </template>
 
 <script setup lang="ts">
-import { Loader2, LogOutIcon, SettingsIcon } from 'lucide-vue-next'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { LogOutIcon, SettingsIcon } from 'lucide-vue-next'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { computed } from 'vue'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -63,6 +65,7 @@ import { useAuthStore } from '@/stores/authStore.store'
 import { useTheme } from '@/composables/useTheme'
 import { useSignOutMutation } from '@/composables/useAuthQuery'
 import { Link } from '@/components/ui/link'
+import { hashToHue } from '@/lib/utils/colors'
 const { store } = useTheme()
 const authStore = useAuthStore()
 const signOutMutation = useSignOutMutation()
@@ -71,4 +74,34 @@ const handleLogout = async () => {
   await signOutMutation.mutateAsync()
   authStore.handleUnauthorized()
 }
+const DEFAULT_ID = '0'
+
+const avatarStyle = computed(() => {
+  const id = authStore.user?.id?.toString() || DEFAULT_ID
+  const hue = hashToHue(id)
+  const hue2 = (hue + 45) % 360
+  return {
+    background: `linear-gradient(135deg, hsl(${hue}, 70%, 55%), hsl(${hue2}, 70%, 55%))`,
+    color: 'white',
+  }
+})
+
+const initials = computed(() => {
+  const name = authStore.user?.username?.trim()
+  if (!name) return '?'
+
+  const parts = name.split(/[\s-]+/).filter(Boolean)
+
+  const chars = parts
+    .slice(0, 2)
+    .map(p => p.charAt(0))
+    .join('')
+
+  const firstTwo = [...chars].slice(0, 2).join('').toUpperCase()
+
+  return firstTwo || '?'
+})
+
+
+
 </script>

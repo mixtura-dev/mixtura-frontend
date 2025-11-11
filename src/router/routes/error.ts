@@ -8,13 +8,13 @@ export const errorRoutes = {
     {
       path: '/403',
       component: ErrorPage,
-      props: { statusCode: 403, message: "You don't have permission to access this page." },
+      props: { statusCode: 403, message: 'noPermission' },
       meta: { title: 'Forbidden' },
     },
     {
       path: '/:pathMatch(.*)*',
       component: ErrorPage,
-      props: { statusCode: 404, message: "We can't find this page." },
+      props: { statusCode: 404, message: 'noResults' },
       meta: { title: 'Not Found' },
     },
   ],
