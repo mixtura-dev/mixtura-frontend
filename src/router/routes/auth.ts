@@ -45,7 +45,7 @@ export const authRoutes = {
     {
       path: '/oauth/callback/:provider',
       component: OAuthCallbackPage,
-      meta: { title: 'OAuth Callback' },
+      meta: { title: 'OAuth Callback', requiresAuth: false, guestOnly: false },
     },
   ],
 }

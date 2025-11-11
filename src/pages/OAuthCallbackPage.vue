@@ -31,8 +31,8 @@ const log = createLogger('OAuthPage')
 
 onMounted(async () => {
   try {
-    const provider = getQueryValue(route.params.provider)
-    const code = getQueryValue(route.query.code)
+    const provider = getQueryValue(route.params.provider) as string
+    const code = getQueryValue(route.query.code) as string
 
     if (!provider || !code) {
       log.error('Missing provider or code')

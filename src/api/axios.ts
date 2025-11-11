@@ -15,12 +15,18 @@ export const baseApi = axios.create({
 baseApi.interceptors.response.use(
   (response) => response,
   (error: AxiosError<{ error?: string; message?: string }>) => {
-    if (error.response?.status === 401) {
-      const authStore = useAuthStore()
+    const authStore = useAuthStore()
+    const url = error.config?.url || ''
+
+    if (
+      error.response?.status === 401 &&
+      !url.includes('/api/auth/callback') &&
+      !window.location.pathname.startsWith('/oauth/callback')
+    ) {
       authStore.handleUnauthorized()
     }
+
     console.log(error)
-    //TODO: Make toast to show error
     const message = error.response?.data?.error || error.message
     return Promise.reject(new Error(message))
   },

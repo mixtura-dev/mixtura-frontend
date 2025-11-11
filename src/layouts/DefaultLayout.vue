@@ -1,6 +1,6 @@
 <template>
   <div class="flex h-full flex-col">
-    <MobileHeader class="md:hidden " :groups="visibleGroups" />
+    <MobileHeader class="md:hidden" :groups="visibleGroups" />
     <MainHeader />
     <div class="flex flex-1 w-full overflow-y-hidden">
       <MainSidebar class="hidden md:flex" :groups="visibleGroups" v-if="!hideSidebar" />
@@ -26,7 +26,6 @@ import MobileHeader from '@/components/header/MobileHeader.vue'
 
 const route = useRoute()
 const hideSidebar = computed(() => route.meta.hideSidebar === true)
-
 
 const visibleGroups = computed(() => {
   const path = route.path

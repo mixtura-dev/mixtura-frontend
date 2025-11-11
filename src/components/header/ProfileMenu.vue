@@ -6,7 +6,6 @@
         <AvatarFallback class="text-sm font-bold" :style="avatarStyle">
           {{ initials }}
         </AvatarFallback>
-
       </Avatar>
     </DropdownMenuTrigger>
     <DropdownMenuContent class="w-64" align="end" side="bottom" :alignOffset="4">
@@ -21,10 +20,10 @@
       <DropdownMenuSeparator />
       <DropdownMenuItem asChild>
         <Link to="/account">
-        <span class="text-xs flex items-center gap-2">
-          <SettingsIcon class="size-3.5" aria-hidden="true" />
-          {{ $t('account.title') }}
-        </span>
+          <span class="text-xs flex items-center gap-2">
+            <SettingsIcon class="size-3.5" aria-hidden="true" />
+            {{ $t('account.title') }}
+          </span>
         </Link>
       </DropdownMenuItem>
       <DropdownMenuLabel class="text-muted-foreground">{{ $t('theme.title') }}</DropdownMenuLabel>
@@ -94,14 +93,11 @@ const initials = computed(() => {
 
   const chars = parts
     .slice(0, 2)
-    .map(p => p.charAt(0))
+    .map((p) => p.charAt(0))
     .join('')
 
   const firstTwo = [...chars].slice(0, 2).join('').toUpperCase()
 
   return firstTwo || '?'
 })
-
-
-
 </script>

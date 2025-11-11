@@ -1,6 +1,8 @@
 <template>
   <section class="flex flex-1 h-full" :aria-labelledby="`${formKey}-title`">
-    <div class="flex flex-col items-center flex-1 flex-shrink-0 px-5 pt-16 pb-8 border-r shadow-lg bg-background">
+    <div
+      class="flex flex-col items-center flex-1 flex-shrink-0 px-5 pt-16 pb-8 border-r shadow-lg bg-background"
+    >
       <div class="flex-1 flex flex-col justify-center max-w-[400px] w-full">
         <div class="mb-6">
           <h1 class="mt-8 mb-2 text-2xl lg:text-3xl font-bold">
@@ -17,18 +19,29 @@
             </Button>
           </template>
           <template v-else-if="providers.length > 0">
-            <Button v-for="provider in providers" :key="provider.id" variant="outline" size="icon" asChild>
+            <Button
+              v-for="provider in providers"
+              :key="provider.id"
+              variant="outline"
+              size="icon"
+              asChild
+            >
               <Link target="_self" :to="provider.redirectUri">
-              <Image v-if="provider.iconUrl" :src="provider.iconUrl" :alt="provider.name" width="32" height="32"
-                class="size-5 aspect-square shrink-0" />
+                <Image
+                  v-if="provider.iconUrl"
+                  :src="provider.iconUrl"
+                  :alt="provider.name"
+                  width="32"
+                  height="32"
+                  class="size-5 aspect-square shrink-0"
+                />
               </Link>
             </Button>
           </template>
           <template v-else>
-            <div class="flex  flex-col gap-1 w-full items-center text-destructive">
-              <p class="text-sm ">
+            <div class="flex flex-col gap-1 w-full items-center text-destructive">
+              <p class="text-sm">
                 {{ $t('common.noProvidersAvailable') }}
-
               </p>
               <AlertTriangleIcon />
             </div>
@@ -54,7 +67,7 @@
           <div class="text-center text-sm mt-2">
             {{ $t(`${formKey}.linkText`) }}
             <Link :to="linkTo" class="text-primary hover:underline ml-1">
-            {{ $t(`${formKey}.linkLabel`) }}
+              {{ $t(`${formKey}.linkLabel`) }}
             </Link>
           </div>
         </form>
