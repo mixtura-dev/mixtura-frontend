@@ -12,6 +12,7 @@ export default {
   connect: 'Connect',
   absolutelySure: 'Are you sure?',
   logout: 'Log Out',
+  join: 'Join',
   invalidCode: 'Invalid code',
   sending: 'Sending...',
   verifying: 'Verifying...',

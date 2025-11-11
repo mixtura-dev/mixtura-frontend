@@ -7,8 +7,8 @@ import { VueQueryPlugin } from '@tanstack/vue-query'
 import { i18n } from './i18n'
 import { MotionPlugin } from '@vueuse/motion'
 import { queryClient } from './api/queryClient'
-const pinia = createPinia()
 
+const pinia = createPinia()
 const app = createApp(App)
 app.use(VueQueryPlugin, { queryClient })
 app.use(pinia)

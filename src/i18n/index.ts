@@ -1,8 +1,7 @@
 import { createI18n } from 'vue-i18n'
-import { type SupportedLocale, messages } from './messages'
+import { type SupportedLocale } from './messages'
 import { isSupportedLocale, setHtmlLangAttribute } from '@/lib/utils/localeUtils'
-
-type MessageSchema = (typeof messages)['en']
+import { loadLocaleMessages } from './loaders'
 
 export const DEFAULT_LOCALE: SupportedLocale = 'ru'
 
@@ -53,12 +52,31 @@ const customRule = (choice: number, choicesLength: number): number => {
   return choicesLength < 4 ? 2 : 3 // many
 }
 
-export const i18n = createI18n<[MessageSchema], SupportedLocale>({
+export const i18n = createI18n({
   legacy: false,
-  messages,
-  locale: getInitialLocale(),
+  messages: {},
+  locale: DEFAULT_LOCALE,
   fallbackLocale: DEFAULT_LOCALE,
-  pluralRules: {
-    ru: customRule,
-  },
+  missingWarn: false,
+  fallbackWarn: false,
+  pluralRules: { ru: customRule },
 })
+
+export const changeLocale = async (locale: SupportedLocale): Promise<void> => {
+  console.log(`Requested to change locale to: ${locale}`)
+  console.log(`Changing locale to: ${locale}`)
+  if (!i18n.global.availableLocales.includes(locale)) {
+    console.log(`Loading locale messages for: ${locale}`)
+    try {
+      const messages = await loadLocaleMessages(locale)
+      console.log(`Loaded messages for locale ${locale}:`, messages)
+      i18n.global.setLocaleMessage(locale, messages)
+    } catch (error) {
+      console.error(`Failed to load locale ${locale}:`, error)
+      return
+    }
+  }
+
+  i18n.global.locale.value = locale
+  setLocale(locale)
+}

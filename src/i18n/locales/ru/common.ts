@@ -12,6 +12,7 @@ export default {
   connect: 'Подключить',
   absolutelySure: 'Вы уверены?',
   logout: 'Выйти',
+  join: 'Присоединиться',
   invalidCode: 'Неверный код',
   sending: 'Отправка...',
   verifying: 'Проверка...',
