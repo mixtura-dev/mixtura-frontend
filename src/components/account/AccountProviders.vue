@@ -5,67 +5,44 @@
       <CardDescription>{{ $t('account.connections.description') }}</CardDescription>
     </CardHeader>
     <CardContent>
-      <div
-        v-if="!providersData"
-        class="grid gap-4"
-        role="status"
-        aria-busy="true"
-        aria-live="polite"
-      >
+      <div v-if="!providersData" class="grid gap-4" role="status" aria-busy="true" aria-live="polite">
         <Skeleton class="h-6 w-full sm:w-full" />
         <Skeleton class="h-6 w-full sm:w-3/4" />
         <Skeleton class="h-6 w-full sm:w-2/4" />
       </div>
 
       <ul role="list" class="space-y-4">
-        <li
-          v-for="item in connectionItems"
-          :key="item.id"
-          role="listitem"
-          class="grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] gap-4 items-center py-2"
-        >
+        <li v-for="item in connectionItems" :key="item.id" role="listitem"
+          class="grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] gap-4 items-center py-2">
           <div class="flex items-center gap-4 col-span-full sm:col-span-1">
-            <Image
-              v-if="item.iconUrl"
-              :src="item.iconUrl"
-              :alt="item.name"
-              width="32"
-              height="32"
-              class="size-8 aspect-square shrink-0"
-            />
+            <Image v-if="item.iconUrl" :src="item.iconUrl" :alt="item.name" width="32" height="32"
+              class="size-8 aspect-square shrink-0" />
             <div class="cursor-auto">
-              <p class="font-medium text-muted-foreground text-sm">{{ item.name }}</p>
+              <p class=" font-semibold text-sm">{{ item.name }}</p>
               <div v-if="item.connectedCount > 0" class="mt-1 space-y-1">
-                <div
-                  v-for="(acc, idx) in item.connectedAccounts"
-                  :key="idx"
-                  class="text-sm inline after:content-[',_'] last:after:content-none"
-                >
+                <div v-for="(acc, idx) in item.connectedAccounts" :key="idx"
+                  class="text-sm inline after:content-[',_'] last:after:content-none">
                   @{{ acc.client_username || 'unknown' }}
                 </div>
               </div>
-              <p v-else class="text-sm text-muted-foreground">
+              <p v-else class="text-xs  ">
                 {{ $t('account.connections.connectAccount', { provider: item.name }) }}
               </p>
             </div>
           </div>
 
           <div class="flex justify-end col-span-full sm:col-span-1">
-            <span
-              v-if="!item.canConnectMore"
-              class="text-xs text-primary font-medium ml-auto sm:w-auto"
-              role="note"
-            >
+            <span v-if="!item.canConnectMore" class="text-xs text-primary font-medium ml-auto sm:w-auto" role="note">
               {{ $t('account.connections.maxAccounts', { limit: item.limit }, item.limit) }}
             </span>
 
             <Button v-else variant="outline" size="sm" class="w-full sm:w-auto" asChild>
               <Link :to="item.redirectUri" target="_self">
-                {{
-                  item.connectedCount > 0
-                    ? $t('account.connections.connectAnother')
-                    : $t('account.connections.connect')
-                }}
+              {{
+                item.connectedCount > 0
+                  ? $t('account.connections.connectAnother')
+                  : $t('account.connections.connect')
+              }}
               </Link>
             </Button>
           </div>
