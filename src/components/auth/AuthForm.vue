@@ -76,10 +76,20 @@
     </div>
 
     <aside class="flex-col items-center justify-center flex-1 flex-shrink hidden basis-1/4 xl:flex">
-      <blockquote class="text-3xl font-light italic max-w-md text-center">
-        “The only true wisdom is in knowing you know nothing.”
-        <cite class="block mt-2 text-sm font-normal">— Socrates</cite>
-      </blockquote>
+      <!-- <blockquote class=" relative text-3xl  max-w-md  overflow-hidden rounded-lg px-6 py-10 border-0">
+        <div class="absolute -inset-5 flex items-center [container-type:inline-size]">
+          <div
+            class="absolute size-[100cqw] animate-slow-rotate bg-[conic-gradient(from_0_at_50%_50%,var(--primary)_0deg,transparent_60deg,transparent_300deg,var(--primary)_360deg)]  opacity-100" />
+        </div>
+
+        <div class="absolute inset-0.5  border bg-background rounded-lg" />
+
+
+        <span class="relative font-semibold block">
+          The only true wisdom is in knowing you know nothing.
+          <cite class="block mt-2 text-sm font-normal">— Socrates</cite>
+        </span>
+      </blockquote> -->
     </aside>
   </section>
 </template>
@@ -115,3 +125,19 @@ defineProps<{
   onSubmit: (e: Event) => void
 }>()
 </script>
+
+<style scoped>
+@keyframes slow-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-slow-rotate {
+  animation: slow-rotate 2s linear infinite;
+}
+</style>

@@ -26,6 +26,9 @@ export default {
     required: 'Email address is required',
     invalid: 'Invalid email address',
   },
+  captcha: {
+    required: 'Please confirm you are not a robot',
+  },
   repeatPassword: {
     required: 'Please confirm your password',
     mismatch: 'Passwords do not match',

@@ -2,7 +2,7 @@ export default {
   token: {
     invalid: 'Код должен содержать 6 цифр',
   },
-  login:{
+  login: {
     invalid: 'Логин содержит недопустимые символы',
   },
   username: {
@@ -22,9 +22,12 @@ export default {
     hide: 'Скрыть',
     show: 'Показать',
   },
-  email:{
+  email: {
     required: 'Требуется адрес электронной почты',
     invalid: 'Недопустимый адрес электронной почты',
+  },
+  captcha: {
+    required: 'Подтвердите, что вы не робот',
   },
   repeatPassword: {
     required: 'Пожалуйста, подтвердите ваш пароль',

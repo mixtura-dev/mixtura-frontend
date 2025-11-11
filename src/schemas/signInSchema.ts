@@ -17,7 +17,6 @@ export const createSignInSchema = () => {
         (value) => USERNAME_REGEX.test(value) || z.string().email().safeParse(value).success,
         t('validation.login.invalid'),
       ),
-
     password: z
       .string({
         required_error: t('validation.password.required'),
@@ -26,5 +25,6 @@ export const createSignInSchema = () => {
       .min(6, { message: t('validation.password.min') })
       .max(32, { message: t('validation.password.max') })
       .regex(PASSWORD_REGEX, t('validation.password.invalid')),
+    captcha: z.string().min(1, t('validation.captcha.required')),
   })
 }

@@ -1,5 +1,5 @@
 export default {
-  or: 'Или',
+  or: 'или',
   save: 'Сохранить',
   cancel: 'Отмена',
   loading: 'Загрузка...',

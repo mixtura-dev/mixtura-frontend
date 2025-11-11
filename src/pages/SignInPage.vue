@@ -32,6 +32,7 @@
         <FormMessage />
       </FormItem>
     </FormField>
+    <FormCaptcha name="captcha" label="Captcha" />
   </AuthForm>
 </template>
 
@@ -47,17 +48,18 @@ import { useSignInMutation } from '@/composables/useAuthQuery'
 import { InputPassword } from '@/components/ui/input'
 import { Link } from '@/components/ui/link'
 import AuthForm from '@/components/auth/AuthForm.vue'
+import FormCaptcha from '@/components/ui/form/FormCaptcha.vue'
 
 const router = useRouter()
 const route = useRoute()
 
 const schema = createSignInSchema()
-type SignInFormValues = { login: string; password: string }
+type SignInFormValues = { login: string; password: string; captcha: string }
 
 const { mutate: signIn, isPending } = useSignInMutation()
 const { handleSubmit } = useForm<SignInFormValues>({
   validationSchema: toTypedSchema(schema),
-  initialValues: { login: '', password: '' },
+  initialValues: { login: '', password: '', captcha: '' },
 })
 
 const onSubmit = handleSubmit((values) => {

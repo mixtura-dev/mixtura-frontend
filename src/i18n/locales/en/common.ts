@@ -1,5 +1,5 @@
 export default {
-  or: 'Or',
+  or: 'or',
   save: 'Save',
   cancel: 'Cancel',
   loading: 'Loading...',
