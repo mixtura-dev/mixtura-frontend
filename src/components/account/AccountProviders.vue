@@ -25,26 +25,33 @@
           class="grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] gap-4 items-center py-2"
         >
           <div class="flex items-center gap-4 col-span-full sm:col-span-1">
-            <Image
-              v-if="item.iconUrl"
-              :src="item.iconUrl"
-              :alt="item.name"
-              width="32"
-              height="32"
-              class="size-8 aspect-square shrink-0"
-            />
+            <div class="flex size-10 items-center justify-center rounded-lg bg-muted shrink-0">
+              <Image
+                v-if="item.iconUrl"
+                :src="item.iconUrl"
+                :alt="item.name"
+                width="20"
+                height="20"
+                class="size-5"
+              />
+              <span v-else class="text-muted-foreground text-sm font-medium">{{
+                item.name.slice(0, 2).toUpperCase()
+              }}</span>
+            </div>
             <div class="cursor-auto">
-              <p class="font-semibold text-sm">{{ item.name }}</p>
-              <div v-if="item.connectedCount > 0" class="mt-1 space-y-1">
+              <p class="mb-1 font-semibold text-sm text-foreground truncate">
+                {{ item.name }}
+              </p>
+              <div v-if="item.connectedCount > 0">
                 <div
                   v-for="(acc, idx) in item.connectedAccounts"
                   :key="idx"
-                  class="text-sm inline after:content-[',_'] last:after:content-none"
+                  class="text-xs inline-center px-2 py-0.5 bg-secondary rounded-md font-medium text-secondary-foreground after:content-[',_'] last:after:content-none"
                 >
                   @{{ acc.client_username || 'unknown' }}
                 </div>
               </div>
-              <p v-else class="text-xs">
+              <p v-else class="text-sm">
                 {{ $t('account.connections.connectAccount', { provider: item.name }) }}
               </p>
             </div>
@@ -53,10 +60,9 @@
           <div class="flex justify-end col-span-full sm:col-span-1">
             <span
               v-if="!item.canConnectMore"
-              class="text-xs text-primary font-medium ml-auto sm:w-auto"
-              role="note"
+              class="inline-flex items-center rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground"
             >
-              {{ $t('account.connections.maxAccounts', { limit: item.limit }, item.limit) }}
+              {{ $t('account.connections.maxAccounts', { limit: item.limit }) }}
             </span>
 
             <Button v-else variant="outline" size="sm" class="w-full sm:w-auto" asChild>

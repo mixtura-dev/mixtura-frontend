@@ -14,7 +14,7 @@
           authStore.user?.username
         }}</span>
         <span class="w-full text-left text-muted-foreground text-xs truncate">
-          {{ authStore.user?.email }}
+          {{ blurredEmail }}
         </span>
       </DropdownMenuLabel>
       <DropdownMenuSeparator />
@@ -65,6 +65,7 @@ import { useTheme } from '@/composables/useTheme'
 import { useSignOutMutation } from '@/composables/useAuthQuery'
 import { Link } from '@/components/ui/link'
 import { hashToHue } from '@/lib/utils/colors'
+import { getInitials, maskEmail } from '@/lib/utils/user'
 const { store } = useTheme()
 const authStore = useAuthStore()
 const signOutMutation = useSignOutMutation()
@@ -84,20 +85,6 @@ const avatarStyle = computed(() => {
     color: 'white',
   }
 })
-
-const initials = computed(() => {
-  const name = authStore.user?.username?.trim()
-  if (!name) return '?'
-
-  const parts = name.split(/[\s-]+/).filter(Boolean)
-
-  const chars = parts
-    .slice(0, 2)
-    .map((p) => p.charAt(0))
-    .join('')
-
-  const firstTwo = [...chars].slice(0, 2).join('').toUpperCase()
-
-  return firstTwo || '?'
-})
+const blurredEmail = computed(() => maskEmail(authStore.user?.email))
+const initials = computed(() => getInitials(authStore.user?.username))
 </script>

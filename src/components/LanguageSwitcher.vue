@@ -28,7 +28,7 @@ const locales: { code: SupportedLocale; label: string; flag: string }[] = [
         <img
           :src="locales.find((l) => l.code === currentLocale)?.flag"
           alt="flag"
-          class="w-5 h-5 rounded-sm"
+          class="size-5 rounded-sm"
         />
         <span class="uppercase text-sm">{{ currentLocale }}</span>
       </Button>
