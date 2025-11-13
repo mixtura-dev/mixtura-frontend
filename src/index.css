@@ -350,7 +350,7 @@
 }
 
 /* Turn off animations if browser prefers to off it */
-@media (prefers-reduced-motion: reduce) {
+/* @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after,
@@ -360,7 +360,7 @@
     transition: none !important;
     transform: none !important;
   }
-}
+} */
 
 ::selection {
   background-color: var(--color-primary);
