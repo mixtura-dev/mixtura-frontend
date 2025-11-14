@@ -1,4 +1,3 @@
-import router from '@/router'
 import { type User } from '@/types/user'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
@@ -18,7 +17,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   const handleUnauthorized = () => {
     clearUser()
-    router.push('/sign-in')
+ 
   }
 
   return {

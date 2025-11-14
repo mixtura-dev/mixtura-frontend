@@ -311,6 +311,14 @@
     clip: rect(0 0 0 0);
     clip-path: inset(100%);
   }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }
 .level-0,
 .level-0 [data-state],

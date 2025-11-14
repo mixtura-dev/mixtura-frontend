@@ -6,6 +6,7 @@ export default {
   loading: 'Загрузка...',
   next: 'Далее',
   back: 'Назад',
+  join: 'Присоединиться',
   delete: 'Удалить',
   add: 'Добавить',
   search: 'Поиск',

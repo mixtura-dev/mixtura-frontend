@@ -1,7 +1,12 @@
-export const hashToHue = (value: string): number => {
+export function hashToHue(str: string | null | undefined): number {
+  if (!str) return 0
+
   let hash = 0
-  for (let i = 0; i < value.length; i++) {
-    hash = value.charCodeAt(i) + ((hash << 5) - hash)
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i)
+    hash = (hash << 5) - hash + char
+    hash |= 0
   }
-  return Math.abs(hash) % 360
+
+  return ((hash % 360) + 360) % 360
 }

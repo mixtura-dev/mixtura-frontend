@@ -28,7 +28,7 @@ const locales: { code: SupportedLocale; label: string; flag: string }[] = [
         <img
           :src="locales.find((l) => l.code === currentLocale)?.flag"
           alt="flag"
-          class="size-5 rounded-sm"
+          class="w-5 border rounded-[2px]"
         />
         <span class="uppercase text-sm">{{ currentLocale }}</span>
       </Button>
@@ -40,7 +40,7 @@ const locales: { code: SupportedLocale; label: string; flag: string }[] = [
         :key="locale.code"
         @click="currentLocale = locale.code"
       >
-        <img :src="locale.flag" :alt="locale.label" class="w-5 h-5 rounded-sm" />
+        <img :src="locale.flag" :alt="locale.label" class="w-5 rounded-[2px] border" />
         <span>{{ locale.label }}</span>
         <Check v-show="currentLocale === locale.code" class="size-4 text-primary" />
       </DropdownMenuItem>

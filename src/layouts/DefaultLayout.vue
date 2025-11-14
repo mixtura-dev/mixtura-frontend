@@ -3,7 +3,7 @@
     <MobileHeader class="md:hidden" :groups="visibleGroups" />
     <MainHeader />
     <div class="flex flex-1 w-full overflow-y-hidden">
-      <MainSidebar class="hidden md:flex" :groups="visibleGroups" v-if="!hideSidebar" />
+      <MainSidebar :groups="visibleGroups" v-if="!hideSidebar" />
       <ShortcutsDialog />
       <main class="main flex-grow overflow-y-auto">
         <RouterView />

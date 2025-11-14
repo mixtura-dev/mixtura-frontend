@@ -60,7 +60,7 @@
           <div class="flex justify-end col-span-full sm:col-span-1">
             <span
               v-if="!item.canConnectMore"
-              class="inline-flex items-center rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground"
+              class="inline-flex items-center rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground cursor-not-allowed"
             >
               {{ $t('account.connections.maxAccounts', { limit: item.limit }) }}
             </span>

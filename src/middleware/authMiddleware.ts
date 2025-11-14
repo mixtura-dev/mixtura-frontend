@@ -1,7 +1,6 @@
+import { useAuthStore } from '@/stores/authStore.store'
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
 import { authQueryKeys } from '@/composables/useAuthQuery'
-import { getUserInfo } from '@/api/endpoints/user'
-import { useAuthStore } from '@/stores/authStore.store'
 import { queryClient } from '@/api/queryClient'
 import { createLogger } from '@/lib/logger'
 
@@ -14,14 +13,18 @@ export const authMiddleware = async (
 ) => {
   const authStore = useAuthStore()
   const isOAuthCallback = to.path.startsWith('/oauth/callback')
+
   logger.debug('Auth middleware triggered', {
     to: to.fullPath,
     isOAuthCallback,
     isAuthLoaded: authStore.isAuthLoaded,
     isAuthenticated: authStore.isAuthenticated,
   })
+
   if (!authStore.isAuthLoaded) {
     try {
+      const { getUserInfo } = await import('@/api/endpoints/user')
+
       const user = await queryClient.ensureQueryData({
         queryKey: authQueryKeys.user(),
         queryFn: getUserInfo,

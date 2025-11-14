@@ -1,18 +1,17 @@
 <template>
-  <section class="flex   p-4 flex-col h-full w-full justify-center items-center">
-    <Card class="relative w-full max-w-md shadow-md">
+  <section class="flex relative px-4 flex-col h-full w-full  items-center justify-center">
+    <Card class="relative w-full max-w-md">
 
       <CardHeader class=" flex flex-col items-center gap-4">
         <Avatar class="size-24">
-          <AvatarImage draggable="false" src="https://github.com/unovue.png" alt="Group Avatar" />
-          <AvatarFallback>
+          <AvatarFallback class=" font-bold text-3xl">
             G
           </AvatarFallback>
 
         </Avatar>
 
         <CardTitle class="text-center text-2xl font-bold tracking-tight text-foreground break-words leading-tight">
-          asdasd
+          Test
         </CardTitle>
 
         <p class="text-sm text-muted-foreground text-center max-w-sm">
@@ -35,12 +34,8 @@
 <script lang="ts" setup>
 import Avatar from '@/components/ui/avatar/Avatar.vue'
 import AvatarFallback from '@/components/ui/avatar/AvatarFallback.vue'
-import AvatarImage from '@/components/ui/avatar/AvatarImage.vue'
 import Badge from '@/components/ui/badge/Badge.vue'
 import { Button } from '@/components/ui/button'
-import Card from '@/components/ui/card/Card.vue'
-import CardContent from '@/components/ui/card/CardContent.vue'
-import CardFooter from '@/components/ui/card/CardFooter.vue'
-import CardHeader from '@/components/ui/card/CardHeader.vue'
-import CardTitle from '@/components/ui/card/CardTitle.vue'
+
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 </script>

@@ -6,6 +6,7 @@ export default {
   loading: 'Loading...',
   next: 'Next',
   back: 'Back',
+  join: 'Join',
   delete: 'Delete',
   add: 'Add',
   search: 'Search',

@@ -1,27 +1,30 @@
 <template>
-  <section class="flex bg-background px-4 flex-col h-full w-full items-center justify-center">
+  <section aria-labelledby="error-title" role="alert"
+    class="flex relative px-4 flex-col h-full w-full  items-center justify-center" v-motion :initial="{ opacity: 0 }"
+    :enter="{
+      opacity: 1,
+    }">
     <div class="flex flex-col items-center container max-w-xl">
-      <Badge variant="destructive" class="mb-6">
-        <p role="alert" aria-live="assertive" class="font-bold tracking-tight">
-          {{ statusCode }} <span class="mx-1">•</span> {{ $t('common.error') }}
-        </p>
-      </Badge>
+      <p
+        class="-z-1 absolute top-1/4  sm:top-1/2 -translate-y-1/2 font-mono font-bold  sm:text-muted/60 text-foregroun text-[35vw] leading-none select-none">
+        {{ statusCode }}
+      </p>
 
-      <!-- 
-      <div class="size-12 cursor-pointer" @mouseenter="handleHover">
-        <Vue3Lottie ref="lottieRef" :animationData="duckNotFound" :autoPlay="false" :loop="false" renderer="svg"
+      <div class="size-24 cursor-pointer" @mouseenter="handleHover" aria-hidden="true">
+        <Vue3Lottie ref="lottieRef" :animationData="duckNotFound" :autoPlay="true" :loop="false" renderer="svg"
           @onComplete="onAnimationComplete" />
-      </div> -->
+      </div>
 
-      <h1 class="mb-7 text-4xl font-extrabold tracking-tight lg:text-5xl">
+      <h1 id="error-title"
+        class="mb-8 text-center font-extrabold text-3xl sm:text-4xl md:text-5xl tracking-tight text-foreground">
         {{ $t(`error.${title}`) }}
       </h1>
       <div class="flex flex-col sm:flex-row gap-3 justify-center">
-        <Button size="lg" @click="goBack">
+        <Button size="lg" class="hover:-rotate-3" @click="goBack">
           <ArrowLeft />
           {{ $t('common.back') }}
         </Button>
-        <Button variant="outline" size="lg" class="px-8" @click="goBack">
+        <Button variant="outline" size="lg" class="px-8 hover:rotate-3" @click="goHome">
           <HomeIcon />
           {{ $t('menu.home') }}
         </Button>
@@ -31,12 +34,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-// import { Vue3Lottie } from 'vue3-lottie'
-// import duckNotFound from '@/assets/duckNotFound.json'
+import { computed, ref } from 'vue'
+import { Vue3Lottie } from 'vue3-lottie'
+import duckNotFound from '@/assets/duckNotFound.json'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'vue-router'
-import Badge from '@/components/ui/badge/Badge.vue'
 import { ArrowLeft, HomeIcon } from 'lucide-vue-next'
 
 interface ErrorPageProps {
@@ -56,16 +58,17 @@ const goBack = () => {
   else router.push('/')
 }
 
-// const lottieRef = ref<typeof Vue3Lottie | null>(null)
-// const isPlaying = ref(false)
+const goHome = () => router.push('/')
+const lottieRef = ref<typeof Vue3Lottie | null>(null)
+const isPlaying = ref(false)
 
-// const handleHover = () => {
-//   if (isPlaying.value || !lottieRef.value) return
-//   isPlaying.value = true
-//   lottieRef.value.goToAndPlay(0, true)
-// }
+const handleHover = () => {
+  if (isPlaying.value || !lottieRef.value) return
+  isPlaying.value = true
+  lottieRef.value.goToAndPlay(0, true)
+}
 
-// const onAnimationComplete = () => {
-//   isPlaying.value = false
-// }
+const onAnimationComplete = () => {
+  isPlaying.value = false
+}
 </script>

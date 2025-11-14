@@ -1,20 +1,18 @@
 <template>
   <Alert variant="destructive">
     <AlertTriangleIcon />
-    <AlertTitle>Request for account deletion</AlertTitle>
+    <AlertTitle>{{ $t('account.deleteAccount.title') }}</AlertTitle>
     <AlertDescription>
-      Deleting your account is permanent and cannot be undone. Your data will be deleted within 30
-      days, except we may retain some metadata and logs for longer where required or permitted by
-      law.
+      {{ $t('account.deleteAccount.warning') }}
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button class="mt-1" variant="destructive" size="sm"> Request to delete account </Button>
+          <Button class="mt-1" variant="destructive" size="sm"> {{ $t('account.deleteAccount.request') }} </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{{ $t('common.absolutelySure') }}</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently reset your settings.
+              {{ $t('account.deleteAccount.description') }}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

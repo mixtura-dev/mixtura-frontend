@@ -12,4 +12,11 @@ export default {
     connectAnother: 'Connect another',
     maxAccounts: 'Max {limit} account | Max {limit} accounts',
   },
+  deleteAccount: {
+    title: 'Delete Account',
+    request: 'Request for account deletion',
+    warning:
+      'Deleting your account is permanent and cannot be undone. Your data will be deleted within 30 days, except where we are required to retain certain metadata and logs for a longer period as required by law.',
+    description: 'This action cannot be undone. It will permanently delete your account.',
+  },
 }

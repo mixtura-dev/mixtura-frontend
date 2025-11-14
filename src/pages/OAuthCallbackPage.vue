@@ -1,10 +1,6 @@
 <template>
-  <section
-    class="flex flex-col items-center justify-center w-full h-full p-4 text-center"
-    role="status"
-    aria-live="polite"
-    tabindex="-1"
-  >
+  <section class="flex flex-col items-center justify-center w-full h-full p-4 text-center" role="status"
+    aria-live="polite" tabindex="-1">
     <div class="inline-block mb-4">
       <Loader2Icon class="size-10 text-primary animate-spin" aria-hidden="true" />
       <p class="hidden-visually">{{ $t('common.loading') }}</p>
@@ -42,12 +38,12 @@ onMounted(async () => {
     log('OAuth success!')
     toast.success(`Successfully connected ${provider} account!`)
     log.debug('Redirecting to /account')
-    router.push('/account')
+    router.replace('/account')
   } catch (error) {
     log.error('OAuth callback error:', error)
     toast.error('Failed to connect account. Please try again.')
     log.debug('Redirecting to /account (error)')
-    router.push('/account')
+    router.replace('/account')
   }
 })
 </script>
