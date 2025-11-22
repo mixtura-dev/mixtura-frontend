@@ -1,22 +1,31 @@
 <template>
-  <section aria-labelledby="error-title" role="alert"
-    class="flex relative px-4 flex-col h-full w-full  items-center justify-center" v-motion :initial="{ opacity: 0 }"
-    :enter="{
-      opacity: 1,
-    }">
+  <section
+    aria-labelledby="error-title"
+    role="alert"
+    class="flex relative px-4 flex-col h-full w-full items-center justify-center"
+  >
     <div class="flex flex-col items-center container max-w-xl">
       <p
-        class="-z-1 absolute top-1/4  sm:top-1/2 -translate-y-1/2 font-mono font-bold  sm:text-muted/60 text-foregroun text-[35vw] leading-none select-none">
+        class="-z-1 absolute top-1/4 sm:top-1/2 -translate-y-1/2 font-mono font-bold sm:text-muted/60 text-foregroun text-[35vw] leading-none select-none"
+      >
         {{ statusCode }}
       </p>
 
       <div class="size-24 cursor-pointer" @mouseenter="handleHover" aria-hidden="true">
-        <Vue3Lottie ref="lottieRef" :animationData="duckNotFound" :autoPlay="true" :loop="false" renderer="svg"
-          @onComplete="onAnimationComplete" />
+        <Vue3Lottie
+          ref="lottieRef"
+          :animationData="duckNotFound"
+          :autoPlay="true"
+          :loop="false"
+          renderer="svg"
+          @onComplete="onAnimationComplete"
+        />
       </div>
 
-      <h1 id="error-title"
-        class="mb-8 text-center font-extrabold text-3xl sm:text-4xl md:text-5xl tracking-tight text-foreground">
+      <h1
+        id="error-title"
+        class="mb-8 text-center font-extrabold text-3xl sm:text-4xl md:text-5xl tracking-tight text-foreground"
+      >
         {{ $t(`error.${title}`) }}
       </h1>
       <div class="flex flex-col sm:flex-row gap-3 justify-center">

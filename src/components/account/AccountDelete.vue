@@ -6,7 +6,9 @@
       {{ $t('account.deleteAccount.warning') }}
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button class="mt-1" variant="destructive" size="sm"> {{ $t('account.deleteAccount.request') }} </Button>
+          <Button class="mt-1" variant="destructive" size="sm">
+            {{ $t('account.deleteAccount.request') }}
+          </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>

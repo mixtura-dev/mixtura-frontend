@@ -6,7 +6,9 @@
  * @returns string with 1-2 Uppercase letters or '?'
  */
 
-export const getInitials = (name: string | undefined | null, maxLength: number = 2): string => {
+import type { Nullable } from '@/types/utils'
+
+export const getInitials = (name: Nullable<string>, maxLength: number = 2): string => {
   if (!name?.trim()) return '?'
   const parts = name
     .trim()
@@ -31,7 +33,7 @@ export const getInitials = (name: string | undefined | null, maxLength: number =
  * @returns - disguised email, for example: e**********8@gmail.com
  */
 
-export const maskEmail = (email: string | null | undefined, maskChar: string = '*'): string => {
+export const maskEmail = (email: Nullable<string>, maskChar: string = '*'): string => {
   if (!email?.trim()) return ''
   const atIndex = email.indexOf('@')
   if (atIndex <= 0 || atIndex === email.length - 1) {

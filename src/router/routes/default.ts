@@ -11,8 +11,16 @@ export const defaultRoutes = {
   component: DefaultLayout,
   children: [
     { path: '', component: HomePage, meta: { title: 'Home', requiresAuth: true } },
-    { path: 'workspace', component: WorkspacePage, meta: { title: 'Workspace', requiresAuth: true } },
-    { path: 'workspace/new', component: WorkspaceCreatePage, meta: { title: 'New Workspace', hideSidebar: true, requiresAuth: true } },
+    {
+      path: 'workspace',
+      component: WorkspacePage,
+      meta: { title: 'Workspace', requiresAuth: true },
+    },
+    {
+      path: 'workspace/new',
+      component: WorkspaceCreatePage,
+      meta: { title: 'New Workspace', hideSidebar: true, requiresAuth: true },
+    },
     { path: 'settings', component: SettingPage, meta: { title: 'Settings', requiresAuth: true } },
     { path: 'account', component: AccountPage, meta: { title: 'Account', requiresAuth: true } },
     { path: 'balancer', component: BalancerPage, meta: { title: 'Balancer', requiresAuth: true } },

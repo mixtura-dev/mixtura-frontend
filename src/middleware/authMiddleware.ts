@@ -1,7 +1,5 @@
 import { useAuthStore } from '@/stores/authStore.store'
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
-import { authQueryKeys } from '@/composables/useAuthQuery'
-import { queryClient } from '@/api/queryClient'
 import { createLogger } from '@/lib/logger'
 
 const logger = createLogger('authMiddleware')
@@ -20,22 +18,7 @@ export const authMiddleware = async (
     isAuthLoaded: authStore.isAuthLoaded,
     isAuthenticated: authStore.isAuthenticated,
   })
-
-  if (!authStore.isAuthLoaded) {
-    try {
-      const { getUserInfo } = await import('@/api/endpoints/user')
-
-      const user = await queryClient.ensureQueryData({
-        queryKey: authQueryKeys.user(),
-        queryFn: getUserInfo,
-      })
-      authStore.setUser(user)
-    } catch (error: unknown) {
-      authStore.clearUser()
-      logger.debug('No authenticated user found during auth check.', error)
-    }
-    authStore.isAuthLoaded = true
-  }
+  await authStore.fetchUser()
 
   if (to.meta.requiresAuth && !authStore.isAuthenticated && !isOAuthCallback) {
     next({ path: '/sign-in', query: { redirect: to.fullPath } })

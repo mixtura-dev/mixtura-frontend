@@ -65,12 +65,6 @@
         <Button @click="makeScreenshot" size="icon" variant="outline">
           <ClipboardIcon />
         </Button>
-        <Button
-          @click="currentLocale === 'en' ? (currentLocale = 'ru') : (currentLocale = 'en')"
-          variant="secondary"
-        >
-          Change language
-        </Button>
       </div>
     </div>
   </section>
@@ -81,7 +75,6 @@ import { ref } from 'vue'
 import { useSettingsStore } from '@/stores/settingsStore.store'
 import { Button } from '@/components/ui/button'
 import { ClipboardIcon } from 'lucide-vue-next'
-import { useLanguage } from '@/composables/useLanguage'
 import PlayerItem from '@/components/balancer/PlayerItem.vue'
 import type { PlayerRole, GameRole } from '@/types/balancer'
 
@@ -89,8 +82,6 @@ import draggable from 'vuedraggable'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import WorkspaceCardBase from '@/components/workspace/WorkspaceCardBase.vue'
 import { useScreenshot } from '@/composables/useScreenshot'
-
-const { currentLocale } = useLanguage()
 
 const screenshotRef = ref<HTMLElement | null>(null)
 

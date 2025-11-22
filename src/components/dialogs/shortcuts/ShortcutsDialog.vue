@@ -2,16 +2,22 @@
   <Dialog v-model:open="open">
     <DialogContent
       class="sm:max-w-[950px] grid-rows-[auto_minmax(0,1fr)_auto] p-0 transition-all duration-300 ease-in-out"
-      :style="{ height: modalHeight }">
+      :style="{ height: modalHeight }"
+    >
       <DialogHeader class="p-6 pb-0">
-        <DialogTitle class="text-start"> <span class="text-2xl"> Комбинации клавиш <KbdGroup><Kbd>Ctrl</Kbd><Kbd>/</Kbd>
-            </KbdGroup> </span> </DialogTitle>
+        <DialogTitle class="text-start">
+          <span class="text-2xl">
+            Комбинации клавиш <KbdGroup><Kbd>Ctrl</Kbd><Kbd>/</Kbd> </KbdGroup>
+          </span>
+        </DialogTitle>
         <DialogDescription class="text-start"> Овладейте мастерством </DialogDescription>
       </DialogHeader>
 
       <div class="relative w-full overflow-hidden">
-        <div class="flex transition-transform duration-300 ease-in-out"
-          :style="{ transform: `translate3d(-${step * 100}%, 0, 0)` }">
+        <div
+          class="flex transition-transform duration-300 ease-in-out"
+          :style="{ transform: `translate3d(-${step * 100}%, 0, 0)` }"
+        >
           <div v-for="(s, index) in steps" :key="index" class="w-full flex-shrink-0 p-6">
             <ShortcutsBody :sections="s.sections" />
           </div>
@@ -22,7 +28,6 @@
         <Button size="sm" @click="nextStep" :disabled="step === steps.length - 1">➡️</Button>
       </DialogFooter>
     </DialogContent>
-
   </Dialog>
 </template>
 
@@ -34,7 +39,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogFooter
+  DialogFooter,
 } from '@/components/ui/dialog'
 import ShortcutsBody, { type Section } from './ShortcutsBody.vue'
 import { useMagicKeys, whenever } from '@vueuse/core'
@@ -49,7 +54,15 @@ const modalHeight = ref('auto')
 const steps = [
   {
     sections: [
-      { title: 'Навигация', items: [{ description: 'Переходите вперед и назад на истории страниц', combos: [{ keys: ['Alt', ArrowLeft] }, { keys: ['Alt', ArrowRight] }], },], },
+      {
+        title: 'Навигация',
+        items: [
+          {
+            description: 'Переходите вперед и назад на истории страниц',
+            combos: [{ keys: ['Alt', ArrowLeft] }, { keys: ['Alt', ArrowRight] }],
+          },
+        ],
+      },
     ] as Section[],
   },
   {

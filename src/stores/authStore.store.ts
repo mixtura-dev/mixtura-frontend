@@ -1,6 +1,13 @@
 import { type User } from '@/types/user'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
+import router from '@/router'
+import { queryClient } from '@/api/queryClient'
+import { authQueryKeys } from '@/composables/useAuthQuery'
+import { createLogger } from '@/lib/logger'
+import { getUserInfo } from '@/api/endpoints/user'
+
+const logger = createLogger('authStore')
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(null)
@@ -15,9 +22,25 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = null
   }
 
+  const fetchUser = async () => {
+    try {
+      const fetchedUser = await queryClient.ensureQueryData({
+        queryKey: authQueryKeys.user(),
+        queryFn: getUserInfo,
+      })
+
+      setUser(fetchedUser)
+      isAuthLoaded.value = true
+    } catch (error: unknown) {
+      clearUser()
+      isAuthLoaded.value = true
+      logger.debug('No authenticated user found during auth check.', error)
+    }
+  }
+
   const handleUnauthorized = () => {
     clearUser()
- 
+    router.push('/sign-in')
   }
 
   return {
@@ -26,6 +49,7 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated,
     handleUnauthorized,
     setUser,
+    fetchUser,
     clearUser,
   }
 })

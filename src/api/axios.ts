@@ -1,4 +1,3 @@
-import router from '@/router'
 import { useAuthStore } from '@/stores/authStore.store'
 import axios, { AxiosError } from 'axios'
 
@@ -25,7 +24,6 @@ baseApi.interceptors.response.use(
       !window.location.pathname.startsWith('/oauth/callback')
     ) {
       authStore.handleUnauthorized()
-      router.push('/sign-in')
     }
 
     console.log(error)

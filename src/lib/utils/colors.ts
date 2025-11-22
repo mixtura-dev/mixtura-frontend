@@ -1,4 +1,6 @@
-export function hashToHue(str: string | null | undefined): number {
+import type { Nullable } from '@/types/utils'
+
+export function hashToHue(str: Nullable<string>): number {
   if (!str) return 0
 
   let hash = 0

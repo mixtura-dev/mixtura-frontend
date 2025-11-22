@@ -3,7 +3,7 @@
     <DropdownMenuTrigger>
       <Avatar>
         <!-- <AvatarImage draggable="false" src="https://github.com/unovue.png" alt="@unovue" /> -->
-        <AvatarFallback class="text-sm font-bold" :style="avatarStyle">
+        <AvatarFallback class="text-[1em] font-bold" :style="avatarStyle">
           {{ initials }}
         </AvatarFallback>
       </Avatar>
@@ -20,10 +20,10 @@
       <DropdownMenuSeparator />
       <DropdownMenuItem asChild>
         <Link to="/account">
-        <span class="text-xs flex items-center gap-2">
-          <SettingsIcon class="size-3.5" aria-hidden="true" />
-          {{ $t('account.title') }}
-        </span>
+          <span class="text-xs flex items-center gap-2">
+            <SettingsIcon class="size-3.5" aria-hidden="true" />
+            {{ $t('account.title') }}
+          </span>
         </Link>
       </DropdownMenuItem>
       <DropdownMenuLabel class="text-muted-foreground">{{ $t('theme.title') }}</DropdownMenuLabel>
