@@ -40,6 +40,6 @@ const router = useRouter()
 function handleSubmit() {
   console.log('Created:', { title: title.value, subtitle: subtitle.value })
 
-  router.push('/workspace')
+  router.push('/servers')
 }
 </script>

@@ -52,7 +52,7 @@ import { createForgotPasswordEmailSchema } from '@/schemas/forgotPasswordSchema'
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { useResetPasswordMutation } from '@/composables/useAuthQuery'
+import { useResetPasswordMutation } from '@/api/queries/user/useAuthQuery'
 import { Link } from '@/components/ui/link'
 
 const { t } = useI18n()

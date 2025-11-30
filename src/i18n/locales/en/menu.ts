@@ -4,5 +4,5 @@ export default {
   help: 'Help',
   settings: 'Settings',
   balancer: 'Balancer',
-  workspace: 'Workspace',
+  servers: 'Servers',
 }

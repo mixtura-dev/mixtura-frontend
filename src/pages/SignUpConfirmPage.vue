@@ -80,7 +80,7 @@ import { createSignUpSchema } from '@/schemas/signUpSchema'
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
 import { InputPassword } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { useConfirmSignUpMutation, useSignInMutation } from '@/composables/useAuthQuery'
+import { useConfirmSignUpMutation, useSignInMutation } from '@/api/queries/user/useAuthQuery'
 import { getQueryValue } from '@/lib/utils/router'
 import { Link } from '@/components/ui/link'
 

@@ -1,4 +1,4 @@
-import { checkUsername } from '@/api/endpoints/user'
+import { checkUsername } from '@/api/endpoints/user/user'
 import { useDebounceFn } from '@vueuse/core'
 
 export const useUsernameValidator = () => {

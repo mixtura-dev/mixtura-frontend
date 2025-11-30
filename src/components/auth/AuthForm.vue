@@ -101,7 +101,7 @@
 import { Button } from '@/components/ui/button'
 import { Link } from '@/components/ui/link'
 import { computed } from 'vue'
-import { useProvidersQuery } from '@/composables/useAuthQuery'
+import { useProvidersQuery } from '@/api/queries/user/useAuthQuery'
 import Image from '../ui/image/Image.vue'
 import { AlertTriangleIcon, LoaderIcon } from 'lucide-vue-next'
 

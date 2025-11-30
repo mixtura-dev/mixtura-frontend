@@ -21,7 +21,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
 import { Loader2Icon } from 'lucide-vue-next'
 import { getQueryValue } from '@/lib/utils/router'
-import { useCallbackProvidersMutation } from '@/composables/useAuthQuery'
+import { useCallbackProvidersMutation } from '@/api/queries/user/useAuthQuery'
 import { createLogger } from '@/lib/logger'
 
 const route = useRoute()

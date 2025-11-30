@@ -9,19 +9,15 @@ import {
   signUp,
   verifyResetPassword,
   verifySignUp,
-} from '@/api/endpoints/auth'
-import { getUserInfo } from '@/api/endpoints/user'
+} from '@/api/endpoints/user/auth'
+import { getUserInfo } from '@/api/endpoints/user/user'
 import { queryClient } from '@/api/queryClient'
 import { useAuthStore } from '@/stores/authStore.store'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
+import { authQueryKeys } from './keys'
 
 export const USER_STALE_TIME = 5 * 60 * 1000
 const PROVIDER_STALE_TIME = 10 * 60 * 1000
-
-export const authQueryKeys = {
-  user: () => ['auth', 'user'] as const,
-  providers: () => ['auth', 'providers'] as const,
-}
 
 export const useProvidersQuery = () => {
   return useQuery({

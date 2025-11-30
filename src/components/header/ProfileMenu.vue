@@ -62,7 +62,7 @@ import DropdownMenuRadioItem from '@/components/ui/dropdown-menu/DropdownMenuRad
 import { THEMES } from '@/constants/theme'
 import { useAuthStore } from '@/stores/authStore.store'
 import { useTheme } from '@/composables/useTheme'
-import { useSignOutMutation } from '@/composables/useAuthQuery'
+import { useSignOutMutation } from '@/api/queries/user/useAuthQuery'
 import { Link } from '@/components/ui/link'
 import { hashToHue } from '@/lib/utils/colors'
 import { getInitials, maskEmail } from '@/lib/utils/user'

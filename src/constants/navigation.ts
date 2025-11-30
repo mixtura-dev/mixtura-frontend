@@ -20,8 +20,8 @@ export const MAIN_NAV: NavItem[] = [
     icon: HouseIcon,
   },
   {
-    path: '/workspace',
-    labelKey: 'menu.workspace',
+    path: '/servers',
+    labelKey: 'menu.servers',
     icon: BoxesIcon,
   },
   {
@@ -39,8 +39,8 @@ export const MAIN_NAV: NavItem[] = [
 export const NAV_GROUPS: NavGroup[] = [
   { id: 'main', items: MAIN_NAV },
   {
-    id: 'workspace',
-    match: /^\/workspace/,
-    items: [{ path: '/workspace/team', labelKey: 'nav.team', icon: Users }],
+    id: 'servers',
+    match: /^\/servers/,
+    items: [{ path: '/servers/team', labelKey: 'nav.team', icon: Users }],
   },
 ]

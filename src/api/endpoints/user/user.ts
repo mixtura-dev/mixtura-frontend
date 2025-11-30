@@ -1,5 +1,5 @@
 import type { RequestBody, SuccessResponse } from '@/types/auth'
-import { baseApi } from '../axios'
+import { baseApi } from '@/api/axios'
 
 export const getUserInfo = (): Promise<SuccessResponse<'/api/auth/user', 'get'>> =>
   baseApi.get('/api/auth/user').then((res) => res.data)

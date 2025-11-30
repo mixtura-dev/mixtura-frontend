@@ -3,9 +3,9 @@ import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import router from '@/router'
 import { queryClient } from '@/api/queryClient'
-import { authQueryKeys } from '@/composables/useAuthQuery'
 import { createLogger } from '@/lib/logger'
-import { getUserInfo } from '@/api/endpoints/user'
+import { getUserInfo } from '@/api/endpoints/user/user'
+import { authQueryKeys } from '@/api/queries/user/keys'
 
 const logger = createLogger('authStore')
 

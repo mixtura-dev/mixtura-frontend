@@ -27,7 +27,7 @@ import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/comp
 import { Input } from '@/components/ui/input'
 import AuthForm from '@/components/auth/AuthForm.vue'
 import { createSignUpEmailSchema } from '@/schemas/signUpSchema'
-import { useSignUpMutation } from '@/composables/useAuthQuery'
+import { useSignUpMutation } from '@/api/queries/user/useAuthQuery'
 
 const router = useRouter()
 const schema = createSignUpEmailSchema()

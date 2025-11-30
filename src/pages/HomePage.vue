@@ -53,9 +53,9 @@
             <SheetTitle>Match History</SheetTitle>
           </SheetHeader>
           <div class="p-4 pt-0 flex flex-col gap-4 overflow-y-scroll">
-            <WorkspaceCardBase class="border p-4 rounded bg-accent" v-for="i in 100" :key="i">
+            <ServerCardBase class="border p-4 rounded bg-accent" v-for="i in 100" :key="i">
               Match {{ i }}
-            </WorkspaceCardBase>
+            </ServerCardBase>
           </div>
         </SheetContent>
       </Sheet>
@@ -80,7 +80,7 @@ import type { PlayerRole, GameRole } from '@/types/balancer'
 
 import draggable from 'vuedraggable'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import WorkspaceCardBase from '@/components/workspace/WorkspaceCardBase.vue'
+import ServerCardBase from '@/components/workspace/ServerCardBase.vue'
 import { useScreenshot } from '@/composables/useScreenshot'
 
 const screenshotRef = ref<HTMLElement | null>(null)

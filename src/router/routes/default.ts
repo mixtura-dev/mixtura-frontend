@@ -1,7 +1,7 @@
 const DefaultLayout = () => import('@/layouts/DefaultLayout.vue')
 const HomePage = () => import('@/pages/HomePage.vue')
-const WorkspacePage = () => import('@/pages/WorkspacePage.vue')
-const WorkspaceCreatePage = () => import('@/pages/WorkspaceCreatePage.vue')
+const ServersPage = () => import('@/pages/ServersPage.vue')
+const ServersCreatePage = () => import('@/pages/ServersCreatePage.vue')
 const SettingPage = () => import('@/pages/WorkspaceSettingsPage.vue')
 const BalancerPage = () => import('@/pages/BalancerPage.vue')
 const AccountPage = () => import('@/pages/AccountPage.vue')
@@ -12,14 +12,14 @@ export const defaultRoutes = {
   children: [
     { path: '', component: HomePage, meta: { title: 'Home', requiresAuth: true } },
     {
-      path: 'workspace',
-      component: WorkspacePage,
-      meta: { title: 'Workspace', requiresAuth: true },
+      path: 'servers',
+      component: ServersPage,
+      meta: { title: 'Servers', requiresAuth: true },
     },
     {
-      path: 'workspace/new',
-      component: WorkspaceCreatePage,
-      meta: { title: 'New Workspace', hideSidebar: true, requiresAuth: true },
+      path: 'servers/new',
+      component: ServersCreatePage,
+      meta: { title: 'New Server', hideSidebar: true, requiresAuth: true },
     },
     { path: 'settings', component: SettingPage, meta: { title: 'Settings', requiresAuth: true } },
     { path: 'account', component: AccountPage, meta: { title: 'Account', requiresAuth: true } },

@@ -18,9 +18,21 @@ export const authMiddleware = async (
     isAuthLoaded: authStore.isAuthLoaded,
     isAuthenticated: authStore.isAuthenticated,
   })
-  await authStore.fetchUser()
 
-  if (to.meta.requiresAuth && !authStore.isAuthenticated && !isOAuthCallback) {
+  if (!authStore.isAuthLoaded) {
+    try {
+      await authStore.fetchUser()
+    } catch (error) {
+      logger.debug('User fetch failed (likely guest)', error)
+    }
+  }
+
+  if (
+    to.meta.requiresAuth &&
+    !authStore.isAuthenticated &&
+    !isOAuthCallback &&
+    !to.meta.guestOnly
+  ) {
     next({ path: '/sign-in', query: { redirect: to.fullPath } })
     return
   }

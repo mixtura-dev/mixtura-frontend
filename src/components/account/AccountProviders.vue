@@ -81,7 +81,7 @@
   </Card>
 </template>
 <script setup lang="ts">
-import { useProvidersQuery, useUserQuery } from '@/composables/useAuthQuery'
+import { useProvidersQuery, useUserQuery } from '@/api/queries/user/useAuthQuery'
 import { computed } from 'vue'
 import { Card, CardDescription, CardHeader, CardContent, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'

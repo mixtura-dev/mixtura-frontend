@@ -26,7 +26,7 @@ baseApi.interceptors.response.use(
       authStore.handleUnauthorized()
     }
 
-    console.log(error)
+    console.error(error)
     const message = error.response?.data?.error || error.message
     return Promise.reject(new Error(message))
   },

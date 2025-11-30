@@ -1,5 +1,5 @@
 import type { RequestBody, SuccessResponse } from '@/types/auth'
-import { baseApi } from '../axios'
+import { baseApi } from '@/api/axios'
 
 export const signIn = (
   data: RequestBody<'/api/auth/signin', 'post'>,

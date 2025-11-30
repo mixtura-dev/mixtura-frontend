@@ -15,6 +15,10 @@ const ALIASES = {
 
 export default defineConfig(({ mode = 'development' }) => {
   const env = loadEnv(mode, process.cwd())
+  console.log('=== VITE CONFIG ===')
+  console.log('Mode:', mode)
+  console.log('API URL:', env.VITE_API_URL)
+  console.log('==================')
   return {
     plugins: [
       vue(),
@@ -55,6 +59,7 @@ export default defineConfig(({ mode = 'development' }) => {
         '/api': {
           target: env.VITE_API_URL,
           changeOrigin: true,
+          secure: true,
         },
       },
     },
