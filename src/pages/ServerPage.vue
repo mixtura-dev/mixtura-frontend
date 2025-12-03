@@ -35,7 +35,7 @@
 
           <div class="flex-1 min-w-0 flex flex-col justify-end mb-1 space-y-1">
             <h1
-              class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white truncate drop-shadow-md"
+              class="text-2xl leading-normal sm:text-3xl md:text-4xl font-bold tracking-tight text-white truncate"
               :title="server.name"
             >
               {{ server.name }}
@@ -101,77 +101,106 @@
           class="animate-in fade-in slide-in-from-bottom-4 duration-500"
         >
           <div class="grid gap-6 lg:grid-cols-3">
+            <!-- LEFT COLUMN: Main Content -->
             <div class="lg:col-span-2 space-y-6">
-              <Card>
+              <Card class="h-full flex flex-col">
                 <CardHeader>
                   <CardTitle>About Workspace</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent class="flex-1 space-y-6">
+                  <!-- Description -->
                   <p class="leading-relaxed text-muted-foreground whitespace-pre-line">
                     {{ server.description }}
                   </p>
+
+                  <div v-if="server.games.length" class="pt-4">
+                    <h3 class="text-sm font-medium text-foreground mb-3 flex items-center gap-2">
+                      <Gamepad2 class="size-4 text-primary" />
+                      Active Games
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div
+                        v-for="game in server.games"
+                        :key="game.id"
+                        class="flex items-center gap-3 p-2 rounded-md border bg-muted/30 transition-colors hover:bg-muted hover:border-primary/50"
+                      >
+                        <Avatar class="size-8 rounded-md">
+                          <AvatarImage :src="game.icon_url" />
+                          <AvatarFallback class="rounded-md text-xs">{{
+                            game.name[0]
+                          }}</AvatarFallback>
+                        </Avatar>
+                        <span class="font-medium text-sm">{{ game.name }}</span>
+                      </div>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
-
-              <!-- Features Grid -->
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Card class="bg-primary/5 border-primary/20">
-                  <CardHeader class="pb-2">
-                    <CardTitle class="text-sm font-medium text-primary">Type</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div class="text-2xl font-bold flex items-center gap-2">
-                      <Globe2 v-if="server.public" class="size-6" />
-                      <Lock v-else class="size-6" />
-                      {{ server.public ? 'Public Community' : 'Private Team' }}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader class="pb-2">
-                    <CardTitle class="text-sm font-medium text-muted-foreground"
-                      >Rating System</CardTitle
-                    >
-                  </CardHeader>
-                  <CardContent>
-                    <div class="text-2xl font-bold">
-                      {{ server.rating_set ? server.rating_set.name : 'Casual / None' }}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
             </div>
 
+            <!-- RIGHT COLUMN: Meta Data & Sidebar -->
             <div class="space-y-6">
+              <!-- Server Details Card -->
               <Card>
-                <CardHeader>
-                  <CardTitle class="text-sm text-muted-foreground uppercase tracking-wider"
-                    >Supported Games</CardTitle
+                <CardHeader class="pb-3">
+                  <CardTitle class="text-sm text-muted-foreground tracking-wider uppercase"
+                    >Server Info</CardTitle
                   >
                 </CardHeader>
-                <CardContent class="flex flex-wrap gap-2">
-                  <Badge v-for="game in server.games" :key="game.id" variant="secondary">
-                    {{ game.name }}
-                  </Badge>
+                <CardContent class="grid gap-4">
+                  <!-- Type -->
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-sm">
+                      <Globe2 v-if="server.public" class="size-4 text-muted-foreground" />
+                      <Lock v-else class="size-4 text-muted-foreground" />
+                      <span>Access</span>
+                    </div>
+                    <Badge variant="outline">{{ server.public ? 'Public' : 'Private' }}</Badge>
+                  </div>
+
+                  <!-- Rating System -->
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-sm">
+                      <Trophy class="size-4 text-muted-foreground" />
+                      <span>Rating System</span>
+                    </div>
+                    <span class="text-sm font-medium">{{
+                      server.rating_set ? 'Enabled' : 'Disabled'
+                    }}</span>
+                  </div>
+
+                  <!-- Rating Name if enabled -->
+                  <div
+                    v-if="server.rating_set"
+                    class="mt-2 p-3 rounded-md bg-secondary/50 text-xs text-muted-foreground border border-border/50"
+                  >
+                    Using
+                    <span class="font-semibold text-foreground">{{ server.rating_set.name }}</span>
+                    preset.
+                  </div>
                 </CardContent>
               </Card>
 
               <Card>
-                <CardHeader>
-                  <CardTitle class="text-sm text-muted-foreground uppercase tracking-wider"
+                <CardHeader class="pb-3">
+                  <CardTitle class="text-sm text-muted-foreground tracking-wider uppercase"
                     >Administrators</CardTitle
                   >
                 </CardHeader>
                 <CardContent>
-                  <div class="flex items-center gap-3">
-                    <Avatar>
-                      <AvatarFallback>AD</AvatarFallback>
+                  <div
+                    class="flex items-center gap-3 p-2 -mx-2 rounded-md hover:bg-muted/50 transition-colors cursor-pointer"
+                  >
+                    <Avatar class="size-9 border">
+                      <AvatarFallback class="text-xs bg-primary/10 text-primary font-bold"
+                        >OP</AvatarFallback
+                      >
                     </Avatar>
-                    <div>
-                      <p class="text-sm font-medium">Server Admin</p>
-                      <p class="text-xs text-muted-foreground">@{{ server.owner_id }}</p>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm font-medium truncate">Server Owner</p>
+                      <p class="text-xs text-muted-foreground truncate">@{{ server.owner_id }}</p>
                     </div>
+                    <Badge variant="secondary" class="text-[10px] h-5">Owner</Badge>
                   </div>
                 </CardContent>
               </Card>
@@ -200,48 +229,85 @@
             </Card>
           </div>
         </TabsContent>
-
         <TabsContent
           value="competitive"
           v-if="server.rating_set"
           class="animate-in fade-in slide-in-from-bottom-4 duration-500"
         >
-          <Card>
-            <CardHeader>
-              <CardTitle>Rating System: {{ server.rating_set.name }}</CardTitle>
-              <CardDescription>
-                This server uses a custom MMR range from {{ server.rating_set.min_rating }} to
-                {{ server.rating_set.max_rating }}.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div class="space-y-4">
-                <div
-                  v-for="rating in server.rating_set.ratings"
-                  :key="rating.id"
-                  class="flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
-                >
-                  <div class="flex items-center gap-4">
-                    <div
-                      class="size-12 rounded-full bg-accent flex items-center justify-center shrink-0"
-                    >
-                      <img v-if="rating.icon_url" :src="rating.icon_url" class="size-8" />
-                      <Trophy v-else class="size-6 text-primary" />
-                    </div>
-                    <div>
-                      <h4 class="font-bold">Tier {{ rating.threshold }}</h4>
-                      <p class="text-sm text-muted-foreground">
-                        Requires {{ rating.threshold }} rating points
-                      </p>
+          <div class="space-y-6">
+            <div class="grid gap-4 grid-cols-1">
+              <Card>
+                <CardContent>
+                  <div class="flex items-center justify-between">
+                    <div class="space-y-1">
+                      <CardTitle class="text-lg flex items-center gap-2">
+                        {{ server.rating_set.name }}
+                        <Badge variant="outline" class="font-normal text-xs text-muted-foreground">
+                          Global
+                        </Badge>
+                      </CardTitle>
+                      <CardDescription class="flex items-center gap-2 text-xs">
+                        <span
+                          >Range: {{ server.rating_set.min_rating }} -
+                          {{ server.rating_set.max_rating }} MMR</span
+                        >
+                      </CardDescription>
                     </div>
                   </div>
-                  <Badge variant="secondary" class="font-mono">{{ rating.threshold }}+</Badge>
+                </CardContent>
+              </Card>
+            </div>
+
+            <!-- Tiers Grid -->
+            <div>
+              <h3 class="text-lg font-semibold mb-4 px-1">Progression Ladder</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div
+                  v-for="(rating, index) in server.rating_set.ratings.sort(
+                    (a, b) => a.threshold - b.threshold,
+                  )"
+                  :key="rating.id"
+                  class="group relative overflow-hidden rounded-xl border bg-card p-6 transition-all hover:shadow-lg hover:border-primary/50"
+                >
+                  <!-- Background Decor -->
+                  <div
+                    class="absolute -right-6 -top-6 opacity-5 transition-opacity group-hover:opacity-10"
+                  >
+                    <img v-if="rating.icon_url" :src="rating.icon_url" class="size-24 rotate-12" />
+                    <Swords v-else class="size-24 rotate-12" />
+                  </div>
+
+                  <div class="relative flex flex-col items-center text-center gap-4">
+                    <!-- Icon Circle -->
+                    <div
+                      class="flex size-16 items-center justify-center rounded-full bg-muted shadow-inner ring-4 ring-background transition-transform group-hover:scale-110 group-hover:bg-primary/10"
+                    >
+                      <img v-if="rating.icon_url" :src="rating.icon_url" class="size-10" />
+                      <Swords
+                        v-else
+                        class="size-8 text-muted-foreground group-hover:text-primary"
+                      />
+                    </div>
+
+                    <!-- Info -->
+                    <div class="space-y-1">
+                      <div
+                        class="text-xs font-bold uppercase text-muted-foreground tracking-widest"
+                      >
+                        Tier {{ index + 1 }}
+                      </div>
+                      <div class="text-3xl font-black tracking-tighter">
+                        {{ rating.threshold }}
+                        <span class="text-sm font-normal text-muted-foreground align-top">+</span>
+                      </div>
+                      <p class="text-xs text-muted-foreground">MMR Required</p>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </TabsContent>
-
         <TabsContent
           value="roles"
           v-if="server.role_set"
@@ -298,6 +364,7 @@ import {
   Trophy,
   Shield,
   Check,
+  Swords,
 } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -313,7 +380,6 @@ import {
 } from '@/components/ui/card'
 import type { Server } from '@/types/user'
 
-// --- MOCK DATA (Fully populated based on your types) ---
 const mockServer: Server = {
   id: '123',
   name: 'Cyberpunk Netrunners',
@@ -368,11 +434,9 @@ const mockServer: Server = {
   },
 }
 
-// State
 const server = ref<Server>(mockServer)
 const isJoined = ref(false)
 
-// Computeds
 const serverInitials = computed(() => {
   return server.value.name
     .split(' ')
@@ -382,7 +446,6 @@ const serverInitials = computed(() => {
     .toUpperCase()
 })
 
-// Methods
 const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
@@ -392,8 +455,6 @@ const formatDate = (dateString: string) => {
 }
 
 const handleJoin = () => {
-  // Simulate API call
   isJoined.value = true
-  // Could show a toast here: "Welcome to the server!"
 }
 </script>
