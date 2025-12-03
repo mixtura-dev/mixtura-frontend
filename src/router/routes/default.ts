@@ -1,3 +1,5 @@
+import ServerPage from '@/pages/ServerPage.vue'
+
 const DefaultLayout = () => import('@/layouts/DefaultLayout.vue')
 const HomePage = () => import('@/pages/HomePage.vue')
 const ServersPage = () => import('@/pages/ServersPage.vue')
@@ -20,6 +22,10 @@ export const defaultRoutes = {
       path: 'servers/new',
       component: ServersCreatePage,
       meta: { title: 'New Server', hideSidebar: true, requiresAuth: true },
+    },
+    {
+      path: 'servers/:id',
+      component: ServerPage,
     },
     { path: 'settings', component: SettingPage, meta: { title: 'Settings', requiresAuth: true } },
     { path: 'account', component: AccountPage, meta: { title: 'Account', requiresAuth: true } },

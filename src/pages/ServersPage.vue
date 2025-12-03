@@ -27,7 +27,7 @@
           <RefreshCw class="size-4" :class="{ 'animate-spin': isRefetching }" />
           <span class="sr-only">Refresh</span>
         </Button>
-        <Button @click="showCreateDialog = true">
+        <Button @click="$router.push('/servers/new')">
           <Plus class="mr-2 size-4" />
           New server
         </Button>
@@ -100,17 +100,10 @@
         />
       </ul>
 
-      <!-- Results count -->
       <p v-if="search" class="mt-4 text-center text-sm text-muted-foreground">
-        Showing {{ filteredServers.length }} of {{ servers?.length }} servers
+        Showing {{ filteredServers.length }} of {{ servers.length }} servers
       </p>
     </template>
-
-    <!-- <CreateServerDialog v-model:open="showCreateDialog" />
-
-    <DeleteServerDialog v-model:open="showDeleteDialog" :server="selectedServer" />
-
-    <InviteDialog v-model:open="showInviteDialog" :server-id="selectedServer?.id" /> -->
   </section>
 </template>
 
@@ -121,9 +114,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { AlertCircle, Plus, RefreshCw, Search, SearchX, ServerIcon, X } from 'lucide-vue-next'
-import { useServersQuery } from '@/api/queries/server'
+
 import ServerCard from '@/components/workspace/ServerCard.vue'
 import ServerSkeleton from '@/components/workspace/ServerSkeleton.vue'
+
 import type { Server } from '@/types/user'
 
 const router = useRouter()
@@ -133,10 +127,93 @@ const showDeleteDialog = ref(false)
 const showInviteDialog = ref(false)
 const selectedServer = ref<Server | null>(null)
 
-const { data: servers, isLoading, isError, error, refetch, isRefetching } = useServersQuery()
+// ------------------------------------------------------
+// ✅ MOCK DATA
+// ------------------------------------------------------
+const mockServers: Server[] = [
+  {
+    id: '1',
+    name: 'Valorant EU Team',
+    description: 'Competitive Valorant community server',
+    icon_url: null,
+    banner_url: null,
+    owner_id: '123',
+    public: true,
+    created_at: '2024-01-12T10:00:00Z',
+    rating_set: null,
+    role_set: null,
+    games: [
+      {
+        id: 'v1',
+        name: 'Valorant',
+        icon_url: '',
+        banner_url: '',
+      },
+    ],
+  },
+  {
+    id: '2',
+    name: 'CS2 Matchmaking Hub',
+    description: 'Classic competitive CS2 server',
+    icon_url: null,
+    banner_url: null,
+    owner_id: '456',
+    public: true,
+    created_at: '2024-02-01T12:00:00Z',
+    rating_set: null,
+    role_set: null,
+    games: [
+      {
+        id: 'cs2',
+        name: 'Counter-Strike 2',
+        icon_url: '',
+        banner_url: '',
+      },
+    ],
+  },
+  {
+    id: '3',
+    name: 'Dota 2 CIS',
+    description: 'Dota 2 community for tournaments',
+    icon_url: null,
+    banner_url: null,
+    owner_id: '789',
+    public: false,
+    created_at: '2024-03-05T15:00:00Z',
+    rating_set: null,
+    role_set: null,
+    games: [
+      {
+        id: 'd2',
+        name: 'Dota 2',
+        icon_url: '',
+        banner_url: '',
+      },
+    ],
+  },
+]
 
+// ------------------------------------------------------
+// ✅ MOCKED QUERY STATE (замена useServersQuery)
+// ------------------------------------------------------
+const servers = ref<Server[]>(mockServers)
+const isLoading = ref(false)
+const isError = ref(false)
+const error = ref(null)
+const isRefetching = ref(false)
+
+function refetch() {
+  isRefetching.value = true
+  setTimeout(() => {
+    servers.value = [...mockServers] // можно обновить
+    isRefetching.value = false
+  }, 600)
+}
+
+// ------------------------------------------------------
+// Logic from original component
+// ------------------------------------------------------
 const filteredServers = computed(() => {
-  if (!servers.value) return []
   if (!search.value.trim()) return servers.value
 
   const query = search.value.toLowerCase().trim()

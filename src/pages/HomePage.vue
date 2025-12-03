@@ -89,7 +89,6 @@ const { makeScreenshot } = useScreenshot(screenshotRef)
 
 const settings = useSettingsStore()
 
-// Тестовые данные для игроков (массивы для команд)
 interface Player {
   id: number
   name: string

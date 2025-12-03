@@ -2,6 +2,7 @@
   <li
     class="group relative overflow-hidden rounded-xl border bg-card transition-all hover:border-primary/50 hover:shadow-lg"
   >
+    <!-- Контейнер баннера (убрали аватарку отсюда) -->
     <div class="relative h-24 overflow-hidden bg-muted">
       <img
         v-if="server.banner_url"
@@ -10,22 +11,22 @@
         class="h-full w-full object-cover transition-transform group-hover:scale-105"
       />
       <div v-else class="flex h-full items-center justify-center">
-        <ImageIcon class="size-8 text-muted-foreground/50" />
+        <ImageIcon class="size-8" />
       </div>
 
       <div class="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
-
-      <div class="absolute -bottom-6 left-4">
-        <Avatar class="size-14 border-4 border-card shadow-md">
-          <AvatarImage :src="server.icon_url || ''" :alt="server.name" />
-          <AvatarFallback class="text-lg font-semibold">
-            {{ serverInitials }}
-          </AvatarFallback>
-        </Avatar>
-      </div>
     </div>
 
-    <div class="p-4 pt-8">
+    <div class="relative -mt-7 ml-4 z-10">
+      <Avatar class="size-14 border-2 border-card">
+        <AvatarImage :src="server.icon_url || ''" :alt="server.name" />
+        <AvatarFallback class="text-lg font-semibold">
+          {{ serverInitials }}
+        </AvatarFallback>
+      </Avatar>
+    </div>
+
+    <div class="p-4 pt-2">
       <div class="flex items-start justify-between gap-2">
         <div class="min-w-0 flex-1">
           <h3 class="truncate text-lg font-semibold">{{ server.name }}</h3>
@@ -34,7 +35,7 @@
           </p>
         </div>
 
-        <DropdownMenu>
+        <!-- <DropdownMenu>
           <DropdownMenuTrigger as-child>
             <Button
               variant="ghost"
@@ -63,7 +64,7 @@
               Delete server
             </DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu> -->
       </div>
 
       <Button class="mt-4 w-full" @click="$emit('open', server)">
@@ -78,15 +79,16 @@
 import { computed } from 'vue'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { ArrowRight, ImageIcon, MoreHorizontal, Settings, Trash2, UserPlus } from 'lucide-vue-next'
+// import {
+//   DropdownMenu,
+//   DropdownMenuContent,
+//   DropdownMenuItem,
+//   DropdownMenuSeparator,
+//   DropdownMenuTrigger,
+// } from '@/components/ui/dropdown-menu'
+import { ArrowRight, ImageIcon } from 'lucide-vue-next'
 import type { Server } from '@/types/user'
+import { getInitials } from '@/lib/utils/user'
 
 const props = defineProps<{
   server: Server
@@ -100,11 +102,6 @@ defineEmits<{
 }>()
 
 const serverInitials = computed(() => {
-  return props.server.name
-    .split(' ')
-    .map((word) => word[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase()
+  return getInitials(props.server.name)
 })
 </script>
