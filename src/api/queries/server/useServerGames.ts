@@ -3,11 +3,14 @@ import { computed, toValue, type MaybeRef } from 'vue'
 import { queryKeys } from './keys'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import {
-  addGameToServer,
   listServerGames,
+  setServerGames,
+  addGameToServer,
   removeGameFromServer,
 } from '@/api/endpoints/server/serverGame'
 import type { RequestBody } from '@/types/auth'
+
+// ===== QUERIES =====
 
 export const useServerGamesQuery = (serverId: MaybeRef<ServerID>) => {
   const id = computed(() => toValue(serverId))
@@ -18,7 +21,10 @@ export const useServerGamesQuery = (serverId: MaybeRef<ServerID>) => {
     enabled: computed(() => !!id.value),
   })
 }
-export const useAddGameToServerMutation = () => {
+
+// ===== MUTATIONS =====
+
+export const useSetServerGamesMutation = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -27,10 +33,24 @@ export const useAddGameToServerMutation = () => {
       data,
     }: {
       serverId: ServerID
-      data: RequestBody<'/api/servers/{server_id}/games/', 'post'>
-    }) => addGameToServer(serverId, data),
+      data: RequestBody<'/api/server/{server_id}/games/', 'put'>
+    }) => setServerGames(serverId, data),
     onSuccess: (_, { serverId }) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.servers.games(serverId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.servers.detail(serverId) })
+    },
+  })
+}
+
+export const useAddGameToServerMutation = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ serverId, gameId }: { serverId: ServerID; gameId: string }) =>
+      addGameToServer(serverId, gameId),
+    onSuccess: (_, { serverId }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.servers.games(serverId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.servers.detail(serverId) })
     },
   })
 }
@@ -43,6 +63,7 @@ export const useRemoveGameFromServerMutation = () => {
       removeGameFromServer(serverId, gameId),
     onSuccess: (_, { serverId }) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.servers.games(serverId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.servers.detail(serverId) })
     },
   })
 }

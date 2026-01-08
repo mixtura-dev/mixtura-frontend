@@ -4,54 +4,68 @@ import type { ServerID } from '@/types/user'
 
 export const getRoleSet = (
   serverId: ServerID,
-): Promise<SuccessResponse<'/api/servers/{server_id}/role-set/', 'get'>> =>
-  baseApi.get(`/api/servers/${serverId}/role-set/`).then((res) => res.data)
+): Promise<SuccessResponse<'/api/server/{server_id}/role-set/', 'get'>> =>
+  baseApi.get(`/api/server/${serverId}/role-set/`).then((res) => res.data)
 
 export const createRole = (
   serverId: ServerID,
   roleSetId: string,
-  data: RequestBody<'/api/servers/{server_id}/role-set/{role_set_id}/roles', 'post'>,
-): Promise<SuccessResponse<'/api/servers/{server_id}/role-set/{role_set_id}/roles', 'post'>> =>
-  baseApi.post(`/api/servers/${serverId}/role-set/${roleSetId}/roles`, data).then((res) => res.data)
+  data: RequestBody<'/api/server/{server_id}/role-set/{role_set_id}/role', 'post'>,
+): Promise<SuccessResponse<'/api/server/{server_id}/role-set/{role_set_id}/role', 'post'>> =>
+  baseApi.post(`/api/server/${serverId}/role-set/${roleSetId}/role`, data).then((res) => res.data)
 
 export const deleteRole = (
   serverId: ServerID,
   roleSetId: string,
   roleId: string,
 ): Promise<
-  SuccessResponse<'/api/servers/{server_id}/role-set/{role_set_id}/roles/{role_id}', 'delete'>
+  SuccessResponse<'/api/server/{server_id}/role-set/{role_set_id}/roles/{role_id}', 'delete'>
 > =>
   baseApi
-    .delete(`/api/servers/${serverId}/role-set/${roleSetId}/roles/${roleId}`)
+    .delete(`/api/server/${serverId}/role-set/${roleSetId}/roles/${roleId}`)
     .then((res) => res.data)
 
 export const updateRole = (
   serverId: ServerID,
   roleSetId: string,
   roleId: string,
-  data: RequestBody<'/api/servers/{server_id}/role-set/{role_set_id}/roles/{role_id}', 'patch'>,
+  data: RequestBody<'/api/server/{server_id}/role-set/{role_set_id}/role/{role_id}', 'patch'>,
 ): Promise<
-  SuccessResponse<'/api/servers/{server_id}/role-set/{role_set_id}/roles/{role_id}', 'patch'>
+  SuccessResponse<'/api/server/{server_id}/role-set/{role_set_id}/role/{role_id}', 'patch'>
 > =>
   baseApi
-    .patch(`/api/servers/${serverId}/role-set/${roleSetId}/roles/${roleId}`, data)
+    .patch(`/api/server/${serverId}/role-set/${roleSetId}/role/${roleId}`, data)
     .then((res) => res.data)
 
 export const updateRoleIcon = (
   serverId: ServerID,
   roleSetId: string,
   roleId: string,
-  data: RequestBody<'/api/servers/{server_id}/role-set/{role_set_id}/roles/{role_id}/icon', 'put'>,
+  icon: File,
 ): Promise<
-  SuccessResponse<'/api/servers/{server_id}/role-set/{role_set_id}/roles/{role_id}/icon', 'put'>
+  SuccessResponse<'/api/server/{server_id}/role-set/{role_set_id}/roles/{role_id}/icon', 'put'>
+> => {
+  const formData = new FormData()
+  formData.append('icon', icon)
+  return baseApi
+    .put(`/api/server/${serverId}/role-set/${roleSetId}/roles/${roleId}/icon`, formData)
+    .then((res) => res.data)
+}
+
+export const deleteRoleIcon = (
+  serverId: ServerID,
+  roleSetId: string,
+  roleId: string,
+): Promise<
+  SuccessResponse<'/api/server/{server_id}/role-set/{role_set_id}/roles/{role_id}/icon', 'delete'>
 > =>
   baseApi
-    .put(`/api/servers/${serverId}/role-set/${roleSetId}/roles/${roleId}/icon`, data)
+    .delete(`/api/server/${serverId}/role-set/${roleSetId}/roles/${roleId}/icon`)
     .then((res) => res.data)
 
 export const updateRoleSet = (
   serverId: ServerID,
   roleSetId: string,
-  data: RequestBody<'/api/servers/{server_id}/role-set/{role_set_id}', 'patch'>,
-): Promise<SuccessResponse<'/api/servers/{server_id}/role-set/{role_set_id}', 'patch'>> =>
-  baseApi.patch(`/api/servers/${serverId}/role-set/${roleSetId}`, data).then((res) => res.data)
+  data: RequestBody<'/api/server/{server_id}/role-set/{role_set_id}', 'patch'>,
+): Promise<SuccessResponse<'/api/server/{server_id}/role-set/{role_set_id}', 'patch'>> =>
+  baseApi.patch(`/api/server/${serverId}/role-set/${roleSetId}`, data).then((res) => res.data)

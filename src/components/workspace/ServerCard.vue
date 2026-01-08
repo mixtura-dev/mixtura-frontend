@@ -2,25 +2,33 @@
   <li
     class="group relative overflow-hidden rounded-xl border bg-card transition-all hover:border-primary/50 hover:shadow-lg"
   >
-    <!-- Контейнер баннера (убрали аватарку отсюда) -->
     <div class="relative h-24 overflow-hidden bg-muted">
       <img
         v-if="server.banner_url"
         :src="server.banner_url"
         :alt="`${server.name} banner`"
-        class="h-full w-full object-cover transition-transform group-hover:scale-105"
+        class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+        loading="lazy"
       />
       <div v-else class="flex h-full items-center justify-center">
-        <ImageIcon class="size-8" />
+        <ImageIcon class="size-8 text-muted-foreground" />
       </div>
 
       <div class="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
+
+      <div class="absolute right-2 top-2">
+        <Badge :variant="server.public ? 'secondary' : 'outline'" class="text-xs">
+          <Globe v-if="server.public" class="mr-1 size-3" />
+          <Lock v-else class="mr-1 size-3" />
+          {{ server.public ? 'Public' : 'Private' }}
+        </Badge>
+      </div>
     </div>
 
-    <div class="relative -mt-7 ml-4 z-10">
-      <Avatar class="size-14 border-2 border-card">
-        <AvatarImage :src="server.icon_url || ''" :alt="server.name" />
-        <AvatarFallback class="text-lg font-semibold">
+    <div class="relative z-10 -mt-7 ml-4">
+      <Avatar class="size-14 border-2 border-card shadow-md">
+        <AvatarImage v-if="server.icon_url" :src="server.icon_url" :alt="server.name" />
+        <AvatarFallback class="bg-primary text-lg font-semibold text-primary-foreground">
           {{ serverInitials }}
         </AvatarFallback>
       </Avatar>
@@ -34,37 +42,6 @@
             {{ server.description }}
           </p>
         </div>
-
-        <!-- <DropdownMenu>
-          <DropdownMenuTrigger as-child>
-            <Button
-              variant="ghost"
-              size="icon"
-              class="shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
-            >
-              <MoreHorizontal class="size-4" />
-              <span class="sr-only">Server actions</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem @click="$emit('edit', server)">
-              <Settings class="mr-2 size-4" />
-              Settings
-            </DropdownMenuItem>
-            <DropdownMenuItem @click="$emit('invite', server)">
-              <UserPlus class="mr-2 size-4" />
-              Invite members
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              class="text-destructive focus:text-destructive"
-              @click="$emit('delete', server)"
-            >
-              <Trash2 class="mr-2 size-4" />
-              Delete server
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu> -->
       </div>
 
       <Button class="mt-4 w-full" @click="$emit('open', server)">
@@ -78,15 +55,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuItem,
-//   DropdownMenuSeparator,
-//   DropdownMenuTrigger,
-// } from '@/components/ui/dropdown-menu'
-import { ArrowRight, ImageIcon } from 'lucide-vue-next'
+import { ArrowRight, Globe, ImageIcon, Lock } from 'lucide-vue-next'
 import type { Server } from '@/types/user'
 import { getInitials } from '@/lib/utils/user'
 
@@ -101,7 +72,5 @@ defineEmits<{
   invite: [server: Server]
 }>()
 
-const serverInitials = computed(() => {
-  return getInitials(props.server.name)
-})
+const serverInitials = computed(() => getInitials(props.server.name))
 </script>

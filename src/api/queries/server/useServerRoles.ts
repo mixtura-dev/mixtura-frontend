@@ -5,6 +5,7 @@ import { queryKeys } from './keys'
 import {
   createRole,
   deleteRole,
+  deleteRoleIcon,
   getRoleSet,
   updateRole,
   updateRoleIcon,
@@ -12,7 +13,9 @@ import {
 } from '@/api/endpoints/server/serverRole'
 import type { RequestBody } from '@/types/auth'
 
-export function useRoleSetQuery(serverId: MaybeRef<ServerID>) {
+// ===== QUERIES =====
+
+export const useRoleSetQuery = (serverId: MaybeRef<ServerID>) => {
   const id = computed(() => toValue(serverId))
 
   return useQuery({
@@ -21,6 +24,8 @@ export function useRoleSetQuery(serverId: MaybeRef<ServerID>) {
     enabled: computed(() => !!id.value),
   })
 }
+
+// ===== MUTATIONS =====
 
 export const useCreateRoleMutation = () => {
   const queryClient = useQueryClient()
@@ -33,10 +38,11 @@ export const useCreateRoleMutation = () => {
     }: {
       serverId: ServerID
       roleSetId: string
-      data: RequestBody<'/api/servers/{server_id}/role-set/{role_set_id}/roles', 'post'>
+      data: RequestBody<'/api/server/{server_id}/role-set/{role_set_id}/role', 'post'>
     }) => createRole(serverId, roleSetId, data),
     onSuccess: (_, { serverId }) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.servers.roleSet(serverId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.servers.detail(serverId) })
     },
   })
 }
@@ -56,6 +62,7 @@ export const useDeleteRoleMutation = () => {
     }) => deleteRole(serverId, roleSetId, roleId),
     onSuccess: (_, { serverId }) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.servers.roleSet(serverId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.servers.detail(serverId) })
     },
   })
 }
@@ -73,10 +80,11 @@ export const useUpdateRoleMutation = () => {
       serverId: ServerID
       roleSetId: string
       roleId: string
-      data: RequestBody<'/api/servers/{server_id}/role-set/{role_set_id}/roles/{role_id}', 'patch'>
+      data: RequestBody<'/api/server/{server_id}/role-set/{role_set_id}/role/{role_id}', 'patch'>
     }) => updateRole(serverId, roleSetId, roleId, data),
     onSuccess: (_, { serverId }) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.servers.roleSet(serverId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.servers.detail(serverId) })
     },
   })
 }
@@ -89,16 +97,33 @@ export const useUpdateRoleIconMutation = () => {
       serverId,
       roleSetId,
       roleId,
-      data,
+      icon,
     }: {
       serverId: ServerID
       roleSetId: string
       roleId: string
-      data: RequestBody<
-        '/api/servers/{server_id}/role-set/{role_set_id}/roles/{role_id}/icon',
-        'put'
-      >
-    }) => updateRoleIcon(serverId, roleSetId, roleId, data),
+      icon: File
+    }) => updateRoleIcon(serverId, roleSetId, roleId, icon),
+    onSuccess: (_, { serverId }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.servers.roleSet(serverId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.servers.detail(serverId) })
+    },
+  })
+}
+
+export const useDeleteRoleIconMutation = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({
+      serverId,
+      roleSetId,
+      roleId,
+    }: {
+      serverId: ServerID
+      roleSetId: string
+      roleId: string
+    }) => deleteRoleIcon(serverId, roleSetId, roleId),
     onSuccess: (_, { serverId }) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.servers.roleSet(serverId) })
     },
@@ -116,10 +141,11 @@ export const useUpdateRoleSetMutation = () => {
     }: {
       serverId: ServerID
       roleSetId: string
-      data: RequestBody<'/api/servers/{server_id}/role-set/{role_set_id}', 'patch'>
+      data: RequestBody<'/api/server/{server_id}/role-set/{role_set_id}', 'patch'>
     }) => updateRoleSet(serverId, roleSetId, data),
     onSuccess: (_, { serverId }) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.servers.roleSet(serverId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.servers.detail(serverId) })
     },
   })
 }

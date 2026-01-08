@@ -11,6 +11,8 @@ import {
 } from '@/api/endpoints/server/serverInvite'
 import type { RequestBody } from '@/types/auth'
 
+// ===== QUERIES =====
+
 export const useServerInvitesQuery = (serverId: MaybeRef<ServerID>) => {
   const id = computed(() => toValue(serverId))
 
@@ -28,9 +30,11 @@ export const useInviteByKeyQuery = (key: MaybeRef<string>) => {
     queryKey: computed(() => queryKeys.invites.byKey(inviteKey.value)),
     queryFn: () => getInviteByKey(inviteKey.value),
     enabled: computed(() => !!inviteKey.value),
-    retry: false, // Dont repeat invite can be unavalible
+    retry: false,
   })
 }
+
+// ===== MUTATIONS =====
 
 export const useCreateInviteMutation = () => {
   const queryClient = useQueryClient()
@@ -41,7 +45,7 @@ export const useCreateInviteMutation = () => {
       data,
     }: {
       serverId: ServerID
-      data: RequestBody<'/api/servers/{server_id}/invites', 'post'>
+      data: RequestBody<'/api/server/{server_id}/invites', 'post'>
     }) => createServerInvite(serverId, data),
     onSuccess: (_, { serverId }) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.servers.invites(serverId) })
@@ -58,7 +62,7 @@ export const useAcceptInviteMutation = () => {
       data,
     }: {
       key: string
-      data: RequestBody<'/api/servers/invites/{key}', 'post'>
+      data: RequestBody<'/api/server/invites/{key}', 'post'>
     }) => acceptInviteByKey(key, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.servers.list() })

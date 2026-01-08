@@ -9,6 +9,7 @@ export const queryKeys = {
       [...queryKeys.servers.members(serverId), memberId] as const,
     invites: (serverId: string) => [...queryKeys.servers.all, serverId, 'invites'] as const,
     roleSet: (serverId: string) => [...queryKeys.servers.all, serverId, 'roleSet'] as const,
+    ratingSet: (serverId: string) => [...queryKeys.servers.all, serverId, 'ratingSet'] as const,
     restrictions: (serverId: string, memberId: string) =>
       [...queryKeys.servers.member(serverId, memberId), 'restrictions'] as const,
     customs: (serverId: string, memberId: string) =>
@@ -22,6 +23,7 @@ export const queryKeys = {
     ratingTemplates: ['global', 'ratingTemplates'] as const,
     restrictions: ['global', 'restrictions'] as const,
     roleTemplates: ['global', 'roleTemplates'] as const,
+    permissions: ['global', 'permissions'] as const,
   },
 
   invites: {

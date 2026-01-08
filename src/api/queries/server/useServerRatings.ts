@@ -4,12 +4,28 @@ import { computed, toValue, type MaybeRef } from 'vue'
 import { queryKeys } from './keys'
 import {
   createRating,
+  deleteRating,
+  updateRating,
+  updateRatingIcon,
+  updateRatingSet,
   deleteCustom,
-  getCustom,
   listCustoms,
   updateRatingValue,
 } from '@/api/endpoints/server/serverRating'
+import { getRatingSet } from '@/api/endpoints/server/serverRating'
 import type { RequestBody } from '@/types/auth'
+
+// ===== QUERIES =====
+
+export const useRatingSetQuery = (serverId: MaybeRef<ServerID>) => {
+  const id = computed(() => toValue(serverId))
+
+  return useQuery({
+    queryKey: computed(() => queryKeys.servers.ratingSet(id.value)),
+    queryFn: () => getRatingSet(id.value),
+    enabled: computed(() => !!id.value),
+  })
+}
 
 export const useMemberCustomsQuery = (serverId: MaybeRef<ServerID>, memberId: MaybeRef<string>) => {
   const sId = computed(() => toValue(serverId))
@@ -22,21 +38,7 @@ export const useMemberCustomsQuery = (serverId: MaybeRef<ServerID>, memberId: Ma
   })
 }
 
-export const useMemberCustomQuery = (
-  serverId: MaybeRef<ServerID>,
-  memberId: MaybeRef<string>,
-  customId: MaybeRef<string>,
-) => {
-  const sId = computed(() => toValue(serverId))
-  const mId = computed(() => toValue(memberId))
-  const cId = computed(() => toValue(customId))
-
-  return useQuery({
-    queryKey: computed(() => queryKeys.servers.custom(sId.value, mId.value, cId.value)),
-    queryFn: () => getCustom(sId.value, mId.value, cId.value),
-    enabled: computed(() => !!sId.value && !!mId.value && !!cId.value),
-  })
-}
+// ===== MUTATIONS =====
 
 export const useCreateRatingMutation = () => {
   const queryClient = useQueryClient()
@@ -49,9 +51,97 @@ export const useCreateRatingMutation = () => {
     }: {
       serverId: ServerID
       ratingSetId: string
-      data: RequestBody<'/api/servers/{server_id}/rating-set/{rating_set_id}/ratings', 'post'>
+      data: RequestBody<'/api/server/{server_id}/rating-set/{rating_set_id}/ratings', 'post'>
     }) => createRating(serverId, ratingSetId, data),
     onSuccess: (_, { serverId }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.servers.ratingSet(serverId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.servers.detail(serverId) })
+    },
+  })
+}
+
+export const useDeleteRatingMutation = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({
+      serverId,
+      ratingSetId,
+      ratingId,
+    }: {
+      serverId: ServerID
+      ratingSetId: string
+      ratingId: string
+    }) => deleteRating(serverId, ratingSetId, ratingId),
+    onSuccess: (_, { serverId }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.servers.ratingSet(serverId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.servers.detail(serverId) })
+    },
+  })
+}
+
+export const useUpdateRatingMutation = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({
+      serverId,
+      ratingSetId,
+      ratingId,
+      data,
+    }: {
+      serverId: ServerID
+      ratingSetId: string
+      ratingId: string
+      data: RequestBody<
+        '/api/server/{server_id}/rating-set/{rating_set_id}/ratings/{rating_id}',
+        'patch'
+      >
+    }) => updateRating(serverId, ratingSetId, ratingId, data),
+    onSuccess: (_, { serverId }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.servers.ratingSet(serverId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.servers.detail(serverId) })
+    },
+  })
+}
+
+export const useUpdateRatingIconMutation = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({
+      serverId,
+      ratingSetId,
+      ratingId,
+      icon,
+    }: {
+      serverId: ServerID
+      ratingSetId: string
+      ratingId: string
+      icon: File
+    }) => updateRatingIcon(serverId, ratingSetId, ratingId, icon),
+    onSuccess: (_, { serverId }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.servers.ratingSet(serverId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.servers.detail(serverId) })
+    },
+  })
+}
+
+export const useUpdateRatingSetMutation = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({
+      serverId,
+      ratingSetId,
+      data,
+    }: {
+      serverId: ServerID
+      ratingSetId: string
+      data: RequestBody<'/api/server/{server_id}/rating-set/{rating_set_id}', 'patch'>
+    }) => updateRatingSet(serverId, ratingSetId, data),
+    onSuccess: (_, { serverId }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.servers.ratingSet(serverId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.servers.detail(serverId) })
     },
   })
@@ -92,15 +182,13 @@ export const useUpdateRatingValueMutation = () => {
       customId: string
       gameRoleId: string
       data: RequestBody<
-        '/api/servers/{server_id}/members/{member_id}/customs/{custom_id}/ratings/{game_role_id}',
+        '/api/server/{server_id}/members/{member_id}/customs/{custom_id}/ratings/{game_role_id}',
         'put'
       >
     }) => updateRatingValue(serverId, memberId, customId, gameRoleId, data),
-    onSuccess: (_, { serverId, memberId, customId }) => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.servers.custom(serverId, memberId, customId),
-      })
+    onSuccess: (_, { serverId, memberId }) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.servers.customs(serverId, memberId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.servers.member(serverId, memberId) })
     },
   })
 }

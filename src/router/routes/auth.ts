@@ -41,7 +41,7 @@ export const authRoutes = {
       component: ForgotPasswordConfirmPage,
       meta: { title: 'Set New Password', guestOnly: true },
     },
-    { path: '/invite', component: InvitePage, meta: { title: 'Invite' } },
+    { path: '/invite/:key', component: InvitePage, meta: { title: 'Join Server' } },
     {
       path: '/oauth/callback/:provider',
       component: OAuthCallbackPage,
