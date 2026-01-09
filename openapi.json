@@ -1234,6 +1234,36 @@
         "operationId": "list_public_servers_api_server_list_public_get",
         "parameters": [
           {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Query"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 50,
+              "title": "Page Size"
+            }
+          },
+          {
             "name": "token",
             "in": "cookie",
             "required": false,
@@ -1284,6 +1314,36 @@
         "summary": "List User Servers",
         "operationId": "list_user_servers_api_server_list_user_get",
         "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Query"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 50,
+              "title": "Page Size"
+            }
+          },
           {
             "name": "token",
             "in": "cookie",
@@ -3073,86 +3133,11 @@
         }
       }
     },
-    "/api/server/{server_id}/members/{member_id}/restrictions": {
-      "post": {
-        "tags": ["Member"],
-        "summary": "Add Restriction",
-        "operationId": "add_restriction_api_server__server_id__members__member_id__restrictions_post",
-        "parameters": [
-          {
-            "name": "server_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "title": "Server Id"
-            }
-          },
-          {
-            "name": "member_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "title": "Member Id"
-            }
-          },
-          {
-            "name": "token",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Token"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MemberRestrictionCreateRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MemberRestrictionResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      },
+    "/api/server/{server_id}/members/": {
       "get": {
         "tags": ["Member"],
-        "summary": "Get Restrictions",
-        "operationId": "get_restrictions_api_server__server_id__members__member_id__restrictions_get",
+        "summary": "List Members",
+        "operationId": "list_members_api_server__server_id__members__get",
         "parameters": [
           {
             "name": "server_id",
@@ -3165,13 +3150,33 @@
             }
           },
           {
-            "name": "member_id",
-            "in": "path",
-            "required": true,
+            "name": "query",
+            "in": "query",
+            "required": false,
             "schema": {
               "type": "string",
-              "format": "uuid",
-              "title": "Member Id"
+              "default": "",
+              "title": "Query"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 50,
+              "title": "Page Size"
             }
           },
           {
@@ -3199,9 +3204,64 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/MemberRestrictionResponse"
+                    "$ref": "#/components/schemas/ReducedMemberResponse"
                   },
-                  "title": "Response Get Restrictions Api Server  Server Id  Members  Member Id  Restrictions Get"
+                  "title": "Response List Members Api Server  Server Id  Members  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Member"],
+        "summary": "Join Server",
+        "operationId": "join_server_api_server__server_id__members__post",
+        "parameters": [
+          {
+            "name": "server_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Server Id"
+            }
+          },
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemberResponse"
                 }
               }
             }
@@ -3286,6 +3346,63 @@
         }
       }
     },
+    "/api/server/{server_id}/members/me": {
+      "get": {
+        "tags": ["Member"],
+        "summary": "Get My Member",
+        "operationId": "get_my_member_api_server__server_id__members_me_get",
+        "parameters": [
+          {
+            "name": "server_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Server Id"
+            }
+          },
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemberMeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/server/{server_id}/members/{member_id}": {
       "get": {
         "tags": ["Member"],
@@ -3336,71 +3453,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MemberResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": ["Member"],
-        "summary": "Kick Member",
-        "operationId": "kick_member_api_server__server_id__members__member_id__delete",
-        "parameters": [
-          {
-            "name": "server_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "title": "Server Id"
-            }
-          },
-          {
-            "name": "member_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "title": "Member Id"
-            }
-          },
-          {
-            "name": "token",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Token"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StatusResponse"
                 }
               }
             }
@@ -3491,68 +3543,11 @@
             }
           }
         }
-      }
-    },
-    "/api/server/{server_id}/members/": {
-      "post": {
-        "tags": ["Member"],
-        "summary": "Join Server",
-        "operationId": "join_server_api_server__server_id__members__post",
-        "parameters": [
-          {
-            "name": "server_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "title": "Server Id"
-            }
-          },
-          {
-            "name": "token",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Token"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MemberResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
       },
-      "get": {
+      "delete": {
         "tags": ["Member"],
-        "summary": "List Members",
-        "operationId": "list_members_api_server__server_id__members__get",
+        "summary": "Kick Member",
+        "operationId": "kick_member_api_server__server_id__members__member_id__delete",
         "parameters": [
           {
             "name": "server_id",
@@ -3562,6 +3557,16 @@
               "type": "string",
               "format": "uuid",
               "title": "Server Id"
+            }
+          },
+          {
+            "name": "member_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Member Id"
             }
           },
           {
@@ -3587,11 +3592,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ReducedMemberResponse"
-                  },
-                  "title": "Response List Members Api Server  Server Id  Members  Get"
+                  "$ref": "#/components/schemas/StatusResponse"
                 }
               }
             }
@@ -3669,6 +3670,152 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MemberResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/server/{server_id}/members/{member_id}/restrictions": {
+      "get": {
+        "tags": ["Member"],
+        "summary": "Get Restrictions",
+        "operationId": "get_restrictions_api_server__server_id__members__member_id__restrictions_get",
+        "parameters": [
+          {
+            "name": "server_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Server Id"
+            }
+          },
+          {
+            "name": "member_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Member Id"
+            }
+          },
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MemberRestrictionResponse"
+                  },
+                  "title": "Response Get Restrictions Api Server  Server Id  Members  Member Id  Restrictions Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Member"],
+        "summary": "Add Restriction",
+        "operationId": "add_restriction_api_server__server_id__members__member_id__restrictions_post",
+        "parameters": [
+          {
+            "name": "server_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Server Id"
+            }
+          },
+          {
+            "name": "member_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Member Id"
+            }
+          },
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemberRestrictionCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemberRestrictionResponse"
                 }
               }
             }
@@ -4673,6 +4820,30 @@
         "type": "object",
         "required": ["inviter", "server"],
         "title": "InviteKeyResponse"
+      },
+      "MemberMeResponse": {
+        "properties": {
+          "member": {
+            "$ref": "#/components/schemas/MemberResponse"
+          },
+          "permissions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Permissions"
+          },
+          "restrictions": {
+            "items": {
+              "$ref": "#/components/schemas/MemberRestrictionResponse"
+            },
+            "type": "array",
+            "title": "Restrictions"
+          }
+        },
+        "type": "object",
+        "required": ["member", "permissions", "restrictions"],
+        "title": "MemberMeResponse"
       },
       "MemberResponse": {
         "properties": {

@@ -73,3 +73,8 @@ export const migrateMember = (
   data: RequestBody<'/api/server/{server_id}/members/{member_id}/migrate', 'post'>,
 ): Promise<SuccessResponse<'/api/server/{server_id}/members/{member_id}/migrate', 'post'>> =>
   baseApi.post(`/api/server/${serverId}/members/${memberId}/migrate`, data).then((res) => res.data)
+
+export const getCurrentMember = (
+  serverId: ServerID,
+): Promise<SuccessResponse<'/api/server/{server_id}/members/me', 'get'>> =>
+  baseApi.get(`/api/server/${serverId}/members/me`).then((res) => res.data)

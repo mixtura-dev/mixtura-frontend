@@ -5,7 +5,7 @@
     <div class="flex flex-1 w-full overflow-y-hidden">
       <MainSidebar :groups="visibleGroups" v-if="!hideSidebar" />
       <ShortcutsDialog />
-      <main class="main flex-grow overflow-y-auto">
+      <main class="main min-h-0 min-w-0 flex-1">
         <RouterView />
       </main>
     </div>

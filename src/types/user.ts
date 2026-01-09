@@ -1,5 +1,6 @@
-import type { paths } from '@/types/api'
+import type { paths, components } from '@/types/api'
 
+// Серверы
 export type ServerDetail =
   paths['/api/server/{server_id}']['get']['responses'][200]['content']['application/json']
 
@@ -9,6 +10,7 @@ export type ServerListItem =
 export type Server = ServerListItem
 export type ServerID = Server['id']
 
+// Инвайты
 export type Invite =
   paths['/api/server/{server_id}/invites']['get']['responses'][200]['content']['application/json'][number]
 
@@ -20,3 +22,15 @@ export type JoinServerResponse =
 
 export type CreateInviteBody =
   paths['/api/server/{server_id}/invites']['post']['requestBody']['content']['application/json']
+
+export type Member =
+  paths['/api/server/{server_id}/members/{member_id}']['get']['responses'][200]['content']['application/json']
+
+export type MemberListItem =
+  paths['/api/server/{server_id}/members/']['get']['responses'][200]['content']['application/json'][number]
+export type CurrentMemberResponse =
+  paths['/api/server/{server_id}/members/me']['get']['responses'][200]['content']['application/json']
+
+export type ServerRole = components['schemas']['ServerRoleResponse']
+export type Permission = components['schemas']['PermissionResponse']
+export type Game = components['schemas']['GameResponse']

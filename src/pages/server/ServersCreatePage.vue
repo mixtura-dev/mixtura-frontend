@@ -204,10 +204,6 @@ import {
 
 const router = useRouter()
 
-// ============================================
-// Data Fetching
-// ============================================
-
 const { data: gamesData, isLoading: isGamesLoading } = useGlobalGamesQuery()
 const { data: ratingTemplatesData, isLoading: isRatingTemplatesLoading } =
   useGlobalRatingTemplatesQuery()
@@ -216,10 +212,7 @@ const { data: roleTemplatesData, isLoading: isRoleTemplatesLoading } = useGlobal
 const { mutateAsync: createServer } = useCreateServerMutation()
 const { mutateAsync: setServerGames } = useSetServerGamesMutation()
 
-// ============================================
-// Form Validation & Setup
-// ============================================
-
+// TODO: add translate
 const formSchema = toTypedSchema(
   z.object({
     name: z.string().min(3, 'Name must be at least 3 characters').max(50),

@@ -712,18 +712,18 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/server/{server_id}/members/{member_id}/restrictions": {
+    "/api/server/{server_id}/members/": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get Restrictions */
-        get: operations["get_restrictions_api_server__server_id__members__member_id__restrictions_get"];
+        /** List Members */
+        get: operations["list_members_api_server__server_id__members__get"];
         put?: never;
-        /** Add Restriction */
-        post: operations["add_restriction_api_server__server_id__members__member_id__restrictions_post"];
+        /** Join Server */
+        post: operations["join_server_api_server__server_id__members__post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -741,6 +741,23 @@ export interface paths {
         put?: never;
         /** Create Virtual */
         post: operations["create_virtual_api_server__server_id__members_virtual_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/server/{server_id}/members/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get My Member */
+        get: operations["get_my_member_api_server__server_id__members_me_get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -766,24 +783,6 @@ export interface paths {
         patch: operations["update_member_api_server__server_id__members__member_id__patch"];
         trace?: never;
     };
-    "/api/server/{server_id}/members/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List Members */
-        get: operations["list_members_api_server__server_id__members__get"];
-        put?: never;
-        /** Join Server */
-        post: operations["join_server_api_server__server_id__members__post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/server/{server_id}/members/{member_id}/migrate": {
         parameters: {
             query?: never;
@@ -795,6 +794,24 @@ export interface paths {
         put?: never;
         /** Migrate Member */
         post: operations["migrate_member_api_server__server_id__members__member_id__migrate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/server/{server_id}/members/{member_id}/restrictions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Restrictions */
+        get: operations["get_restrictions_api_server__server_id__members__member_id__restrictions_get"];
+        put?: never;
+        /** Add Restriction */
+        post: operations["add_restriction_api_server__server_id__members__member_id__restrictions_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1131,6 +1148,14 @@ export interface components {
         InviteKeyResponse: {
             inviter: components["schemas"]["ReducedMemberResponse"];
             server: components["schemas"]["ServerListResponse"];
+        };
+        /** MemberMeResponse */
+        MemberMeResponse: {
+            member: components["schemas"]["MemberResponse"];
+            /** Permissions */
+            permissions: string[];
+            /** Restrictions */
+            restrictions: components["schemas"]["MemberRestrictionResponse"][];
         };
         /** MemberResponse */
         MemberResponse: {
@@ -2393,7 +2418,11 @@ export interface operations {
     };
     list_public_servers_api_server_list_public_get: {
         parameters: {
-            query?: never;
+            query?: {
+                query?: string;
+                page?: number;
+                page_size?: number;
+            };
             header?: never;
             path?: never;
             cookie?: {
@@ -2424,7 +2453,11 @@ export interface operations {
     };
     list_user_servers_api_server_list_user_get: {
         parameters: {
-            query?: never;
+            query?: {
+                query?: string;
+                page?: number;
+                page_size?: number;
+            };
             header?: never;
             path?: never;
             cookie?: {
@@ -3315,13 +3348,16 @@ export interface operations {
             };
         };
     };
-    get_restrictions_api_server__server_id__members__member_id__restrictions_get: {
+    list_members_api_server__server_id__members__get: {
         parameters: {
-            query?: never;
+            query?: {
+                query?: string;
+                page?: number;
+                page_size?: number;
+            };
             header?: never;
             path: {
                 server_id: string;
-                member_id: string;
             };
             cookie?: {
                 token?: string | null;
@@ -3335,7 +3371,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["MemberRestrictionResponse"][];
+                    "application/json": components["schemas"]["ReducedMemberResponse"][];
                 };
             };
             /** @description Validation Error */
@@ -3349,23 +3385,18 @@ export interface operations {
             };
         };
     };
-    add_restriction_api_server__server_id__members__member_id__restrictions_post: {
+    join_server_api_server__server_id__members__post: {
         parameters: {
             query?: never;
             header?: never;
             path: {
                 server_id: string;
-                member_id: string;
             };
             cookie?: {
                 token?: string | null;
             };
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["MemberRestrictionCreateRequest"];
-            };
-        };
+        requestBody?: never;
         responses: {
             /** @description Successful Response */
             200: {
@@ -3373,7 +3404,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["MemberRestrictionResponse"];
+                    "application/json": components["schemas"]["MemberResponse"];
                 };
             };
             /** @description Validation Error */
@@ -3411,6 +3442,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MemberResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_my_member_api_server__server_id__members_me_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                server_id: string;
+            };
+            cookie?: {
+                token?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberMeResponse"];
                 };
             };
             /** @description Validation Error */
@@ -3530,72 +3594,6 @@ export interface operations {
             };
         };
     };
-    list_members_api_server__server_id__members__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                server_id: string;
-            };
-            cookie?: {
-                token?: string | null;
-            };
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ReducedMemberResponse"][];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    join_server_api_server__server_id__members__post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                server_id: string;
-            };
-            cookie?: {
-                token?: string | null;
-            };
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MemberResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     migrate_member_api_server__server_id__members__member_id__migrate_post: {
         parameters: {
             query?: never;
@@ -3621,6 +3619,78 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MemberResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_restrictions_api_server__server_id__members__member_id__restrictions_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                server_id: string;
+                member_id: string;
+            };
+            cookie?: {
+                token?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberRestrictionResponse"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_restriction_api_server__server_id__members__member_id__restrictions_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                server_id: string;
+                member_id: string;
+            };
+            cookie?: {
+                token?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MemberRestrictionCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberRestrictionResponse"];
                 };
             };
             /** @description Validation Error */

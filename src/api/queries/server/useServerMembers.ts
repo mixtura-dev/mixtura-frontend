@@ -1,10 +1,11 @@
 import type { ServerID } from '@/types/user'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
-import { computed, toValue, type MaybeRef } from 'vue'
+import { computed, toValue, watch, type MaybeRef, type MaybeRefOrGetter } from 'vue'
 import { queryKeys } from './keys'
 import {
   addRestriction,
   createVirtualMember,
+  getCurrentMember,
   getMember,
   getRestrictions,
   joinServer,
@@ -15,6 +16,7 @@ import {
   updateMember,
 } from '@/api/endpoints/server/serverMembers'
 import type { RequestBody } from '@/types/auth'
+import { useCurrentMemberStore } from '@/stores/currentMember.store'
 
 // ===== QUERIES =====
 
@@ -183,4 +185,26 @@ export const useRemoveRestrictionMutation = () => {
       })
     },
   })
+}
+
+export const useCurrentMemberQuery = (serverId: MaybeRefOrGetter<ServerID>) => {
+  const currentMemberStore = useCurrentMemberStore()
+  const sId = computed(() => toValue(serverId))
+
+  const query = useQuery({
+    queryKey: computed(() => [...queryKeys.servers.members(sId.value), 'me']),
+    queryFn: () => getCurrentMember(sId.value),
+    enabled: computed(() => !!sId.value),
+    staleTime: 5 * 60 * 1000,
+  })
+
+  watch(
+    () => query.data.value,
+    (member) => {
+      currentMemberStore.setCurrentMember(member ?? null, sId.value)
+    },
+    { immediate: true },
+  )
+
+  return query
 }
