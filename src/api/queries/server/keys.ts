@@ -12,6 +12,7 @@ export const queryKeys = {
     ratingSet: (serverId: string) => [...queryKeys.servers.all, serverId, 'ratingSet'] as const,
     restrictions: (serverId: string, memberId: string) =>
       [...queryKeys.servers.member(serverId, memberId), 'restrictions'] as const,
+    serverRoles: (serverId: string) => ['servers', serverId, 'serverRoles'] as const,
     customs: (serverId: string, memberId: string) =>
       [...queryKeys.servers.member(serverId, memberId), 'customs'] as const,
     custom: (serverId: string, memberId: string, customId: string) =>

@@ -1,8 +1,14 @@
-<!-- components/server/roles/RoleEditor.vue -->
 <template>
-  <div class="space-y-4">
-    <div class="flex items-center justify-between">
-      <h3 class="font-medium">{{ role.name }}</h3>
+  <div class="flex flex-col h-full">
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center gap-3">
+        <Shield class="size-5 text-muted-foreground" />
+        <h3 class="font-semibold text-lg">{{ role.name }}</h3>
+        <Badge variant="outline">
+          <ArrowUpDown class="size-3 mr-1" />
+          Position {{ role.position }}
+        </Badge>
+      </div>
       <Button variant="destructive" size="sm" :disabled="isDeleting" @click="handleDelete">
         <Trash2 v-if="!isDeleting" class="mr-1 size-3" />
         <Loader2 v-else class="mr-1 size-3 animate-spin" />
@@ -10,85 +16,59 @@
       </Button>
     </div>
 
-    <Tabs default-value="general">
-      <TabsList class="grid w-full grid-cols-2">
+    <Tabs default-value="general" class="flex-1 flex flex-col min-h-0">
+      <TabsList class="grid w-full grid-cols-2 shrink-0">
         <TabsTrigger value="general">General</TabsTrigger>
-        <TabsTrigger value="settings">Settings</TabsTrigger>
+        <TabsTrigger value="permissions">Permissions</TabsTrigger>
       </TabsList>
 
       <TabsContent value="general" class="space-y-4 mt-4">
-        <!-- Role Name -->
         <div class="space-y-2">
           <Label>Role Name</Label>
           <Input v-model="form.name" placeholder="Role name" />
         </div>
 
-        <!-- Role Icon -->
-        <div class="space-y-2">
-          <Label>Icon</Label>
-          <div class="flex items-center gap-3">
-            <Avatar class="size-12">
-              <AvatarImage v-if="role.icon_url" :src="role.icon_url" />
-              <AvatarFallback>
-                {{ role.name.charAt(0).toUpperCase() }}
-              </AvatarFallback>
-            </Avatar>
-            <div class="flex gap-2">
-              <Button variant="outline" size="sm" @click="triggerIconUpload">
-                <Upload class="mr-1 size-3" />
-                Upload
-              </Button>
-              <Button v-if="role.icon_url" variant="outline" size="sm" @click="handleRemoveIcon">
-                <X class="mr-1 size-3" />
-                Remove
-              </Button>
-            </div>
-            <input
-              ref="iconInput"
-              type="file"
-              accept="image/*"
-              class="hidden"
-              @change="handleIconUpload"
-            />
-          </div>
+        <div class="rounded-lg border bg-muted/30 p-3 text-sm text-muted-foreground">
+          <GripVertical class="inline size-4 mr-1 -mt-0.5" />
+          To change the role's position, drag it in the roles list on the left.
         </div>
 
-        <Button class="w-full" :disabled="!hasGeneralChanges || isSaving" @click="saveGeneral">
+        <Button class="w-full" :disabled="!hasNameChanged || isSaving" @click="saveName">
           <Loader2 v-if="isSaving" class="mr-2 size-4 animate-spin" />
           Save Changes
         </Button>
       </TabsContent>
 
-      <TabsContent value="settings" class="space-y-4 mt-4">
-        <!-- Min in Team -->
-        <div class="space-y-2">
-          <Label>Minimum in Team</Label>
-          <Input v-model.number="form.min_in_team" type="number" :min="0" />
-        </div>
-
-        <!-- Max in Team -->
-        <div class="space-y-2">
-          <Label>Maximum in Team</Label>
-          <Input v-model.number="form.max_in_team" type="number" :min="0" />
-        </div>
-
-        <!-- Hidden -->
-        <div class="flex items-center justify-between rounded-lg border p-3">
-          <div>
-            <p class="font-medium text-sm">Hidden</p>
-            <p class="text-xs text-muted-foreground">Hide this role from public view</p>
+      <TabsContent value="permissions" class="flex-1 flex flex-col min-h-0 mt-4 overflow-hidden">
+        <ScrollArea class="flex-1 max-h-[300px]">
+          <div class="space-y-2 pr-4">
+            <div
+              v-for="permission in allPermissions"
+              :key="permission.code"
+              class="flex items-center justify-between rounded-lg border p-3 hover:bg-muted/50 transition-colors"
+            >
+              <div class="flex-1 min-w-0 pr-4">
+                <p class="font-medium text-sm">{{ permission.label }}</p>
+                <p class="text-xs text-muted-foreground">{{ permission.description }}</p>
+              </div>
+              <Switch
+                :checked="hasPermission(permission.code)"
+                @update:checked="(val: boolean) => togglePermission(permission.code, val)"
+              />
+            </div>
           </div>
-          <Switch v-model:checked="form.hidden" />
-        </div>
+        </ScrollArea>
 
-        <Button
-          class="w-full"
-          :disabled="!hasSettingsChanges || isSavingSettings"
-          @click="saveSettings"
-        >
-          <Loader2 v-if="isSavingSettings" class="mr-2 size-4 animate-spin" />
-          Save Settings
-        </Button>
+        <div class="pt-4 border-t mt-4 shrink-0">
+          <Button
+            class="w-full"
+            :disabled="!hasPermissionChanges || isSavingPermissions"
+            @click="savePermissions"
+          >
+            <Loader2 v-if="isSavingPermissions" class="mr-2 size-4 animate-spin" />
+            Save Permissions
+          </Button>
+        </div>
       </TabsContent>
     </Tabs>
   </div>
@@ -97,35 +77,33 @@
 <script setup lang="ts">
 import { ref, reactive, computed, watch } from 'vue'
 import { toast } from 'vue-sonner'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Badge } from '@/components/ui/badge'
 import { Switch } from '@/components/ui/switch'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Loader2, Trash2, Upload, X } from 'lucide-vue-next'
-
-import type { ServerID } from '@/types/user'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { ArrowUpDown, GripVertical, Loader2, Shield, Trash2 } from 'lucide-vue-next'
 import {
-  useDeleteRoleIconMutation,
-  useDeleteRoleMutation,
-  useUpdateRoleIconMutation,
-  useUpdateRoleMutation,
+  useUpdateServerRoleMutation,
+  useDeleteServerRoleMutation,
+  useUpdateServerRolePermissionsMutation,
+  useGlobalPermissionsQuery,
 } from '@/api/queries/server'
+import { PERMISSION_CODES } from '@/types/permissions'
+import type { ServerID } from '@/types/user'
 
-interface GameRole {
+interface ServerRole {
   id: string
   name: string
-  icon_url?: string | null
-  min_in_team: number
-  max_in_team: number
-  hidden: boolean
+  position: number
+  permissions_list: Array<{ id: string; code: string }>
 }
 
 const props = defineProps<{
-  role: GameRole
+  role: ServerRole
   serverId: ServerID
-  roleSetId: string
 }>()
 
 const emit = defineEmits<{
@@ -133,49 +111,142 @@ const emit = defineEmits<{
   deleted: []
 }>()
 
-const iconInput = ref<HTMLInputElement | null>(null)
-
 const form = reactive({
   name: props.role.name,
-  min_in_team: props.role.min_in_team,
-  max_in_team: props.role.max_in_team,
-  hidden: props.role.hidden,
 })
 
-const { mutate: updateRole, isPending: isSaving } = useUpdateRoleMutation()
-const { mutate: deleteRole, isPending: isDeleting } = useDeleteRoleMutation()
-const { mutate: updateIcon } = useUpdateRoleIconMutation()
-const { mutate: deleteIcon } = useDeleteRoleIconMutation()
-
-const isSavingSettings = ref(false)
-
-const hasGeneralChanges = computed(() => form.name !== props.role.name)
-
-const hasSettingsChanges = computed(
-  () =>
-    form.min_in_team !== props.role.min_in_team ||
-    form.max_in_team !== props.role.max_in_team ||
-    form.hidden !== props.role.hidden,
+// Store permission IDs for the PUT request
+const selectedPermissionIds = ref<Set<string>>(
+  new Set(props.role.permissions_list.map((p) => p.id)),
 )
+
+// Store permission codes for UI
+const selectedPermissionCodes = ref<Set<string>>(
+  new Set(props.role.permissions_list.map((p) => p.code)),
+)
+
+const { mutate: updateRole, isPending: isSaving } = useUpdateServerRoleMutation()
+const { mutate: deleteRole, isPending: isDeleting } = useDeleteServerRoleMutation()
+const { mutate: updatePermissions, isPending: isSavingPermissions } =
+  useUpdateServerRolePermissionsMutation()
+
+const { data: permissionsList } = useGlobalPermissionsQuery()
+
+// Build permission map: code -> id
+const permissionCodeToId = computed(() => {
+  const map = new Map<string, string>()
+  if (permissionsList.value) {
+    for (const perm of permissionsList.value) {
+      map.set(perm.code, perm.id)
+    }
+  }
+  return map
+})
+
+// All available permissions with labels
+const allPermissions = computed(() => [
+  {
+    code: PERMISSION_CODES.ADMINISTRATOR,
+    label: 'Administrator',
+    description: 'Full access to all server settings and actions',
+  },
+  {
+    code: PERMISSION_CODES.MANAGE_SERVER,
+    label: 'Manage Server',
+    description: 'Edit server settings, name, and icon',
+  },
+  {
+    code: PERMISSION_CODES.MANAGE_ROLES,
+    label: 'Manage Roles',
+    description: 'Create, edit, and delete server roles',
+  },
+  {
+    code: PERMISSION_CODES.MANAGE_INVITES,
+    label: 'Manage Invites',
+    description: 'Create and revoke invite links',
+  },
+  {
+    code: PERMISSION_CODES.KICK_MEMBERS,
+    label: 'Kick Members',
+    description: 'Remove members from the server',
+  },
+  {
+    code: PERMISSION_CODES.MANAGE_NICKNAMES,
+    label: 'Manage Nicknames',
+    description: "Change other members' nicknames",
+  },
+  {
+    code: PERMISSION_CODES.VIEW_RESTRICTIONS,
+    label: 'View Restrictions',
+    description: 'View member restrictions and bans',
+  },
+  {
+    code: PERMISSION_CODES.MANAGE_RESTRICTIONS,
+    label: 'Manage Restrictions',
+    description: 'Add and remove member restrictions',
+  },
+  {
+    code: PERMISSION_CODES.CREATE_VIRTUAL_MEMBER,
+    label: 'Create Virtual Members',
+    description: 'Create placeholder members',
+  },
+  {
+    code: PERMISSION_CODES.MIGRATE_VIRTUAL_MEMBER,
+    label: 'Migrate Virtual Members',
+    description: 'Transfer virtual members to real users',
+  },
+])
+
+const hasNameChanged = computed(() => form.name !== props.role.name)
+
+const hasPermissionChanges = computed(() => {
+  const currentCodes = new Set(props.role.permissions_list.map((p) => p.code))
+  if (currentCodes.size !== selectedPermissionCodes.value.size) return true
+  for (const code of selectedPermissionCodes.value) {
+    if (!currentCodes.has(code)) return true
+  }
+  return false
+})
 
 watch(
   () => props.role,
   (newRole) => {
     form.name = newRole.name
-    form.min_in_team = newRole.min_in_team
-    form.max_in_team = newRole.max_in_team
-    form.hidden = newRole.hidden
+    selectedPermissionIds.value = new Set(newRole.permissions_list.map((p) => p.id))
+    selectedPermissionCodes.value = new Set(newRole.permissions_list.map((p) => p.code))
   },
   { deep: true },
 )
 
-function saveGeneral() {
+function hasPermission(code: string): boolean {
+  return selectedPermissionCodes.value.has(code)
+}
+
+function togglePermission(code: string, enabled: boolean) {
+  const permId = permissionCodeToId.value.get(code)
+
+  if (enabled) {
+    selectedPermissionCodes.value.add(code)
+    if (permId) selectedPermissionIds.value.add(permId)
+  } else {
+    selectedPermissionCodes.value.delete(code)
+    if (permId) selectedPermissionIds.value.delete(permId)
+  }
+
+  // Trigger reactivity
+  selectedPermissionCodes.value = new Set(selectedPermissionCodes.value)
+  selectedPermissionIds.value = new Set(selectedPermissionIds.value)
+}
+
+function saveName() {
   updateRole(
     {
       serverId: props.serverId,
-      roleSetId: props.roleSetId,
       roleId: props.role.id,
-      data: { name: form.name },
+      data: {
+        name: form.name,
+        position: props.role.position,
+      },
     },
     {
       onSuccess: () => {
@@ -187,28 +258,21 @@ function saveGeneral() {
   )
 }
 
-function saveSettings() {
-  isSavingSettings.value = true
-  updateRole(
+function savePermissions() {
+  updatePermissions(
     {
       serverId: props.serverId,
-      roleSetId: props.roleSetId,
       roleId: props.role.id,
       data: {
-        min_in_team: form.min_in_team,
-        max_in_team: form.max_in_team,
-        hidden: form.hidden,
+        permissions_ids: Array.from(selectedPermissionIds.value),
       },
     },
     {
       onSuccess: () => {
-        toast.success('Settings updated')
+        toast.success('Permissions updated')
         emit('updated')
       },
-      onError: () => toast.error('Failed to update settings'),
-      onSettled: () => {
-        isSavingSettings.value = false
-      },
+      onError: () => toast.error('Failed to update permissions'),
     },
   )
 }
@@ -217,7 +281,6 @@ function handleDelete() {
   deleteRole(
     {
       serverId: props.serverId,
-      roleSetId: props.roleSetId,
       roleId: props.role.id,
     },
     {
@@ -226,48 +289,6 @@ function handleDelete() {
         emit('deleted')
       },
       onError: () => toast.error('Failed to delete role'),
-    },
-  )
-}
-
-function triggerIconUpload() {
-  iconInput.value?.click()
-}
-
-function handleIconUpload(e: Event) {
-  const file = (e.target as HTMLInputElement).files?.[0]
-  if (!file) return
-
-  updateIcon(
-    {
-      serverId: props.serverId,
-      roleSetId: props.roleSetId,
-      roleId: props.role.id,
-      icon: file,
-    },
-    {
-      onSuccess: () => {
-        toast.success('Icon updated')
-        emit('updated')
-      },
-      onError: () => toast.error('Failed to update icon'),
-    },
-  )
-}
-
-function handleRemoveIcon() {
-  deleteIcon(
-    {
-      serverId: props.serverId,
-      roleSetId: props.roleSetId,
-      roleId: props.role.id,
-    },
-    {
-      onSuccess: () => {
-        toast.success('Icon removed')
-        emit('updated')
-      },
-      onError: () => toast.error('Failed to remove icon'),
     },
   )
 }

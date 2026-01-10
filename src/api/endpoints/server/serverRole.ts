@@ -69,3 +69,34 @@ export const updateRoleSet = (
   data: RequestBody<'/api/server/{server_id}/role-set/{role_set_id}', 'patch'>,
 ): Promise<SuccessResponse<'/api/server/{server_id}/role-set/{role_set_id}', 'patch'>> =>
   baseApi.patch(`/api/server/${serverId}/role-set/${roleSetId}`, data).then((res) => res.data)
+
+export const listServerRoles = (
+  serverId: ServerID,
+): Promise<SuccessResponse<'/api/server/{server_id}/role/', 'get'>> =>
+  baseApi.get(`/api/server/${serverId}/role/`).then((res) => res.data)
+
+export const createServerRole = (
+  serverId: ServerID,
+  data: RequestBody<'/api/server/{server_id}/role/', 'post'>,
+): Promise<SuccessResponse<'/api/server/{server_id}/role/', 'post'>> =>
+  baseApi.post(`/api/server/${serverId}/role/`, data).then((res) => res.data)
+
+export const updateServerRole = (
+  serverId: ServerID,
+  roleId: string,
+  data: RequestBody<'/api/server/{server_id}/role/{role_id}', 'patch'>,
+): Promise<SuccessResponse<'/api/server/{server_id}/role/{role_id}', 'patch'>> =>
+  baseApi.patch(`/api/server/${serverId}/role/${roleId}`, data).then((res) => res.data)
+
+export const deleteServerRole = (
+  serverId: ServerID,
+  roleId: string,
+): Promise<SuccessResponse<'/api/server/{server_id}/role/{role_id}', 'delete'>> =>
+  baseApi.delete(`/api/server/${serverId}/role/${roleId}`).then((res) => res.data)
+
+export const updateServerRolePermissions = (
+  serverId: ServerID,
+  roleId: string,
+  data: RequestBody<'/api/server/{server_id}/role/{role_id}/permissions', 'put'>,
+): Promise<SuccessResponse<'/api/server/{server_id}/role/{role_id}/permissions', 'put'>> =>
+  baseApi.put(`/api/server/${serverId}/role/${roleId}/permissions`, data).then((res) => res.data)

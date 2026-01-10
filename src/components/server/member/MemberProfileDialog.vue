@@ -1,3 +1,4 @@
+<!-- components/server/member/MemberProfileDialog.vue -->
 <template>
   <Dialog v-model:open="open">
     <DialogContent class="max-w-md overflow-hidden p-0">
@@ -30,7 +31,7 @@
           </div>
         </div>
 
-        <div class="px-6 pb-6 pt-6">
+        <div class="px-6 pb-6 pt-14">
           <div class="mb-4">
             <div class="flex items-center gap-2">
               <EditableNickname
@@ -41,6 +42,7 @@
               <Badge v-if="isMe" variant="secondary" class="text-xs">You</Badge>
             </div>
 
+            <!-- Server Role (with permissions) -->
             <div class="mt-2 flex flex-wrap gap-1.5">
               <DropdownMenu v-if="canChangeRole && !isMe">
                 <DropdownMenuTrigger as-child>
@@ -52,13 +54,13 @@
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start">
                   <DropdownMenuItem
-                    v-for="role in availableRoles"
+                    v-for="role in availableServerRoles"
                     :key="role.id"
                     @click="handleChangeRole(role.id)"
                   >
-                    <div class="mr-2 size-3 rounded-full bg-muted-foreground/30" />
+                    <Shield class="mr-2 size-3 text-muted-foreground" />
                     {{ role.name }}
-                    <Check v-if="role.id === member.server_role?.id" class="ml-auto size-4" />
+                    <Check v-if="role.id === member.server_role?.id" class="ml-2 size-4" />
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -78,7 +80,7 @@
           <Separator />
 
           <div class="mt-4 space-y-4">
-            <div>
+            <div v-if="member.joined_at">
               <h3 class="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 Member Since
               </h3>
@@ -246,8 +248,8 @@ import {
   useKickMemberMutation,
   useMemberRestrictionsQuery,
   useRemoveRestrictionMutation,
-  useRoleSetQuery,
   useServerMemberQuery,
+  useServerRolesQuery,
   useUpdateMemberMutation,
 } from '@/api/queries/server'
 
@@ -272,7 +274,7 @@ const memberId = computed(() => props.memberId ?? '')
 
 const { data: member, isLoading, isError } = useServerMemberQuery(serverId, memberId)
 const { data: restrictions } = useMemberRestrictionsQuery(serverId, memberId)
-const { data: roleSet } = useRoleSetQuery(serverId)
+const { data: serverRoles } = useServerRolesQuery(serverId)
 
 const { mutate: removeRestriction } = useRemoveRestrictionMutation()
 const { mutate: kickMember, isPending: isKicking } = useKickMemberMutation()
@@ -289,7 +291,7 @@ const canChangeRole = computed(() =>
   props.memberId ? canActOn(props.memberId, 'CHANGE_ROLE') : false,
 )
 
-const availableRoles = computed(() => roleSet.value?.game_roles ?? [])
+const availableServerRoles = computed(() => serverRoles.value ?? [])
 
 const hasAnyAction = computed(() => {
   if (!props.memberId || isMe.value) return false
@@ -301,28 +303,49 @@ const hasAnyAction = computed(() => {
   )
 })
 
-function formatDate(dateString: string): string {
-  const date = new Date(dateString)
-  const now = new Date()
-  const diffYears = date.getFullYear() - now.getFullYear()
+function formatDate(dateString: string | null | undefined): string {
+  if (!dateString) return 'Unknown'
 
-  if (diffYears > 50) {
-    return 'Permanent'
+  try {
+    const date = new Date(dateString)
+
+    // Check if date is valid
+    if (isNaN(date.getTime())) return 'Unknown'
+
+    const now = new Date()
+    const diffYears = date.getFullYear() - now.getFullYear()
+
+    if (diffYears > 50) {
+      return 'Permanent'
+    }
+
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+    }).format(date)
+  } catch {
+    return 'Unknown'
   }
-
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-  }).format(date)
 }
 
-function formatFullDate(dateString: string): string {
-  return new Intl.DateTimeFormat('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  }).format(new Date(dateString))
+function formatFullDate(dateString: string | null | undefined): string {
+  if (!dateString) return 'Unknown'
+
+  try {
+    const date = new Date(dateString)
+
+    // Check if date is valid
+    if (isNaN(date.getTime())) return 'Unknown'
+
+    return new Intl.DateTimeFormat('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }).format(date)
+  } catch {
+    return 'Unknown'
+  }
 }
 
 function formatPermissionCode(code: string): string {

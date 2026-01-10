@@ -1,76 +1,121 @@
-<!-- components/server/roles/RolesManagementDialog.vue -->
 <template>
   <Dialog v-model:open="open">
-    <DialogContent class="max-w-2xl max-h-[80vh] flex flex-col">
-      <DialogHeader>
-        <DialogTitle>Manage Roles</DialogTitle>
-        <DialogDescription> Create, edit and manage server roles </DialogDescription>
+    <DialogContent class="max-w-5xl! w-full max-h-[85vh] flex flex-col">
+      <DialogHeader class="relative">
+        <DialogTitle>Manage Server Roles</DialogTitle>
+        <DialogDescription>
+          Create and manage roles with permissions for server administration. Drag roles to reorder
+          their hierarchy.
+        </DialogDescription>
+
+        <!-- Small loader in corner -->
+        <Transition name="fade">
+          <div
+            v-if="isSavingOrder"
+            class="absolute right-0 top-0 flex items-center gap-1.5 rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground"
+          >
+            <Loader2 class="size-3 animate-spin" />
+            Saving...
+          </div>
+        </Transition>
       </DialogHeader>
 
       <div class="flex flex-1 min-h-0 gap-4">
-        <!-- Roles list -->
-        <div class="w-48 shrink-0 border-r pr-4">
+        <div class="w-64 shrink-0 border-r pr-4">
           <div class="flex items-center justify-between mb-3">
-            <h3 class="text-sm font-medium">Roles</h3>
-            <Button variant="ghost" size="icon" class="size-6" @click="handleCreateRole">
+            <h3 class="text-sm font-medium">Roles Hierarchy</h3>
+            <Button variant="ghost" size="icon" class="size-6" @click="showCreateDialog = true">
               <Plus class="size-4" />
             </Button>
           </div>
+
+          <p class="text-xs text-muted-foreground mb-3">
+            <ArrowUpDown class="inline size-3 mr-1" />
+            Drag to reorder. Higher = more authority.
+          </p>
 
           <div v-if="isLoading" class="flex justify-center py-4">
             <Loader2 class="size-5 animate-spin text-muted-foreground" />
           </div>
 
-          <ScrollArea v-else class="h-[400px]">
-            <div class="space-y-1">
-              <button
-                v-for="role in gameRoles"
-                :key="role.id"
-                class="w-full flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-muted text-left"
-                :class="{ 'bg-muted': selectedRoleId === role.id }"
-                @click="selectedRoleId = role.id"
-              >
-                <Avatar v-if="role.icon_url" class="size-5">
-                  <AvatarImage :src="role.icon_url" />
-                </Avatar>
-                <div v-else class="size-3 rounded-full bg-muted-foreground/30" />
-                <span class="truncate">{{ role.name }}</span>
-              </button>
+          <ScrollArea v-else class="h-[420px]">
+            <draggable
+              v-model="localRoles"
+              item-key="id"
+              handle=".drag-handle"
+              ghost-class="opacity-50"
+              :animation="200"
+              @end="handleDragEnd"
+            >
+              <template #item="{ element: role, index }">
+                <div
+                  class="flex items-center gap-2 rounded-md px-2 py-2 text-sm transition-colors hover:bg-muted mb-1 group"
+                  :class="{ 'bg-muted': selectedRoleId === role.id }"
+                >
+                  <!-- Drag handle -->
+                  <div
+                    class="drag-handle cursor-grab active:cursor-grabbing p-1 -ml-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <GripVertical class="size-4 text-muted-foreground" />
+                  </div>
+
+                  <!-- Role button -->
+                  <button
+                    class="flex-1 flex items-center gap-2 text-left min-w-0"
+                    @click="selectedRoleId = role.id"
+                  >
+                    <Shield class="size-4 shrink-0 text-muted-foreground" />
+                    <span class="truncate flex-1">{{ role.name }}</span>
+                  </button>
+
+                  <!-- Position badge -->
+                  <Badge variant="outline" class="text-[10px] shrink-0 tabular-nums">
+                    {{ localRoles.length - index }}
+                  </Badge>
+                </div>
+              </template>
+            </draggable>
+
+            <div v-if="!localRoles.length" class="py-8 text-center text-sm text-muted-foreground">
+              No roles yet
             </div>
           </ScrollArea>
         </div>
 
-        <!-- Role editor -->
-        <div class="flex-1 min-w-0">
+        <div class="flex-1 min-w-0 overflow-hidden">
           <template v-if="selectedRole">
             <RoleEditor
               :key="selectedRole.id"
               :role="selectedRole"
               :server-id="serverId"
-              :role-set-id="roleSetId"
               @updated="handleRoleUpdated"
               @deleted="handleRoleDeleted"
             />
           </template>
-          <div v-else class="flex h-full items-center justify-center text-muted-foreground">
-            Select a role to edit
+          <div
+            v-else
+            class="flex h-full flex-col items-center justify-center text-muted-foreground"
+          >
+            <Shield class="size-12 mb-3 opacity-50" />
+            <p>Select a role to edit</p>
+            <p class="text-sm">or create a new one</p>
           </div>
         </div>
       </div>
     </DialogContent>
   </Dialog>
 
-  <!-- Create Role Dialog -->
   <CreateRoleDialog
     v-model:open="showCreateDialog"
     :server-id="serverId"
-    :role-set-id="roleSetId"
     @created="handleRoleCreated"
   />
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
+import draggable from 'vuedraggable'
+import { toast } from 'vue-sonner'
 import {
   Dialog,
   DialogContent,
@@ -79,13 +124,25 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { Avatar, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Loader2, Plus } from 'lucide-vue-next'
-import RoleEditor from './RoleEditor.vue'
-import CreateRoleDialog from './CreateRoleDialog.vue'
+import { ArrowUpDown, GripVertical, Loader2, Plus, Shield } from 'lucide-vue-next'
 import type { ServerID } from '@/types/user'
-import { useRoleSetQuery } from '@/api/queries/server'
+import { useServerRolesQuery, useUpdateServerRoleMutation } from '@/api/queries/server'
+import CreateRoleDialog from './CreateRoleDialog.vue'
+import RoleEditor from './RoleEditor.vue'
+
+interface ServerRole {
+  id: string
+  name: string
+  position: number
+  permissions_list: Array<{ id: string; code: string }>
+}
+
+interface DragEndEvent {
+  oldIndex: number
+  newIndex: number
+}
 
 const props = defineProps<{
   serverId: ServerID
@@ -95,31 +152,79 @@ const open = defineModel<boolean>('open', { required: true })
 
 const selectedRoleId = ref<string | null>(null)
 const showCreateDialog = ref(false)
+const isSavingOrder = ref(false)
 
 const serverId = computed(() => props.serverId)
-const { data: roleSet, isLoading } = useRoleSetQuery(serverId)
+const { data: serverRoles, isLoading } = useServerRolesQuery(serverId)
+const { mutateAsync: updateRole } = useUpdateServerRoleMutation()
 
-// game_roles - это правильное поле из API
-const gameRoles = computed(() => roleSet.value?.game_roles ?? [])
-const roleSetId = computed(() => roleSet.value?.id ?? '')
+const localRoles = ref<ServerRole[]>([])
 
-const selectedRole = computed(
-  () => gameRoles.value.find((r) => r.id === selectedRoleId.value) ?? null,
+watch(
+  () => serverRoles.value,
+  (roles) => {
+    if (roles) {
+      localRoles.value = [...roles].sort((a, b) => b.position - a.position)
+    }
+  },
+  { immediate: true },
 )
 
-function handleCreateRole() {
-  showCreateDialog.value = true
+const selectedRole = computed(
+  () => localRoles.value.find((r) => r.id === selectedRoleId.value) ?? null,
+)
+
+async function handleDragEnd(event: DragEndEvent) {
+  const { oldIndex, newIndex } = event
+
+  if (oldIndex === newIndex) return
+
+  const movedRole = localRoles.value[newIndex]
+  if (!movedRole) return
+
+  const newPosition = localRoles.value.length - newIndex
+
+  isSavingOrder.value = true
+
+  try {
+    await updateRole({
+      serverId: props.serverId,
+      roleId: movedRole.id,
+      data: {
+        name: movedRole.name,
+        position: newPosition,
+      },
+    })
+  } catch {
+    if (serverRoles.value) {
+      localRoles.value = [...serverRoles.value].sort((a, b) => b.position - a.position)
+    }
+    toast.error('Failed to update role order')
+  } finally {
+    isSavingOrder.value = false
+  }
 }
 
 function handleRoleCreated(roleId: string) {
   selectedRoleId.value = roleId
+  showCreateDialog.value = false
 }
 
-function handleRoleUpdated() {
-  // Query will auto-refetch
-}
+function handleRoleUpdated() {}
 
 function handleRoleDeleted() {
   selectedRoleId.value = null
 }
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

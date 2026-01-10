@@ -2,29 +2,22 @@
   <Dialog v-model:open="open">
     <DialogContent class="max-w-md">
       <DialogHeader>
-        <DialogTitle>Create Role</DialogTitle>
-        <DialogDescription> Create a new role for this server </DialogDescription>
+        <DialogTitle>Create Server Role</DialogTitle>
+        <DialogDescription>
+          Create a new role with permissions for server administration. The role will be added at
+          the bottom of the hierarchy.
+        </DialogDescription>
       </DialogHeader>
 
       <form @submit.prevent="handleSubmit" class="space-y-4">
         <div class="space-y-2">
           <Label>Role Name</Label>
-          <Input v-model="form.name" placeholder="Enter role name" :maxlength="32" />
+          <Input v-model="form.name" placeholder="e.g., Moderator, Admin" :maxlength="32" />
         </div>
 
-        <div class="space-y-2">
-          <Label>Min in Team</Label>
-          <Input v-model.number="form.min_in_team" type="number" :min="0" />
-        </div>
-
-        <div class="space-y-2">
-          <Label>Max in Team</Label>
-          <Input v-model.number="form.max_in_team" type="number" :min="0" />
-        </div>
-
-        <div class="flex items-center justify-between">
-          <Label>Hidden</Label>
-          <Switch v-model:checked="form.hidden" />
+        <div class="rounded-lg border bg-muted/30 p-3 text-sm text-muted-foreground">
+          <Info class="inline size-4 mr-1 -mt-0.5" />
+          After creating, drag the role in the list to set its position in the hierarchy.
         </div>
 
         <DialogFooter>
@@ -53,14 +46,12 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Switch } from '@/components/ui/switch'
-import { Loader2 } from 'lucide-vue-next'
+import { Info, Loader2 } from 'lucide-vue-next'
+import { useCreateServerRoleMutation } from '@/api/queries/server'
 import type { ServerID } from '@/types/user'
-import { useCreateRoleMutation } from '@/api/queries/server'
 
 const props = defineProps<{
   serverId: ServerID
-  roleSetId: string
 }>()
 
 const emit = defineEmits<{
@@ -71,45 +62,32 @@ const open = defineModel<boolean>('open', { required: true })
 
 const form = reactive({
   name: '',
-  min_in_team: 0,
-  max_in_team: 1,
-  hidden: false,
 })
 
-const { mutate: createRole, isPending } = useCreateRoleMutation()
+const { mutate: createServerRole, isPending } = useCreateServerRoleMutation()
 
 const isValid = computed(() => form.name.trim().length > 0)
 
 function handleSubmit() {
   if (!isValid.value) return
 
-  createRole(
+  createServerRole(
     {
       serverId: props.serverId,
-      roleSetId: props.roleSetId,
       data: {
         name: form.name.trim(),
-        min_in_team: form.min_in_team,
-        max_in_team: form.max_in_team,
-        hidden: form.hidden,
+        position: 0,
       },
     },
     {
       onSuccess: (data) => {
         toast.success('Role created')
         emit('created', data.id)
-        resetForm()
+        form.name = ''
         open.value = false
       },
       onError: () => toast.error('Failed to create role'),
     },
   )
-}
-
-function resetForm() {
-  form.name = ''
-  form.min_in_team = 0
-  form.max_in_team = 1
-  form.hidden = false
 }
 </script>
