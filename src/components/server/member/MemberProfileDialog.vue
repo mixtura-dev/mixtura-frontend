@@ -1,4 +1,3 @@
-<!-- components/server/member/MemberProfileDialog.vue -->
 <template>
   <Dialog v-model:open="open">
     <DialogContent class="max-w-md overflow-hidden p-0">
@@ -12,7 +11,6 @@
       </div>
 
       <template v-else>
-        <!-- Banner -->
         <div
           class="relative h-24"
           :style="{
@@ -42,9 +40,8 @@
               <Badge v-if="isMe" variant="secondary" class="text-xs">You</Badge>
             </div>
 
-            <!-- Server Role (with permissions) -->
             <div class="mt-2 flex flex-wrap gap-1.5">
-              <DropdownMenu v-if="canChangeRole && !isMe">
+              <DropdownMenu v-if="canChangeRole && !isMe && member.user_id">
                 <DropdownMenuTrigger as-child>
                   <Badge variant="outline" class="cursor-pointer hover:bg-muted">
                     <Shield class="mr-1 size-3" />
@@ -106,8 +103,7 @@
               </div>
             </div>
 
-            <!-- Restrictions -->
-            <PermissionGuard action="VIEW_RESTRICTIONS">
+            <PermissionGuard v-if="member.user_id" action="VIEW_RESTRICTIONS">
               <div v-if="restrictions?.length">
                 <h3 class="mb-2 text-xs font-semibold uppercase tracking-wide text-destructive">
                   Active Restrictions
@@ -154,12 +150,12 @@
             </PermissionGuard>
           </div>
 
-          <!-- Actions -->
           <template v-if="!isMe && hasAnyAction">
             <Separator class="my-4" />
 
             <div class="grid grid-cols-2 gap-2">
               <PermissionGuard
+                v-if="member.user_id"
                 action="MANAGE_RESTRICTIONS"
                 :target-member-id="memberId ?? undefined"
               >
@@ -199,8 +195,8 @@
     </DialogContent>
   </Dialog>
 
-  <!-- Add Restriction Dialog -->
   <AddRestrictionDialog
+    v-if="member?.user_id"
     v-model:open="showAddRestrictionDialog"
     :server-id="serverId"
     :member-id="memberId"
@@ -296,10 +292,12 @@ const availableServerRoles = computed(() => serverRoles.value ?? [])
 const hasAnyAction = computed(() => {
   if (!props.memberId || isMe.value) return false
 
+  const isVirtual = !member.value?.user_id
+
   return (
     canActOn(props.memberId, 'KICK_MEMBER') ||
-    canActOn(props.memberId, 'MANAGE_RESTRICTIONS') ||
-    (!member.value?.user_id && canActOn(props.memberId, 'MIGRATE_VIRTUAL'))
+    (isVirtual && canActOn(props.memberId, 'MIGRATE_VIRTUAL')) ||
+    (!isVirtual && canActOn(props.memberId, 'MANAGE_RESTRICTIONS'))
   )
 })
 
@@ -309,7 +307,6 @@ function formatDate(dateString: string | null | undefined): string {
   try {
     const date = new Date(dateString)
 
-    // Check if date is valid
     if (isNaN(date.getTime())) return 'Unknown'
 
     const now = new Date()
@@ -334,7 +331,6 @@ function formatFullDate(dateString: string | null | undefined): string {
   try {
     const date = new Date(dateString)
 
-    // Check if date is valid
     if (isNaN(date.getTime())) return 'Unknown'
 
     return new Intl.DateTimeFormat('en-US', {

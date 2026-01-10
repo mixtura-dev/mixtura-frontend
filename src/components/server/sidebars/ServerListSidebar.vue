@@ -1,18 +1,11 @@
 <template>
   <aside class="flex w-16 flex-shrink-0 flex-col border-r bg-background">
     <div class="flex items-center justify-center p-2">
-      <Button
-        variant="ghost"
-        size="icon"
-        class="size-12 rounded-xl"
-        @click="router.push('/servers')"
-      >
-        <Home class="size-5" />
+      <Button variant="secondary" size="icon" class="size-12 rounded-xl" @click="router.push('/')">
+        <Icon class="size-7" icon="custom:logo" />
       </Button>
     </div>
-
     <Separator />
-
     <TooltipProvider :delay-duration="200">
       <div ref="listRef" class="hide-scrollbar min-h-0 flex-1 overflow-y-auto p-2">
         <div v-for="server in servers" :key="server.id" class="group relative mb-2">
@@ -71,11 +64,12 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip'
-import { Home, Loader2, Plus } from 'lucide-vue-next'
+import { Loader2, Plus } from 'lucide-vue-next'
 import { useServersQuery } from '@/api/queries/server'
 import { getInitials } from '@/lib/utils/user'
+import { Icon } from '@iconify/vue'
+import Separator from '@/components/ui/separator/Separator.vue'
 
 const router = useRouter()
 const route = useRoute()

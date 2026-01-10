@@ -6,13 +6,11 @@
         <DialogDescription> View and manage member restrictions </DialogDescription>
       </DialogHeader>
 
-      <!-- Search member -->
       <div class="relative">
         <Search class="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
         <Input v-model="searchQuery" placeholder="Search members..." class="pl-9" />
       </div>
 
-      <!-- Members list -->
       <ScrollArea class="h-[400px]">
         <div v-if="isLoading" class="flex justify-center py-8">
           <Loader2 class="size-6 animate-spin text-muted-foreground" />
@@ -22,7 +20,9 @@
           v-else-if="filteredMembers.length === 0"
           class="py-8 text-center text-muted-foreground"
         >
-          No members found
+          <Users class="mx-auto mb-2 size-8 opacity-50" />
+          <p>No members found</p>
+          <p v-if="!searchQuery" class="text-sm">Only real users can have restrictions</p>
         </div>
 
         <div v-else class="space-y-2">
@@ -37,11 +37,29 @@
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <p class="font-medium">{{ member.nickname }}</p>
-                  <p class="text-xs text-muted-foreground">Click to manage restrictions</p>
+                  <div class="flex items-center gap-2">
+                    <p class="font-medium">{{ member.nickname }}</p>
+                    <Badge v-if="isCurrentMember(member.id)" variant="secondary" class="text-xs">
+                      You
+                    </Badge>
+                  </div>
+                  <p class="text-xs text-muted-foreground">
+                    {{
+                      isCurrentMember(member.id)
+                        ? 'Cannot manage your own restrictions'
+                        : 'Click to manage restrictions'
+                    }}
+                  </p>
                 </div>
               </div>
-              <Button variant="outline" size="sm" @click="selectMember(member)"> Manage </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                :disabled="isCurrentMember(member.id)"
+                @click="selectMember(member)"
+              >
+                Manage
+              </Button>
             </div>
           </div>
         </div>
@@ -75,20 +93,17 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Loader2, Search } from 'lucide-vue-next'
+import { Loader2, Search, Users } from 'lucide-vue-next'
 import MemberRestrictionsDialog from './MemberRestrictionsDialog.vue'
 import AddRestrictionDialog from './AddRestrictionDialog.vue'
 import { getInitials } from '@/lib/utils/user'
 import { hashToHue } from '@/lib/utils/colors'
-import type { ServerID } from '@/types/user'
+import type { MemberListItem, ServerID } from '@/types/user'
 import { useServerMembersQuery } from '@/api/queries/server'
-
-interface MemberItem {
-  id: string
-  nickname: string
-}
+import { useCurrentMemberStore } from '@/stores/currentMember.store'
 
 const props = defineProps<{
   serverId: ServerID
@@ -96,22 +111,34 @@ const props = defineProps<{
 
 const open = defineModel<boolean>('open', { required: true })
 
+const currentMemberStore = useCurrentMemberStore()
+
 const searchQuery = ref('')
-const selectedMember = ref<MemberItem | null>(null)
+const selectedMember = ref<MemberListItem | null>(null)
 const showMemberDialog = ref(false)
 const showAddDialog = ref(false)
 
 const { data: members, isLoading } = useServerMembersQuery(computed(() => props.serverId))
 
-const filteredMembers = computed(() => {
+const realMembers = computed(() => {
   if (!members.value) return []
-  if (!searchQuery.value) return members.value
-
-  const query = searchQuery.value.toLowerCase()
-  return members.value.filter((m) => m.nickname.toLowerCase().includes(query))
+  return members.value.filter((m) => m.user_id)
 })
 
-function selectMember(member: MemberItem) {
+const filteredMembers = computed(() => {
+  if (!searchQuery.value) return realMembers.value
+
+  const query = searchQuery.value.toLowerCase()
+  return realMembers.value.filter((m) => m.nickname.toLowerCase().includes(query))
+})
+
+function isCurrentMember(memberId: string): boolean {
+  return currentMemberStore.memberId === memberId
+}
+
+function selectMember(member: MemberListItem) {
+  if (isCurrentMember(member.id)) return
+
   selectedMember.value = member
   showMemberDialog.value = true
 }

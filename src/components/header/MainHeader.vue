@@ -5,13 +5,13 @@
   >
     <div class="flex h-full items-center justify-between px-3 flex-1 overflow-x-auto gap-x-8">
       <div class="flex items-center">
-        <Link
+        <!-- <Link
           to="/"
-          class="flex-shrink-0 text-foreground hidden md:flex items-center justify-center"
+          class="flex-shrink-0 ml-1.5 text-foreground hidden md:flex items-center justify-center"
           :aria-label="$t('menu.home')"
         >
           <Icon class="size-7" icon="custom:logo" />
-        </Link>
+        </Link> -->
       </div>
       <nav class="flex items-center gap-x-2">
         <TooltipProvider>
@@ -39,9 +39,9 @@
 <script setup lang="ts">
 import ProfileMenu from './ProfileMenu.vue'
 import { HelpCircleIcon } from 'lucide-vue-next'
-import { Link } from '@/components/ui/link'
+// import { Link } from '@/components/ui/link'
 
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { Icon } from '@iconify/vue'
+// import { Icon } from '@iconify/vue'
 </script>

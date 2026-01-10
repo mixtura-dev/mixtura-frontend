@@ -1,5 +1,7 @@
 import type { paths, components } from '@/types/api'
 
+export type User = paths['/api/auth/user']['get']['responses'][200]['content']['application/json']
+
 // Серверы
 export type ServerDetail =
   paths['/api/server/{server_id}']['get']['responses'][200]['content']['application/json']

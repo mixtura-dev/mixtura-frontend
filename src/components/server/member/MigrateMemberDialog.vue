@@ -60,7 +60,6 @@ const { mutate: migrateMember, isPending } = useMigrateMemberMutation()
 
 const isValid = computed(() => form.userId.trim().length > 0 && !!props.memberId)
 
-// Reset form when dialog opens
 watch(open, (isOpen) => {
   if (isOpen) {
     form.userId = ''

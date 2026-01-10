@@ -1,7 +1,5 @@
 <template>
   <section class="flex h-full">
-    <ServerListSidebar />
-
     <main class="flex min-h-0 min-w-0 flex-1 flex-col">
       <div v-if="isLoadingCurrentMember" class="flex h-full items-center justify-center">
         <Loader2 class="size-8 animate-spin text-muted-foreground" />
@@ -126,7 +124,6 @@ import {
   Users,
 } from 'lucide-vue-next'
 import PermissionGuard from '@/components/common/PermissionGuard.vue'
-import ServerListSidebar from '@/components/server/sidebars/ServerListSidebar.vue'
 import MemberListSidebar from '@/components/server/sidebars/MemberListSidebar.vue'
 import MemberProfileDialog from '@/components/server/member/MemberProfileDialog.vue'
 import RolesManagementDialog from '@/components/server/roles/RolesManagementDialog.vue'

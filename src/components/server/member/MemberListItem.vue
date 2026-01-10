@@ -11,7 +11,7 @@
       class="flex w-full items-center gap-3 rounded-md p-2 text-left transition-colors hover:bg-muted"
     >
       <Avatar class="size-8">
-        <AvatarFallback class="text-xs">
+        <AvatarFallback class="text-xs" :style="{ backgroundColor: `hsl(${memberHue}, 50%, 45%)` }">
           {{ getInitials(member.nickname) }}
         </AvatarFallback>
       </Avatar>
@@ -36,8 +36,10 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { getInitials } from '@/lib/utils/user'
 import MemberPopover from './MemberPopover.vue'
 import type { MemberListItem, ServerID } from '@/types/user'
+import { computed } from 'vue'
+import { hashToHue } from '@/lib/utils/colors'
 
-defineProps<{
+const props = defineProps<{
   member: MemberListItem
   serverId: ServerID
 }>()
@@ -48,4 +50,6 @@ defineEmits<{
   addRestriction: [memberId: string]
   kick: [memberId: string]
 }>()
+
+const memberHue = computed(() => hashToHue(props.member.id))
 </script>

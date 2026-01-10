@@ -1,4 +1,3 @@
-<!-- components/server/restrictions/MemberRestrictionsDialog.vue -->
 <template>
   <Dialog v-model:open="open">
     <DialogContent class="max-w-md">
@@ -74,17 +73,12 @@ import {
 import { Button } from '@/components/ui/button'
 import { Ban, Loader2, Plus, Trash2 } from 'lucide-vue-next'
 
-import type { ServerID } from '@/types/user'
+import type { MemberListItem, ServerID } from '@/types/user'
 import { useMemberRestrictionsQuery, useRemoveRestrictionMutation } from '@/api/queries/server'
-
-interface MemberWithRestrictions {
-  id: string
-  nickname: string
-}
 
 const props = defineProps<{
   serverId: ServerID
-  member: MemberWithRestrictions | null
+  member: MemberListItem | null
 }>()
 
 defineEmits<{

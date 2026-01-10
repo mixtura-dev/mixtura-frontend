@@ -56,11 +56,6 @@
               <span>Joined {{ formatDate(member.joined_at) }}</span>
             </div>
 
-            <div v-if="member.user_id" class="flex items-center gap-2 text-muted-foreground">
-              <User class="size-4" />
-              <span class="truncate text-xs font-mono">{{ member.user_id }}</span>
-            </div>
-
             <div
               v-if="member.server_role?.permissions_list?.length"
               class="flex items-center gap-2 text-muted-foreground"
@@ -116,8 +111,8 @@ import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
 
-import { Ban, Calendar, ExternalLink, Ghost, Key, Loader2, Shield, User } from 'lucide-vue-next'
-import { useServerMemberQuery, useMemberRestrictionsQuery } from '@/api/queries/server' // Убедись, что это правильный путь к queries
+import { Ban, Calendar, ExternalLink, Ghost, Key, Loader2, Shield } from 'lucide-vue-next'
+import { useServerMemberQuery, useMemberRestrictionsQuery } from '@/api/queries/server'
 import { useServerPermissions } from '@/composables/useServerPermissions'
 import PermissionGuard from '@/components/common/PermissionGuard.vue'
 import { getInitials } from '@/lib/utils/user'

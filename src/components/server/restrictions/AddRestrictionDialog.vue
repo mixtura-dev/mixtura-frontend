@@ -21,7 +21,6 @@
           </Select>
         </div>
 
-        <!-- Reason -->
         <div class="space-y-2">
           <Label>Reason</Label>
           <Textarea
@@ -31,7 +30,6 @@
           />
         </div>
 
-        <!-- Duration -->
         <div class="space-y-2">
           <Label>Duration</Label>
           <div class="flex gap-2">

@@ -115,12 +115,10 @@ const form = reactive({
   name: props.role.name,
 })
 
-// Store permission IDs for the PUT request
 const selectedPermissionIds = ref<Set<string>>(
   new Set(props.role.permissions_list.map((p) => p.id)),
 )
 
-// Store permission codes for UI
 const selectedPermissionCodes = ref<Set<string>>(
   new Set(props.role.permissions_list.map((p) => p.code)),
 )
@@ -132,7 +130,6 @@ const { mutate: updatePermissions, isPending: isSavingPermissions } =
 
 const { data: permissionsList } = useGlobalPermissionsQuery()
 
-// Build permission map: code -> id
 const permissionCodeToId = computed(() => {
   const map = new Map<string, string>()
   if (permissionsList.value) {
@@ -143,7 +140,6 @@ const permissionCodeToId = computed(() => {
   return map
 })
 
-// All available permissions with labels
 const allPermissions = computed(() => [
   {
     code: PERMISSION_CODES.ADMINISTRATOR,
@@ -233,7 +229,6 @@ function togglePermission(code: string, enabled: boolean) {
     if (permId) selectedPermissionIds.value.delete(permId)
   }
 
-  // Trigger reactivity
   selectedPermissionCodes.value = new Set(selectedPermissionCodes.value)
   selectedPermissionIds.value = new Set(selectedPermissionIds.value)
 }
