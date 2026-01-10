@@ -12,7 +12,7 @@ export const useCurrentMemberStore = defineStore('currentMember', () => {
 
   const permissions = computed<Set<string>>(() => {
     const perms = currentMemberData.value?.permissions ?? []
-    return new Set(perms)
+    return new Set(perms.map((p) => p.code))
   })
 
   const hasPermission = (code: PermissionCode): boolean => {
@@ -56,16 +56,11 @@ export const useCurrentMemberStore = defineStore('currentMember', () => {
   }
 
   return {
-    // State
     currentMemberData,
     currentServerId,
-
-    // Getters
     memberId,
     userId,
     permissions,
-
-    // Methods
     hasPermission,
     canPerformAction,
     canActOnMember,

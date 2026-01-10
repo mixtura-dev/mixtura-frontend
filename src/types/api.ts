@@ -1153,7 +1153,7 @@ export interface components {
         MemberMeResponse: {
             member: components["schemas"]["MemberResponse"];
             /** Permissions */
-            permissions: string[];
+            permissions: components["schemas"]["PermissionResponse"][];
             /** Restrictions */
             restrictions: components["schemas"]["MemberRestrictionResponse"][];
         };
