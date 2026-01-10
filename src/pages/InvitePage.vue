@@ -65,7 +65,6 @@
       </CardHeader>
 
       <CardContent class="space-y-4 text-center text-muted-foreground">
-        <!-- Inviter Info -->
         <div v-if="invite.inviter?.nickname" class="rounded-lg bg-muted/50 p-3 text-sm">
           Invited by
           <span class="font-semibold text-foreground">{{ invite.inviter.nickname }}</span>

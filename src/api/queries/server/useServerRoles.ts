@@ -1,6 +1,6 @@
 import type { ServerID } from '@/types/user'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
-import { computed, toValue, type MaybeRef } from 'vue'
+import { toValue, type MaybeRefOrGetter } from 'vue'
 import { queryKeys } from './keys'
 import {
   createRole,
@@ -15,13 +15,11 @@ import type { RequestBody } from '@/types/auth'
 
 // ===== QUERIES =====
 
-export const useRoleSetQuery = (serverId: MaybeRef<ServerID>) => {
-  const id = computed(() => toValue(serverId))
-
+export function useRoleSetQuery(serverId: MaybeRefOrGetter<ServerID>) {
   return useQuery({
-    queryKey: computed(() => queryKeys.servers.roleSet(id.value)),
-    queryFn: () => getRoleSet(id.value),
-    enabled: computed(() => !!id.value),
+    queryKey: queryKeys.servers.roleSet(toValue(serverId)),
+    queryFn: () => getRoleSet(toValue(serverId)),
+    enabled: () => !!toValue(serverId),
   })
 }
 

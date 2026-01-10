@@ -84,8 +84,6 @@ function handleKick(memberId: string) {
   const member = members.value?.find((m) => m.id === memberId)
   if (!member) return
 
-  if (!confirm(`Kick ${member.nickname}?`)) return
-
   kickMember(
     { serverId: props.serverId, memberId },
     {

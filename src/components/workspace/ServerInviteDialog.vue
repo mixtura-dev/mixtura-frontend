@@ -13,37 +13,49 @@
       <div v-else class="space-y-4">
         <div v-if="invites?.length" class="space-y-2">
           <Label class="text-sm font-medium">Active invites</Label>
-          <div class="max-h-48 space-y-2 overflow-y-auto">
-            <div
-              v-for="invite in invites"
-              :key="invite.id"
-              class="flex items-center justify-between rounded-md border p-2 pl-4"
-            >
-              <code class="text-sm select-all">{{ invite.key }}</code>
-              <div class="flex gap-1">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  class="size-8"
-                  @click="copyInviteLink(invite.key)"
-                >
-                  <Copy class="size-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  class="size-8 text-destructive hover:text-destructive"
-                  :disabled="deletingInviteId === invite.id"
-                  @click="handleDeleteInvite(invite.id)"
-                >
-                  <Loader2 v-if="deletingInviteId === invite.id" class="size-4 animate-spin" />
-                  <Trash2 v-else class="size-4" />
-                </Button>
+          <ScrollArea class="max-h-48">
+            <div class="space-y-2 pr-4">
+              <div
+                v-for="invite in invites"
+                :key="invite.id"
+                class="flex items-center justify-between rounded-md border p-2 pl-4"
+              >
+                <div class="flex-1 min-w-0">
+                  <code class="text-sm select-all truncate block">{{ invite.key }}</code>
+                </div>
+                <div class="flex gap-1 shrink-0">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    class="size-8"
+                    @click="copyInviteLink(invite.key)"
+                  >
+                    <Copy class="size-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    class="size-8 text-destructive hover:text-destructive"
+                    :disabled="deletingInviteId === invite.id"
+                    @click="handleDeleteInvite(invite.id)"
+                  >
+                    <Loader2 v-if="deletingInviteId === invite.id" class="size-4 animate-spin" />
+                    <Trash2 v-else class="size-4" />
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
+          </ScrollArea>
         </div>
 
+        <div v-else class="py-4 text-center text-muted-foreground">
+          <LinkIcon class="mx-auto mb-2 size-8 opacity-50" />
+          <p class="text-sm">No active invites</p>
+        </div>
+
+        <Separator />
+
+        <!-- Create new invite -->
         <div class="space-y-2">
           <Label class="text-sm font-medium">Create new invite</Label>
           <div class="flex gap-2">
@@ -84,13 +96,13 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Copy, Loader2, Plus, Trash2 } from 'lucide-vue-next'
-
-import { getErrorMessage } from '@/composables/useApiError'
+import { Separator } from '@/components/ui/separator'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Copy, Link as LinkIcon, Loader2, Plus, Trash2 } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
 import { useClipboard } from '@vueuse/core'
+
 import type { Server } from '@/types/user'
-// Импортируем типы через RequestBody для полной точности
 import type { RequestBody } from '@/types/auth'
 import {
   useCreateInviteMutation,
@@ -99,18 +111,16 @@ import {
 } from '@/api/queries/server'
 
 const props = defineProps<{
-  server: Server | null
+  server: Server | null | undefined
 }>()
 
 const open = defineModel<boolean>('open', { required: true })
 
-// У API в requestBody есть только use_limit (судя по ошибке TS)
 const useLimit = ref<number | undefined>(undefined)
 const deletingInviteId = ref<string | null>(null)
 
 const serverId = computed(() => props.server?.id ?? '')
 
-// Queries
 const {
   data: invites,
   isLoading: isLoadingInvites,
@@ -131,11 +141,8 @@ watch(open, (isOpen) => {
 function handleCreateInvite() {
   if (!props.server) return
 
-  // Формируем payload строго по типу
   const payload: RequestBody<'/api/server/{server_id}/invites', 'post'> = {
     use_limit: useLimit.value ? useLimit.value : null,
-    // expires_in здесь нет, так как TS говорит, что его нет в схеме.
-    // Если нужно добавить expires_in, нужно обновить types/api.ts (перегенерировать с бэкенда)
   }
 
   createInvite(
@@ -151,11 +158,8 @@ function handleCreateInvite() {
         }
         useLimit.value = undefined
       },
-      // Используем типизированный helper для ошибок
-      onError: (error) => {
-        toast.error('Failed to create invite', {
-          description: getErrorMessage(error),
-        })
+      onError: () => {
+        toast.error('Failed to create invite')
       },
     },
   )
@@ -171,12 +175,11 @@ function handleDeleteInvite(inviteId: string) {
     {
       onSuccess: () => {
         toast.success('Invite deleted')
-        deletingInviteId.value = null
       },
-      onError: (error) => {
-        toast.error('Failed to delete invite', {
-          description: getErrorMessage(error),
-        })
+      onError: () => {
+        toast.error('Failed to delete invite')
+      },
+      onSettled: () => {
         deletingInviteId.value = null
       },
     },
