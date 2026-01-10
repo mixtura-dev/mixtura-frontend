@@ -8,7 +8,6 @@
           their hierarchy.
         </DialogDescription>
 
-        <!-- Small loader in corner -->
         <Transition name="fade">
           <div
             v-if="isSavingOrder"
@@ -47,19 +46,17 @@
               :animation="200"
               @end="handleDragEnd"
             >
-              <template #item="{ element: role, index }">
+              <template #item="{ element: role }">
                 <div
                   class="flex items-center gap-2 rounded-md px-2 py-2 text-sm transition-colors hover:bg-muted mb-1 group"
                   :class="{ 'bg-muted': selectedRoleId === role.id }"
                 >
-                  <!-- Drag handle -->
                   <div
                     class="drag-handle cursor-grab active:cursor-grabbing p-1 -ml-1 opacity-0 group-hover:opacity-100 transition-opacity"
                   >
                     <GripVertical class="size-4 text-muted-foreground" />
                   </div>
 
-                  <!-- Role button -->
                   <button
                     class="flex-1 flex items-center gap-2 text-left min-w-0"
                     @click="selectedRoleId = role.id"
@@ -67,11 +64,6 @@
                     <Shield class="size-4 shrink-0 text-muted-foreground" />
                     <span class="truncate flex-1">{{ role.name }}</span>
                   </button>
-
-                  <!-- Position badge -->
-                  <Badge variant="outline" class="text-[10px] shrink-0 tabular-nums">
-                    {{ localRoles.length - index }}
-                  </Badge>
                 </div>
               </template>
             </draggable>
@@ -124,13 +116,14 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { ArrowUpDown, GripVertical, Loader2, Plus, Shield } from 'lucide-vue-next'
 import type { ServerID } from '@/types/user'
-import { useServerRolesQuery, useUpdateServerRoleMutation } from '@/api/queries/server'
+import { useServerRolesQuery, useUpdateServerRoleSilentMutation } from '@/api/queries/server'
 import CreateRoleDialog from './CreateRoleDialog.vue'
 import RoleEditor from './RoleEditor.vue'
+import { queryClient } from '@/api/queryClient'
+import { queryKeys } from '@/api/queries/server/keys'
 
 interface ServerRole {
   id: string
@@ -156,7 +149,7 @@ const isSavingOrder = ref(false)
 
 const serverId = computed(() => props.serverId)
 const { data: serverRoles, isLoading } = useServerRolesQuery(serverId)
-const { mutateAsync: updateRole } = useUpdateServerRoleMutation()
+const { mutateAsync: updateRoleSilent } = useUpdateServerRoleSilentMutation()
 
 const localRoles = ref<ServerRole[]>([])
 
@@ -176,35 +169,47 @@ const selectedRole = computed(
 
 async function handleDragEnd(event: DragEndEvent) {
   const { oldIndex, newIndex } = event
-
   if (oldIndex === newIndex) return
 
-  const movedRole = localRoles.value[newIndex]
-  if (!movedRole) return
-
-  const newPosition = localRoles.value.length - newIndex
-
   isSavingOrder.value = true
+  const previousRoles = localRoles.value.map((r) => ({ ...r }))
 
   try {
-    await updateRole({
-      serverId: props.serverId,
-      roleId: movedRole.id,
-      data: {
-        name: movedRole.name,
-        position: newPosition,
-      },
+    const updates: Promise<unknown>[] = []
+    const minIndex = Math.min(oldIndex, newIndex)
+    const maxIndex = Math.max(oldIndex, newIndex)
+
+    for (let i = minIndex; i <= maxIndex; i++) {
+      const role = localRoles.value[i]
+      const newPosition = localRoles.value.length - 1 - i
+
+      if (role.position !== newPosition) {
+        updates.push(
+          updateRoleSilent({
+            serverId: props.serverId,
+            roleId: role.id,
+            data: {
+              name: role.name,
+              position: newPosition,
+            },
+          }),
+        )
+        role.position = newPosition
+      }
+    }
+
+    await Promise.all(updates)
+
+    queryClient.invalidateQueries({
+      queryKey: queryKeys.servers.serverRoles(props.serverId),
     })
   } catch {
-    if (serverRoles.value) {
-      localRoles.value = [...serverRoles.value].sort((a, b) => b.position - a.position)
-    }
+    localRoles.value = previousRoles
     toast.error('Failed to update role order')
   } finally {
     isSavingOrder.value = false
   }
 }
-
 function handleRoleCreated(roleId: string) {
   selectedRoleId.value = roleId
   showCreateDialog.value = false

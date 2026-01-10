@@ -59,6 +59,20 @@ export const useUpdateServerRoleMutation = () => {
   })
 }
 
+export const useUpdateServerRoleSilentMutation = () => {
+  return useMutation({
+    mutationFn: ({
+      serverId,
+      roleId,
+      data,
+    }: {
+      serverId: ServerID
+      roleId: string
+      data: RequestBody<'/api/server/{server_id}/role/{role_id}', 'patch'>
+    }) => updateServerRole(serverId, roleId, data),
+  })
+}
+
 export const useDeleteServerRoleMutation = () => {
   const queryClient = useQueryClient()
 
