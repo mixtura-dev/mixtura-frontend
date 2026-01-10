@@ -40,7 +40,7 @@
       </TabsContent>
 
       <TabsContent value="permissions" class="flex-1 flex flex-col min-h-0 mt-4 overflow-hidden">
-        <ScrollArea class="flex-1 max-h-[300px]">
+        <ScrollArea class="flex-1 max-h-[300px] min-h-0">
           <div class="space-y-2 pr-4">
             <div
               v-for="permission in allPermissions"
