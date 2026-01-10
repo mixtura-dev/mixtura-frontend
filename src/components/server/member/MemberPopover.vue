@@ -51,7 +51,7 @@
           <Separator class="my-3" />
 
           <div class="space-y-2 text-sm">
-            <div class="flex items-center gap-2 text-muted-foreground">
+            <div v-if="member.joined_at" class="flex items-center gap-2 text-muted-foreground">
               <Calendar class="size-4" />
               <span>Joined {{ formatDate(member.joined_at) }}</span>
             </div>
@@ -62,7 +62,7 @@
             </div>
 
             <div
-              v-if="member.server_role?.permissions_list.length"
+              v-if="member.server_role?.permissions_list?.length"
               class="flex items-center gap-2 text-muted-foreground"
             >
               <Key class="size-4" />
@@ -117,7 +117,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Separator } from '@/components/ui/separator'
 
 import { Ban, Calendar, ExternalLink, Ghost, Key, Loader2, Shield, User } from 'lucide-vue-next'
-import { useServerMemberQuery, useMemberRestrictionsQuery } from '@/api/queries/server'
+import { useServerMemberQuery, useMemberRestrictionsQuery } from '@/api/queries/server' // Убедись, что это правильный путь к queries
 import { useServerPermissions } from '@/composables/useServerPermissions'
 import PermissionGuard from '@/components/common/PermissionGuard.vue'
 import { getInitials } from '@/lib/utils/user'
@@ -152,13 +152,28 @@ const memberHue = computed(() => hashToHue(props.memberId))
 
 const isMe = computed(() => checkIsMe(props.memberId))
 
-function formatDate(dateString: string): string {
-  const date = new Date(dateString)
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(date)
+function formatDate(dateString: string | null | undefined): string {
+  if (!dateString) return 'Unknown'
+
+  try {
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) return 'Unknown'
+
+    const now = new Date()
+    const diffYears = date.getFullYear() - now.getFullYear()
+
+    if (diffYears > 50) {
+      return 'Permanent'
+    }
+
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    }).format(date)
+  } catch {
+    return 'Unknown'
+  }
 }
 
 function handleViewProfile() {
