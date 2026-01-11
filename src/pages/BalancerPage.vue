@@ -1,5 +1,5 @@
 <template>
-  <section class="min-h-full w-full">
+  <section class="h-full w-full">
     <div
       class="grid gap-4"
       :style="{

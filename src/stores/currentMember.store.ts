@@ -1,11 +1,12 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import type { CurrentMemberResponse, ServerID } from '@/types/user'
+import type { CurrentMemberResponse, ServerID } from '@/types/user' // Убедитесь, что ServerID импортирован
 import { ACTIONS, PERMISSION_CODES, type ActionKey, type PermissionCode } from '@/types/permissions'
 
 export const useCurrentMemberStore = defineStore('currentMember', () => {
   const currentMemberData = ref<CurrentMemberResponse | null>(null)
   const currentServerId = ref<ServerID | null>(null)
+  const userServerIds = ref<Set<ServerID>>(new Set())
 
   const memberId = computed(() => currentMemberData.value?.member.id ?? null)
   const userId = computed(() => currentMemberData.value?.member.user_id ?? null)
@@ -14,6 +15,8 @@ export const useCurrentMemberStore = defineStore('currentMember', () => {
     const perms = currentMemberData.value?.permissions ?? []
     return new Set(perms.map((p) => p.code))
   })
+
+  const isMemberOf = computed(() => (serverId: ServerID) => userServerIds.value.has(serverId))
 
   const hasPermission = (code: PermissionCode): boolean => {
     return permissions.value.has(code)
@@ -50,9 +53,18 @@ export const useCurrentMemberStore = defineStore('currentMember', () => {
     currentServerId.value = serverId
   }
 
+  function setUserServers(serverIDs: ServerID[]) {
+    userServerIds.value = new Set(serverIDs)
+  }
+
+  function addServer(serverId: ServerID) {
+    userServerIds.value.add(serverId)
+  }
+
   function clear() {
     currentMemberData.value = null
     currentServerId.value = null
+    userServerIds.value = new Set()
   }
 
   return {
@@ -61,10 +73,13 @@ export const useCurrentMemberStore = defineStore('currentMember', () => {
     memberId,
     userId,
     permissions,
+    isMemberOf,
     hasPermission,
     canPerformAction,
     canActOnMember,
     setCurrentMember,
+    setUserServers,
+    addServer,
     clear,
   }
 })

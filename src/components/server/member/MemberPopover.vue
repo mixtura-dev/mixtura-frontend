@@ -3,7 +3,13 @@
     <PopoverTrigger as-child>
       <slot />
     </PopoverTrigger>
-    <PopoverContent class="w-72 p-0 overflow-hidden" side="left" :side-offset="8" align="start">
+    <PopoverContent
+      position-strategy="fixed"
+      class="w-72 p-0 overflow-hidden"
+      side="left"
+      :side-offset="10"
+      align="start"
+    >
       <div v-if="isLoading" class="flex items-center justify-center p-8">
         <Loader2 class="size-6 animate-spin text-muted-foreground" />
       </div>
@@ -35,7 +41,7 @@
 
         <div class="px-4 pb-4 pt-8">
           <div class="mb-3">
-            <h3 class="text-lg font-semibold">{{ member.nickname }}</h3>
+            <h3 class="text-lg font-semibold truncate">{{ member.nickname }}</h3>
             <div class="flex flex-wrap items-center gap-1.5">
               <Badge v-if="member.server_role" variant="secondary" class="text-xs">
                 <Shield class="mr-1 size-3" />
@@ -53,7 +59,7 @@
           <div class="space-y-2 text-sm">
             <div v-if="member.joined_at" class="flex items-center gap-2 text-muted-foreground">
               <Calendar class="size-4" />
-              <span>Joined {{ formatDate(member.joined_at) }}</span>
+              <span>Joined {{ formatSmartDate(member.joined_at) }}</span>
             </div>
 
             <div
@@ -81,7 +87,7 @@
                     <Ban class="size-3 text-destructive" />
                     <span class="flex-1 truncate">{{ restriction.restriction.code }}</span>
                     <span class="text-muted-foreground">
-                      {{ formatDate(restriction.expiration_date) }}
+                      {{ formatSmartDate(restriction.expiration_date) }}
                     </span>
                   </div>
                 </div>
@@ -118,6 +124,7 @@ import PermissionGuard from '@/components/common/PermissionGuard.vue'
 import { getInitials } from '@/lib/utils/user'
 import type { ServerID } from '@/types/user'
 import { hashToHue } from '@/lib/utils/colors'
+import { useDateFormatter } from '@/lib/utils/date'
 
 const props = defineProps<{
   serverId: ServerID
@@ -147,29 +154,7 @@ const memberHue = computed(() => hashToHue(props.memberId))
 
 const isMe = computed(() => checkIsMe(props.memberId))
 
-function formatDate(dateString: string | null | undefined): string {
-  if (!dateString) return 'Unknown'
-
-  try {
-    const date = new Date(dateString)
-    if (isNaN(date.getTime())) return 'Unknown'
-
-    const now = new Date()
-    const diffYears = date.getFullYear() - now.getFullYear()
-
-    if (diffYears > 50) {
-      return 'Permanent'
-    }
-
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    }).format(date)
-  } catch {
-    return 'Unknown'
-  }
-}
+const { formatSmartDate } = useDateFormatter()
 
 function handleViewProfile() {
   emit('viewProfile', props.memberId)

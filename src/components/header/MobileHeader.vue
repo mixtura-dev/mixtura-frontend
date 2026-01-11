@@ -1,11 +1,5 @@
 <template>
   <div class="h-14 border-b flex items-center justify-between px-3 bg-background">
-    <div class="text-sm">
-      <Link to="/" class="flex-shrink-0 text-foreground" :aria-label="$t('menu.home')">
-        <Icon class="size-7" icon="custom:logo" />
-      </Link>
-    </div>
-
     <Drawer v-model:open="appStore.state.isDrawerOpen">
       <DrawerTrigger asChild>
         <Button class="size-8" variant="secondary" size="icon" :aria-label="$t('menu.menu')">
@@ -51,7 +45,6 @@ import { Button } from '@/components/ui/button'
 import { Link } from '@/components/ui/link'
 
 import { MenuIcon } from 'lucide-vue-next'
-import { Icon } from '@iconify/vue'
 interface Props {
   groups: NavGroup[]
 }

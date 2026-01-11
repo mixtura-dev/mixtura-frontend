@@ -64,8 +64,9 @@ export const joinServer = (
 
 export const listMembers = (
   serverId: ServerID,
+  params?: { query?: string; page?: number; page_size?: number },
 ): Promise<SuccessResponse<'/api/server/{server_id}/members/', 'get'>> =>
-  baseApi.get(`/api/server/${serverId}/members/`).then((res) => res.data)
+  baseApi.get(`/api/server/${serverId}/members/`, { params }).then((res) => res.data)
 
 export const migrateMember = (
   serverId: ServerID,

@@ -1,7 +1,7 @@
 <template>
   <header
     role="banner"
-    class="flex z-20 bg-background h-12 items-center flex-shrink-0 border-b w-full"
+    class="flex z-20 bg-background h-[65px] items-center flex-shrink-0 border-b w-full"
   >
     <div class="flex h-full items-center justify-between px-3 flex-1 overflow-x-auto gap-x-8">
       <div class="flex items-center">

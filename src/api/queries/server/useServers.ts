@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { queryKeys } from './keys'
 import {
   createServer,
@@ -31,10 +31,33 @@ export const useServersQuery = () => {
   })
 }
 
-export const usePublicServersQuery = () => {
-  return useQuery({
-    queryKey: [...queryKeys.servers.all, 'public'] as const,
-    queryFn: listPublicServers,
+const PUBLIC_PAGE_SIZE = 50
+
+export const usePublicServersInfiniteQuery = (searchQuery?: MaybeRef<string>) => {
+  const query = computed(() => toValue(searchQuery) || '')
+
+  return useInfiniteQuery({
+    queryKey: computed(() => [...queryKeys.servers.all, 'public', { query: query.value }]),
+    queryFn: async ({ pageParam = 1 }) => {
+      const items = await listPublicServers({
+        query: query.value || undefined,
+        page: pageParam,
+        page_size: PUBLIC_PAGE_SIZE,
+      })
+      // API пока возвращает только массив, поэтому имитируем PublicServersResponsePage
+      return {
+        items: items,
+        page: pageParam,
+      }
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      if (lastPage.items.length < PUBLIC_PAGE_SIZE) {
+        return undefined
+      }
+      return lastPage.page + 1
+    },
+    enabled: true,
     staleTime: 5 * 60 * 1000,
   })
 }

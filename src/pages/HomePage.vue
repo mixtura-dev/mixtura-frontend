@@ -1,5 +1,5 @@
 <template>
-  <section class="flex flex-row min-h-full">
+  <section class="flex flex-row h-full">
     <div class="max-w-[1200px] w-full ml-auto p-4">
       <div
         ref="screenshotRef"

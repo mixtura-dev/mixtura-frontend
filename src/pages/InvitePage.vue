@@ -1,5 +1,5 @@
 <template>
-  <div class="flex min-h-screen w-full items-center justify-center px-4 py-12">
+  <div class="flex h-full w-full items-center justify-center px-4 py-12">
     <div v-if="isLoading" class="flex flex-col items-center gap-4">
       <Loader2 class="size-10 animate-spin text-primary" />
       <p class="text-muted-foreground">Loading invite details...</p>

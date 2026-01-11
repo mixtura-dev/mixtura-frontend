@@ -44,8 +44,6 @@
                   </DropdownMenuItem>
                 </PermissionGuard>
 
-                <DropdownMenuSeparator />
-
                 <DropdownMenuItem @click="showMyRestrictionsDialog = true">
                   <Eye class="mr-2 size-4" />
                   My Restrictions
@@ -110,7 +108,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {

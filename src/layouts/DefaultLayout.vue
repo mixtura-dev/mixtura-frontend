@@ -1,33 +1,32 @@
 <template>
-  <div class="flex h-full flex-col">
-    <MobileHeader class="md:hidden" :groups="visibleGroups" />
-    <MainHeader />
-    <div class="flex flex-1 w-full overflow-y-hidden">
-      <!-- <MainSidebar :groups="visibleGroups" v-if="!hideSidebar" /> -->
-      <ServerListSidebar />
-      <ShortcutsDialog />
-      <main class="main min-h-0 min-w-0 flex-1">
+  <div class="flex h-full w-full">
+    <ServerListSidebar class="flex-shrink-0" />
+
+    <div class="flex flex-1 flex-col min-w-0">
+      <MobileHeader class="md:hidden" :groups="visibleGroups" />
+      <MainHeader />
+
+      <main class="main flex-1 overflow-y-auto">
         <RouterView />
       </main>
     </div>
+
+    <ShortcutsDialog />
   </div>
 </template>
 
 <script setup lang="ts">
-const ShortcutsDialog = defineAsyncComponent(
-  () => import('@/components/dialogs/shortcuts/ShortcutsDialog.vue'),
-)
-// const MainSidebar = defineAsyncComponent(() => import('@/components/MainSidebar.vue'))
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 
 import MainHeader from '@/components/header/MainHeader.vue'
-import { computed, defineAsyncComponent } from 'vue'
-import { useRoute } from 'vue-router'
-import { NAV_GROUPS } from '@/constants/navigation'
 import MobileHeader from '@/components/header/MobileHeader.vue'
 import ServerListSidebar from '@/components/server/sidebars/ServerListSidebar.vue'
+import ShortcutsDialog from '@/components/dialogs/shortcuts/ShortcutsDialog.vue'
+
+import { NAV_GROUPS } from '@/constants/navigation'
 
 const route = useRoute()
-// const hideSidebar = computed(() => route.meta.hideSidebar === true)
 
 const visibleGroups = computed(() => {
   const path = route.path

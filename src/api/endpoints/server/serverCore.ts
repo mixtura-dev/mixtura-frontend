@@ -5,8 +5,12 @@ import type { ServerID } from '@/types/user'
 export const listUserServers = (): Promise<SuccessResponse<'/api/server/list/user', 'get'>> =>
   baseApi.get('/api/server/list/user').then((res) => res.data)
 
-export const listPublicServers = (): Promise<SuccessResponse<'/api/server/list/public', 'get'>> =>
-  baseApi.get('/api/server/list/public').then((res) => res.data)
+export const listPublicServers = (params?: {
+  query?: string
+  page?: number
+  page_size?: number
+}): Promise<SuccessResponse<'/api/server/list/public', 'get'>> =>
+  baseApi.get(`/api/server/list/public`, { params }).then((res) => res.data)
 
 export const createServer = (
   data: RequestBody<'/api/server/', 'post'>,

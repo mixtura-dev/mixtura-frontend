@@ -123,7 +123,7 @@
                     </div>
                     <div class="flex items-center gap-2">
                       <span class="text-xs text-muted-foreground">
-                        {{ formatDate(restriction.expiration_date) }}
+                        {{ formatSmartDate(restriction.expiration_date) }}
                       </span>
                       <PermissionGuard
                         action="MANAGE_RESTRICTIONS"
@@ -248,6 +248,7 @@ import {
   useServerRolesQuery,
   useUpdateMemberMutation,
 } from '@/api/queries/server'
+import { useDateFormatter } from '@/lib/utils/date'
 
 const props = defineProps<{
   serverId: ServerID
@@ -301,48 +302,7 @@ const hasAnyAction = computed(() => {
   )
 })
 
-function formatDate(dateString: string | null | undefined): string {
-  if (!dateString) return 'Unknown'
-
-  try {
-    const date = new Date(dateString)
-
-    if (isNaN(date.getTime())) return 'Unknown'
-
-    const now = new Date()
-    const diffYears = date.getFullYear() - now.getFullYear()
-
-    if (diffYears > 50) {
-      return 'Permanent'
-    }
-
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-    }).format(date)
-  } catch {
-    return 'Unknown'
-  }
-}
-
-function formatFullDate(dateString: string | null | undefined): string {
-  if (!dateString) return 'Unknown'
-
-  try {
-    const date = new Date(dateString)
-
-    if (isNaN(date.getTime())) return 'Unknown'
-
-    return new Intl.DateTimeFormat('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    }).format(date)
-  } catch {
-    return 'Unknown'
-  }
-}
+const { formatSmartDate, formatFullDate } = useDateFormatter()
 
 function formatPermissionCode(code: string): string {
   return code

@@ -3,48 +3,64 @@
     <header class="flex shrink-0 items-center gap-2 border-b p-2">
       <div class="relative flex-1">
         <Search class="absolute left-2 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-        <Input v-model="searchQuery" class="h-8 pl-8" placeholder="Search members..." />
+        <Input
+          v-model="searchQuery"
+          class="h-8 pl-8"
+          placeholder="Search members..."
+          @input="debouncedSearch"
+        />
       </div>
     </header>
 
-    <div v-if="isLoading" class="flex flex-1 items-center justify-center">
+    <div v-if="isLoading && !allMembers.length" class="flex flex-1 items-center justify-center">
       <Loader2 class="size-6 animate-spin text-muted-foreground" />
     </div>
 
-    <div
-      v-else-if="filteredMembers.length > 0"
-      class="hide-scrollbar min-h-0 flex-1 overflow-y-auto p-2"
+    <VirtualList
+      v-else-if="allMembers.length > 0"
+      ref="virtualListRef"
+      :data="allMembers"
+      :estimate-size="56"
+      :overscan="10"
+      :is-loading="isFetchingNextPage"
+      :has-next-page="hasNextPage ?? false"
+      :on-load-more="loadMore"
+      :load-more-threshold="300"
+      container-class="min-h-0 flex-1 p-2"
     >
-      <MemberListItem
-        v-for="member in filteredMembers"
-        :key="member.id"
-        :member="member"
-        :server-id="serverId"
-        @view-profile="handleViewProfile"
-        @edit="handleEdit"
-        @add-restriction="handleAddRestriction"
-        @kick="handleKick"
-      />
-    </div>
+      <template #default="{ item: member }">
+        <MemberListItem
+          :member="member"
+          :server-id="serverId"
+          class="mb-1"
+          @view-profile="handleViewProfile"
+          @edit="handleEdit"
+          @add-restriction="handleAddRestriction"
+          @kick="handleKick"
+        />
+      </template>
+    </VirtualList>
 
     <div v-else class="flex flex-1 flex-col items-center justify-center p-4 text-center">
       <Users class="mb-2 size-8 text-muted-foreground/50" />
       <p class="text-sm text-muted-foreground">
-        {{ searchQuery ? 'No members found' : 'No members yet' }}
+        {{ debouncedSearchQuery ? 'No members found' : 'No members yet' }}
       </p>
     </div>
   </aside>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
+import { useDebounceFn } from '@vueuse/core'
 import { toast } from 'vue-sonner'
 import { Input } from '@/components/ui/input'
 import { Loader2, Search, Users } from 'lucide-vue-next'
-import { useServerMembersQuery, useKickMemberMutation } from '@/api/queries/server'
+import { useServerMembersInfiniteQuery, useKickMemberMutation } from '@/api/queries/server'
 import { getErrorMessage } from '@/composables/useApiError'
 import type { ServerID } from '@/types/user'
 import MemberListItem from '../member/MemberListItem.vue'
+import VirtualList, { type VirtualListExposed } from '@/components/ui/virtual-list/VirtualList.vue'
 
 const props = defineProps<{
   serverId: ServerID
@@ -55,17 +71,38 @@ const emit = defineEmits<{
 }>()
 
 const searchQuery = ref('')
+const debouncedSearchQuery = ref('')
+
+const virtualListRef = ref<VirtualListExposed | null>(null)
 const serverId = computed(() => props.serverId)
 
-const { data: members, isLoading } = useServerMembersQuery(serverId)
+const debouncedSearch = useDebounceFn(() => {
+  debouncedSearchQuery.value = searchQuery.value
+}, 300)
+
+const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
+  useServerMembersInfiniteQuery(serverId, debouncedSearchQuery)
+
 const { mutate: kickMember } = useKickMemberMutation()
 
-const filteredMembers = computed(() => {
-  const list = members.value ?? []
-  if (!searchQuery.value.trim()) return list
+const allMembers = computed(() => {
+  if (!data.value?.pages) return []
+  return data.value.pages.flatMap((page) => page.items)
+})
 
-  const query = searchQuery.value.toLowerCase()
-  return list.filter((member) => member.nickname.toLowerCase().includes(query))
+function loadMore() {
+  if (hasNextPage.value && !isFetchingNextPage.value) {
+    fetchNextPage()
+  }
+}
+
+watch(serverId, () => {
+  searchQuery.value = ''
+  debouncedSearchQuery.value = ''
+})
+
+watch(debouncedSearchQuery, () => {
+  virtualListRef.value?.scrollToTop()
 })
 
 function handleViewProfile(memberId: string) {
@@ -73,15 +110,15 @@ function handleViewProfile(memberId: string) {
 }
 
 function handleEdit(memberId: string) {
-  console.log('Edit member:', memberId)
+  emit('selectMember', memberId)
 }
 
 function handleAddRestriction(memberId: string) {
-  console.log('Add restriction:', memberId)
+  emit('selectMember', memberId)
 }
 
 function handleKick(memberId: string) {
-  const member = members.value?.find((m) => m.id === memberId)
+  const member = allMembers.value.find((m) => m.id === memberId)
   if (!member) return
 
   kickMember(

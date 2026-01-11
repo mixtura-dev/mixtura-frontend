@@ -1,5 +1,5 @@
 import type { ServerID } from '@/types/user'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { computed, toValue, watch, type MaybeRef, type MaybeRefOrGetter } from 'vue'
 import { queryKeys } from './keys'
 import {
@@ -54,8 +54,38 @@ export const useMemberRestrictionsQuery = (
     enabled: computed(() => !!sId.value && !!mId.value),
   })
 }
+const PAGE_SIZE = 50
 
-// ===== MUTATIONS =====
+export const useServerMembersInfiniteQuery = (
+  serverId: MaybeRef<ServerID>,
+  searchQuery?: MaybeRef<string>,
+) => {
+  const sId = computed(() => toValue(serverId))
+  const query = computed(() => toValue(searchQuery) || '')
+
+  return useInfiniteQuery({
+    queryKey: computed(() => [...queryKeys.servers.members(sId.value), { query: query.value }]),
+    queryFn: async ({ pageParam = 1 }) => {
+      const items = await listMembers(sId.value, {
+        query: query.value || undefined,
+        page: pageParam,
+        page_size: PAGE_SIZE,
+      })
+      return {
+        items,
+        page: pageParam,
+      }
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      if (lastPage.items.length < PAGE_SIZE) {
+        return undefined
+      }
+      return lastPage.page + 1
+    },
+    enabled: computed(() => !!sId.value),
+  })
+}
 
 export const useJoinServerMutation = () => {
   const queryClient = useQueryClient()

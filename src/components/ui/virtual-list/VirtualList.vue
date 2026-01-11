@@ -14,7 +14,7 @@
     >
       <div
         v-for="item in virtualizer.getVirtualItems()"
-        :key="String(item.key)"
+        :key="getItemKey(item.index)"
         :style="{
           position: 'absolute',
           top: 0,
@@ -28,16 +28,21 @@
       </div>
     </div>
 
-    <div v-if="isLoading" class="flex items-center justify-center py-4">
-      <Loader2 class="size-5 animate-spin text-muted-foreground" />
+    <div v-if="isLoading" class="flex items-center justify-center py-3">
+      <Loader2 class="size-4 animate-spin text-muted-foreground" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts" generic="T">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useVirtualizer } from '@tanstack/vue-virtual'
 import { Loader2 } from 'lucide-vue-next'
+
+export interface VirtualListExposed {
+  scrollToIndex: (index: number) => void
+  scrollToTop: () => void
+}
 
 const props = withDefaults(
   defineProps<{
@@ -72,6 +77,23 @@ const virtualizer = useVirtualizer({
   estimateSize: () => props.estimateSize,
   overscan: props.overscan,
 })
+
+watch(
+  () => props.data.length,
+  (newLen, oldLen) => {
+    if (oldLen > 0 && newLen < oldLen && newLen < 20) {
+      parentRef.value?.scrollTo({ top: 0 })
+    }
+  },
+)
+
+function getItemKey(index: number): string | number {
+  const item = props.data[index]
+  if (item && typeof item === 'object' && 'id' in item) {
+    return (item as { id: string | number }).id
+  }
+  return index
+}
 
 function handleScroll() {
   if (!parentRef.value || !props.hasNextPage || props.isLoading || !props.onLoadMore) return
