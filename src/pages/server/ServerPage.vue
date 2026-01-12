@@ -24,7 +24,7 @@
       </template>
 
       <template v-else>
-        <div class="flex items-center justify-center h-[65px] border-b">
+        <div class="flex items-center px-2 h-[65px] border-b">
           <div class="flex items-center justify-center gap-3 px-2">
             <div
               class="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"
@@ -76,7 +76,7 @@
         </div>
 
         <nav class="flex flex-1 flex-col overflow-y-auto p-3">
-          <div class="flex flex-col gap-1"></div>
+          <div class="flex flex-col gap-1">Test</div>
         </nav>
 
         <div class="mt-auto border-t p-3">

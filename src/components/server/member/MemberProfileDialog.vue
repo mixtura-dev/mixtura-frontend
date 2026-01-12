@@ -1,16 +1,17 @@
 <template>
   <Dialog v-model:open="open">
     <DialogContent class="max-w-md overflow-hidden p-0">
-      <div v-if="isLoading" class="flex items-center justify-center py-16">
+      <!-- Показываем loader только при первой загрузке, не при рефетче -->
+      <div v-if="isLoading && !member" class="flex items-center justify-center py-16">
         <Loader2 class="size-8 animate-spin text-muted-foreground" />
       </div>
 
-      <div v-else-if="isError || !member" class="py-16 text-center">
+      <div v-else-if="isError && !member" class="py-16 text-center">
         <AlertCircle class="mx-auto mb-2 size-8 text-muted-foreground" />
         <p class="text-sm text-muted-foreground">Failed to load member</p>
       </div>
 
-      <template v-else>
+      <template v-else-if="member">
         <div
           class="relative h-24"
           :style="{
@@ -21,9 +22,13 @@
             <MemberAvatar
               class="border-4 border-background"
               :nickname="member.nickname"
-              :member-id="props.memberId ?? ''"
+              :member-id="memberId"
               size="xl"
             />
+          </div>
+
+          <div v-if="isFetching" class="absolute left-3 top-3">
+            <Loader2 class="size-4 animate-spin text-white/70" />
           </div>
         </div>
 
@@ -86,6 +91,7 @@
                 {{ formatSmartDate(member.joined_at) }}
               </div>
             </div>
+
             <div v-if="member.server_role?.permissions_list?.length">
               <h3 class="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 Permissions
@@ -124,10 +130,7 @@
                       <span class="text-xs text-muted-foreground">
                         {{ formatSmartDate(restriction.expiration_date) }}
                       </span>
-                      <PermissionGuard
-                        action="MANAGE_RESTRICTIONS"
-                        :target-member-id="memberId ?? undefined"
-                      >
+                      <PermissionGuard action="MANAGE_RESTRICTIONS" :target-member-id="memberId">
                         <Button
                           variant="ghost"
                           size="icon"
@@ -150,11 +153,11 @@
           </div>
 
           <template v-if="!isMe && hasAnyAction">
-            <div class="grid grid-cols-2 gap-2 mt-4">
+            <div class="mt-4 grid grid-cols-2 gap-2">
               <PermissionGuard
                 v-if="member.user_id"
                 action="MANAGE_RESTRICTIONS"
-                :target-member-id="memberId ?? undefined"
+                :target-member-id="memberId"
               >
                 <Button variant="outline" class="w-full" @click="showAddRestrictionDialog = true">
                   <Ban class="mr-2 size-4" />
@@ -165,7 +168,7 @@
               <PermissionGuard
                 v-if="!member.user_id"
                 action="MIGRATE_VIRTUAL"
-                :target-member-id="memberId ?? undefined"
+                :target-member-id="memberId"
               >
                 <Button variant="outline" class="w-full" @click="handleMigrate">
                   <ArrowRightLeft class="mr-2 size-4" />
@@ -173,7 +176,7 @@
                 </Button>
               </PermissionGuard>
 
-              <PermissionGuard action="KICK_MEMBER" :target-member-id="memberId ?? undefined">
+              <PermissionGuard action="KICK_MEMBER" :target-member-id="memberId">
                 <Button
                   variant="destructive"
                   class="w-full"
@@ -193,7 +196,7 @@
   </Dialog>
 
   <AddRestrictionDialog
-    v-if="member?.user_id"
+    v-if="memberId && member?.user_id"
     v-model:open="showAddRestrictionDialog"
     :server-id="serverId"
     :member-id="memberId"
@@ -265,7 +268,8 @@ const removingRestrictionId = ref<string | null>(null)
 const serverId = computed(() => props.serverId)
 const memberId = computed(() => props.memberId ?? '')
 
-const { data: member, isLoading, isError } = useServerMemberQuery(serverId, memberId)
+// Добавили isFetching для индикации рефетча
+const { data: member, isLoading, isError, isFetching } = useServerMemberQuery(serverId, memberId)
 const { data: restrictions } = useMemberRestrictionsQuery(serverId, memberId)
 const { data: serverRoles } = useServerRolesQuery(serverId)
 
@@ -274,27 +278,27 @@ const { mutate: kickMember, isPending: isKicking } = useKickMemberMutation()
 const { mutate: updateMember } = useUpdateMemberMutation()
 
 const memberHue = computed(() => hashToHue(props.memberId))
-const isMe = computed(() => (props.memberId ? checkIsMe(props.memberId) : false))
+const isMe = computed(() => (memberId.value ? checkIsMe(memberId.value) : false))
 
 const canEditNickname = computed(() =>
-  props.memberId ? canActOn(props.memberId, 'EDIT_NICKNAME') : false,
+  memberId.value ? canActOn(memberId.value, 'EDIT_NICKNAME') : false,
 )
 
 const canChangeRole = computed(() =>
-  props.memberId ? canActOn(props.memberId, 'CHANGE_ROLE') : false,
+  memberId.value ? canActOn(memberId.value, 'CHANGE_ROLE') : false,
 )
 
 const availableServerRoles = computed(() => serverRoles.value ?? [])
 
 const hasAnyAction = computed(() => {
-  if (!props.memberId || isMe.value) return false
+  if (!memberId.value || isMe.value) return false
 
   const isVirtual = !member.value?.user_id
 
   return (
-    canActOn(props.memberId, 'KICK_MEMBER') ||
-    (isVirtual && canActOn(props.memberId, 'MIGRATE_VIRTUAL')) ||
-    (!isVirtual && canActOn(props.memberId, 'MANAGE_RESTRICTIONS'))
+    canActOn(memberId.value, 'KICK_MEMBER') ||
+    (isVirtual && canActOn(memberId.value, 'MIGRATE_VIRTUAL')) ||
+    (!isVirtual && canActOn(memberId.value, 'MANAGE_RESTRICTIONS'))
   )
 })
 
@@ -308,12 +312,12 @@ function formatPermissionCode(code: string): string {
 }
 
 function handleSaveNickname(newNickname: string) {
-  if (!props.memberId) return
+  if (!memberId.value) return
 
   updateMember(
     {
       serverId: props.serverId,
-      memberId: props.memberId,
+      memberId: memberId.value,
       data: { name: newNickname },
     },
     {
@@ -324,39 +328,34 @@ function handleSaveNickname(newNickname: string) {
 }
 
 function handleChangeRole(roleId: string) {
-  if (!props.memberId) return
+  if (!memberId.value) return
 
   updateMember(
     {
       serverId: props.serverId,
-      memberId: props.memberId,
+      memberId: memberId.value,
       data: { server_role_id: roleId },
     },
     {
-      onSuccess: () => toast.success('Role updated'),
       onError: () => toast.error('Failed to update role'),
     },
   )
 }
 
 function handleRemoveRestriction(restrictionId: string) {
-  if (!props.memberId) return
+  if (!memberId.value) return
 
   removingRestrictionId.value = restrictionId
 
   removeRestriction(
     {
       serverId: props.serverId,
-      memberId: props.memberId,
+      memberId: memberId.value,
       restrictionId,
     },
     {
-      onSuccess: () => {
-        toast.success('Restriction removed')
-      },
-      onError: () => {
-        toast.error('Failed to remove restriction')
-      },
+      onSuccess: () => toast.success('Restriction removed'),
+      onError: () => toast.error('Failed to remove restriction'),
       onSettled: () => {
         removingRestrictionId.value = null
       },
@@ -369,27 +368,25 @@ function handleRestrictionAdded() {
 }
 
 function handleMigrate() {
-  if (props.memberId) {
-    emit('migrate', props.memberId)
+  if (memberId.value) {
+    emit('migrate', memberId.value)
     open.value = false
   }
 }
 
 function handleKick() {
-  if (!props.memberId || !member.value) return
+  if (!memberId.value || !member.value) return
 
   const nickname = member.value.nickname
 
   kickMember(
-    { serverId: props.serverId, memberId: props.memberId },
+    { serverId: props.serverId, memberId: memberId.value },
     {
       onSuccess: () => {
         toast.success(`${nickname} has been kicked`)
         open.value = false
       },
-      onError: () => {
-        toast.error('Failed to kick member')
-      },
+      onError: () => toast.error('Failed to kick member'),
     },
   )
 }
