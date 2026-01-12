@@ -7,7 +7,10 @@
     </div>
     <Separator />
     <TooltipProvider :delay-duration="200">
-      <div ref="listRef" class="hide-scrollbar min-h-0 flex-1 overflow-y-auto p-2">
+      <div
+        ref="listRef"
+        class="flex items-center flex-col h-full hide-scrollbar min-h-0 flex-1 overflow-y-auto p-2"
+      >
         <div v-for="server in servers" :key="server.id" class="group relative mb-2">
           <Tooltip>
             <TooltipTrigger as-child>
@@ -41,7 +44,9 @@
             class="absolute -left-2 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-foreground"
           />
         </div>
-
+        <div v-if="isLoading" class="flex flex-col mb-2 gap-2 justify-center">
+          <Skeleton v-for="i in 10" :key="i" class="size-12 rounded-xl" />
+        </div>
         <div class="flex flex-col gap-2">
           <Tooltip>
             <TooltipTrigger as-child>
@@ -69,10 +74,6 @@
         </div>
       </div>
     </TooltipProvider>
-
-    <div v-if="isLoading" class="flex justify-center p-2">
-      <Loader2 class="size-5 animate-spin text-muted-foreground" />
-    </div>
   </aside>
 </template>
 
@@ -81,11 +82,12 @@ import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip'
-import { Compass, Loader2, Plus } from 'lucide-vue-next'
+import { Compass, Plus } from 'lucide-vue-next'
 import { useServersQuery } from '@/api/queries/server'
 import { getInitials } from '@/lib/utils/user'
 import { Icon } from '@iconify/vue'
 import Separator from '@/components/ui/separator/Separator.vue'
+import Skeleton from '@/components/ui/skeleton/Skeleton.vue'
 
 const router = useRouter()
 const route = useRoute()

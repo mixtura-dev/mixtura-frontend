@@ -2,14 +2,23 @@
   <aside class="flex w-60 flex-shrink-0 flex-col border-l bg-background">
     <header class="flex shrink-0 items-center gap-2 border-b p-2">
       <div class="relative flex-1">
-        <Search class="absolute left-2 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+        <component
+          :is="isSearching ? Loader2 : Search"
+          :class="[
+            'absolute left-2 top-1/2 size-4 -translate-y-1/2 text-muted-foreground',
+            isSearching && 'animate-spin',
+          ]"
+        />
         <Input
           v-model="searchQuery"
           class="h-8 pl-8"
           placeholder="Search members..."
-          @input="debouncedSearch"
+          @input="handleSearch"
         />
       </div>
+      <Button variant="ghost" size="icon" class="size-8 shrink-0" @click="emit('close')">
+        <PanelRightClose class="size-4" />
+      </Button>
     </header>
 
     <div v-if="isLoading && !allMembers.length" class="flex flex-1 items-center justify-center">
@@ -20,7 +29,7 @@
       v-else-if="allMembers.length > 0"
       ref="virtualListRef"
       :data="allMembers"
-      :estimate-size="56"
+      :estimate-size="48"
       :overscan="10"
       :is-loading="isFetchingNextPage"
       :has-next-page="hasNextPage ?? false"
@@ -29,15 +38,7 @@
       container-class="min-h-0 flex-1 p-2"
     >
       <template #default="{ item: member }">
-        <MemberListItem
-          :member="member"
-          :server-id="serverId"
-          class="mb-1"
-          @view-profile="handleViewProfile"
-          @edit="handleEdit"
-          @add-restriction="handleAddRestriction"
-          @kick="handleKick"
-        />
+        <MemberListItem :member="member" class="mb-1" @click="handleMemberClick" />
       </template>
     </VirtualList>
 
@@ -47,6 +48,15 @@
         {{ debouncedSearchQuery ? 'No members found' : 'No members yet' }}
       </p>
     </div>
+
+    <MemberPopover
+      v-model:open="isPopoverOpen"
+      :server-id="serverId"
+      :member-id="activeMemberId"
+      :anchor-el="anchorEl"
+      @view-profile="handleViewProfile"
+      @kick="handleKick"
+    />
   </aside>
 </template>
 
@@ -55,11 +65,13 @@ import { ref, computed, watch } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import { toast } from 'vue-sonner'
 import { Input } from '@/components/ui/input'
-import { Loader2, Search, Users } from 'lucide-vue-next'
+import { Button } from '@/components/ui/button'
+import { Loader2, PanelRightClose, Search, Users } from 'lucide-vue-next'
 import { useServerMembersInfiniteQuery, useKickMemberMutation } from '@/api/queries/server'
 import { getErrorMessage } from '@/composables/useApiError'
 import type { ServerID } from '@/types/user'
 import MemberListItem from '../member/MemberListItem.vue'
+import MemberPopover from '../member/MemberPopover.vue'
 import VirtualList, { type VirtualListExposed } from '@/components/ui/virtual-list/VirtualList.vue'
 
 const props = defineProps<{
@@ -68,17 +80,30 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   selectMember: [memberId: string]
+  close: []
 }>()
 
 const searchQuery = ref('')
 const debouncedSearchQuery = ref('')
+const isSearching = ref(false)
+
+// Popover state
+const isPopoverOpen = ref(false)
+const activeMemberId = ref<string | null>(null)
+const anchorEl = ref<HTMLElement | null>(null)
 
 const virtualListRef = ref<VirtualListExposed | null>(null)
 const serverId = computed(() => props.serverId)
 
 const debouncedSearch = useDebounceFn(() => {
   debouncedSearchQuery.value = searchQuery.value
+  isSearching.value = false
 }, 300)
+
+function handleSearch() {
+  isSearching.value = true
+  debouncedSearch()
+}
 
 const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
   useServerMembersInfiniteQuery(serverId, debouncedSearchQuery)
@@ -99,22 +124,29 @@ function loadMore() {
 watch(serverId, () => {
   searchQuery.value = ''
   debouncedSearchQuery.value = ''
+  isSearching.value = false
+  isPopoverOpen.value = false
 })
 
 watch(debouncedSearchQuery, () => {
   virtualListRef.value?.scrollToTop()
 })
 
+function handleMemberClick(memberId: string, element: HTMLElement) {
+  // Если кликнули на того же члена - закрываем
+  if (activeMemberId.value === memberId && isPopoverOpen.value) {
+    isPopoverOpen.value = false
+    return
+  }
+
+  activeMemberId.value = memberId
+  anchorEl.value = element
+  isPopoverOpen.value = true
+}
+
 function handleViewProfile(memberId: string) {
   emit('selectMember', memberId)
-}
-
-function handleEdit(memberId: string) {
-  emit('selectMember', memberId)
-}
-
-function handleAddRestriction(memberId: string) {
-  emit('selectMember', memberId)
+  isPopoverOpen.value = false
 }
 
 function handleKick(memberId: string) {
@@ -126,6 +158,7 @@ function handleKick(memberId: string) {
     {
       onSuccess: () => {
         toast.success(`${member.nickname} has been kicked`)
+        isPopoverOpen.value = false
       },
       onError: (error) => {
         const err = error instanceof Error ? error : new Error('Unknown error')

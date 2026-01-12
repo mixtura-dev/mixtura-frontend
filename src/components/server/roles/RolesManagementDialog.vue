@@ -14,7 +14,7 @@
             class="absolute right-0 top-0 flex items-center gap-1.5 rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground"
           >
             <Loader2 class="size-3 animate-spin" />
-            Saving...
+            {{ $t('common.loading') }}
           </div>
         </Transition>
       </DialogHeader>
@@ -47,8 +47,9 @@
               @end="handleDragEnd"
             >
               <template #item="{ element: role }">
-                <div
-                  class="flex items-center gap-2 rounded-md px-2 py-2 text-sm transition-colors hover:bg-muted mb-1 group"
+                <button
+                  @click="selectedRoleId = role.id"
+                  class="flex items-center gap-2 w-full rounded-md px-2 py-2 text-sm transition-colors hover:bg-muted mb-1 group"
                   :class="{ 'bg-muted': selectedRoleId === role.id }"
                 >
                   <div
@@ -57,14 +58,11 @@
                     <GripVertical class="size-4 text-muted-foreground" />
                   </div>
 
-                  <button
-                    class="flex-1 flex items-center gap-2 text-left min-w-0"
-                    @click="selectedRoleId = role.id"
-                  >
+                  <div class="flex-1 flex items-center gap-2 text-left min-w-0">
                     <Shield class="size-4 shrink-0 text-muted-foreground" />
                     <span class="truncate flex-1">{{ role.name }}</span>
-                  </button>
-                </div>
+                  </div>
+                </button>
               </template>
             </draggable>
 

@@ -1,107 +1,127 @@
 <template>
-  <Popover v-model:open="isOpen">
-    <PopoverTrigger as-child>
-      <slot />
-    </PopoverTrigger>
+  <Popover v-model:open="open">
+    <PopoverAnchor as-child>
+      <div ref="virtualAnchorRef" class="pointer-events-none fixed size-0" :style="anchorStyles" />
+    </PopoverAnchor>
+
     <PopoverContent
-      position-strategy="fixed"
-      class="w-72 p-0 overflow-hidden"
+      class="w-72 overflow-hidden p-0"
       side="left"
-      :side-offset="10"
+      :side-offset="8"
       align="start"
+      :collision-padding="16"
+      @interact-outside="open = false"
+      @escape-key-down="open = false"
     >
       <div v-if="isLoading" class="flex items-center justify-center p-8">
         <Loader2 class="size-6 animate-spin text-muted-foreground" />
       </div>
 
       <template v-else-if="member">
+        <!-- Banner -->
         <div class="relative">
           <div
-            class="h-16"
+            class="h-14"
             :style="{
-              background: `linear-gradient(135deg, hsl(${memberHue}, 60%, 40%) 0%, hsl(${memberHue}, 40%, 30%) 100%)`,
+              background: `linear-gradient(135deg, hsl(${memberHue}, 55%, 45%) 0%, hsl(${memberHue}, 45%, 35%) 100%)`,
             }"
           />
 
-          <div class="absolute -bottom-6 left-4">
-            <Avatar class="size-14 border-4 border-popover">
-              <AvatarFallback
-                class="text-lg font-bold text-white"
-                :style="{ backgroundColor: `hsl(${memberHue}, 50%, 45%)` }"
-              >
-                {{ getInitials(member.nickname) }}
-              </AvatarFallback>
-            </Avatar>
+          <!-- Avatar -->
+          <div class="absolute -bottom-5 left-4">
+            <MemberAvatar
+              :member-id="memberId!"
+              :nickname="member.nickname"
+              size="lg"
+              class="cursor-pointer border-[3px] border-popover shadow-md transition-transform hover:scale-105"
+              @click="handleViewProfile"
+            />
           </div>
 
-          <Badge v-if="isMe" variant="secondary" class="absolute right-2 top-2 text-xs">
-            You
-          </Badge>
+          <!-- Badges -->
+          <div class="absolute right-2 top-2 flex gap-1">
+            <Badge v-if="isMe" variant="secondary" class="px-1.5 py-0 text-[10px]"> You </Badge>
+            <Badge
+              v-if="!member.user_id"
+              variant="outline"
+              class="bg-background/80 px-1.5 py-0 text-[10px]"
+            >
+              <Ghost class="mr-0.5 size-2.5" />
+              Virtual
+            </Badge>
+          </div>
         </div>
 
-        <div class="px-4 pb-4 pt-8">
-          <div class="mb-3">
-            <h3 class="text-lg font-semibold truncate">{{ member.nickname }}</h3>
-            <div class="flex flex-wrap items-center gap-1.5">
-              <Badge v-if="member.server_role" variant="secondary" class="text-xs">
-                <Shield class="mr-1 size-3" />
-                {{ member.server_role.name }}
-              </Badge>
-              <Badge v-if="!member.user_id" variant="outline" class="text-xs">
-                <Ghost class="mr-1 size-3" />
-                Virtual
-              </Badge>
+        <!-- Content -->
+        <div class="px-4 pb-3 pt-7">
+          <!-- Name & Role -->
+          <div class="mb-2">
+            <h3 class="truncate text-base font-semibold leading-tight">
+              {{ member.nickname }}
+            </h3>
+            <div v-if="member.server_role" class="mt-1 flex items-center gap-1">
+              <div
+                class="size-2 rounded-full"
+                :style="{
+                  backgroundColor: `hsl(${hashToHue(member.server_role.name)}, 50%, 50%)`,
+                }"
+              />
+              <span class="text-xs text-muted-foreground">{{ member.server_role.name }}</span>
             </div>
           </div>
 
-          <Separator class="my-3" />
-
-          <div class="space-y-2 text-sm">
-            <div v-if="member.joined_at" class="flex items-center gap-2 text-muted-foreground">
-              <Calendar class="size-4" />
+          <!-- Quick Info -->
+          <div class="rounded-md bg-muted/50 p-2 text-xs text-muted-foreground">
+            <div v-if="member.joined_at" class="flex items-center gap-2">
+              <Calendar class="size-3.5" />
               <span>Joined {{ formatSmartDate(member.joined_at) }}</span>
             </div>
-
             <div
               v-if="member.server_role?.permissions_list?.length"
-              class="flex items-center gap-2 text-muted-foreground"
+              class="mt-1 flex items-center gap-2"
             >
-              <Key class="size-4" />
+              <Key class="size-3.5" />
               <span>{{ member.server_role.permissions_list.length }} permissions</span>
             </div>
           </div>
 
+          <!-- Restrictions Preview -->
           <PermissionGuard action="VIEW_RESTRICTIONS">
-            <template v-if="restrictions && restrictions.length > 0">
-              <Separator class="my-3" />
-              <div class="space-y-2">
-                <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                  Active Restrictions
-                </p>
-                <div class="space-y-1">
-                  <div
-                    v-for="restriction in restrictions"
-                    :key="restriction.id"
-                    class="flex items-center gap-2 rounded-md bg-destructive/10 px-2 py-1.5 text-xs"
-                  >
-                    <Ban class="size-3 text-destructive" />
-                    <span class="flex-1 truncate">{{ restriction.restriction.code }}</span>
-                    <span class="text-muted-foreground">
-                      {{ formatSmartDate(restriction.expiration_date) }}
-                    </span>
-                  </div>
-                </div>
+            <div v-if="restrictions?.length" class="mt-2">
+              <div
+                class="flex items-center gap-1.5 rounded-md bg-destructive/10 px-2 py-1.5 text-xs text-destructive"
+              >
+                <Ban class="size-3.5" />
+                <span>
+                  {{ restrictions.length }} active restriction{{
+                    restrictions.length > 1 ? 's' : ''
+                  }}
+                </span>
               </div>
-            </template>
+            </div>
           </PermissionGuard>
 
-          <Separator class="my-3" />
-
-          <div class="flex gap-2">
-            <Button variant="outline" size="sm" class="flex-1" @click="handleViewProfile">
-              <ExternalLink class="mr-1 size-3" />
-              Profile
+          <!-- Actions -->
+          <div class="mt-3 flex gap-2">
+            <Button
+              variant="secondary"
+              size="sm"
+              class="h-7 flex-1 text-xs"
+              @click="handleViewProfile"
+            >
+              View Profile
             </Button>
+            <PermissionGuard action="KICK_MEMBER" :target-member-id="memberId ?? undefined">
+              <Button
+                v-if="!isMe"
+                variant="ghost"
+                size="icon"
+                class="size-7 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                @click="handleKick"
+              >
+                <UserX class="size-3.5" />
+              </Button>
+            </PermissionGuard>
           </div>
         </div>
       </template>
@@ -110,54 +130,108 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { computed, ref, watch, onUnmounted } from 'vue'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Separator } from '@/components/ui/separator'
-
-import { Ban, Calendar, ExternalLink, Ghost, Key, Loader2, Shield } from 'lucide-vue-next'
+import { Popover, PopoverAnchor, PopoverContent } from '@/components/ui/popover'
+import { Ban, Calendar, Ghost, Key, Loader2, UserX } from 'lucide-vue-next'
 import { useServerMemberQuery, useMemberRestrictionsQuery } from '@/api/queries/server'
 import { useServerPermissions } from '@/composables/useServerPermissions'
 import PermissionGuard from '@/components/common/PermissionGuard.vue'
-import { getInitials } from '@/lib/utils/user'
+import MemberAvatar from './MemberAvatar.vue'
 import type { ServerID } from '@/types/user'
 import { hashToHue } from '@/lib/utils/colors'
 import { useDateFormatter } from '@/lib/utils/date'
 
 const props = defineProps<{
   serverId: ServerID
-  memberId: string
+  memberId: string | null
+  anchorEl: HTMLElement | null
 }>()
 
 const emit = defineEmits<{
   viewProfile: [memberId: string]
-  edit: [memberId: string]
-  changeRole: [memberId: string]
-  migrate: [memberId: string]
-  addRestriction: [memberId: string]
   kick: [memberId: string]
 }>()
 
-const isOpen = ref(false)
+const open = defineModel<boolean>('open', { required: true })
+
+const virtualAnchorRef = ref<HTMLElement | null>(null)
+const anchorRect = ref({ top: 0, left: 0, width: 0, height: 0 })
+
+const anchorStyles = computed(() => ({
+  top: `${anchorRect.value.top}px`,
+  left: `${anchorRect.value.left}px`,
+  width: `${anchorRect.value.width}px`,
+  height: `${anchorRect.value.height}px`,
+}))
+
+function updateAnchorPosition() {
+  if (props.anchorEl) {
+    const rect = props.anchorEl.getBoundingClientRect()
+    anchorRect.value = {
+      top: rect.top,
+      left: rect.left,
+      width: rect.width,
+      height: rect.height,
+    }
+  }
+}
+
+// Закрываем при скролле
+function handleScroll() {
+  open.value = false
+}
+
+watch(
+  () => props.anchorEl,
+  (el) => {
+    if (el) {
+      updateAnchorPosition()
+    }
+  },
+  { immediate: true },
+)
+
+watch(open, (isOpen) => {
+  if (isOpen) {
+    updateAnchorPosition()
+    // Слушаем скролл на capturing phase чтобы поймать скролл в любом контейнере
+    window.addEventListener('scroll', handleScroll, true)
+    window.addEventListener('resize', handleScroll)
+  } else {
+    window.removeEventListener('scroll', handleScroll, true)
+    window.removeEventListener('resize', handleScroll)
+  }
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll, true)
+  window.removeEventListener('resize', handleScroll)
+})
 
 const { isMe: checkIsMe } = useServerPermissions()
 
 const serverId = computed(() => props.serverId)
-const activeMemberId = computed(() => (isOpen.value ? props.memberId : ''))
+const activeMemberId = computed(() => (open.value && props.memberId ? props.memberId : ''))
 
 const { data: member, isLoading } = useServerMemberQuery(serverId, activeMemberId)
 const { data: restrictions } = useMemberRestrictionsQuery(serverId, activeMemberId)
 
 const memberHue = computed(() => hashToHue(props.memberId))
-
-const isMe = computed(() => checkIsMe(props.memberId))
+const isMe = computed(() => (props.memberId ? checkIsMe(props.memberId) : false))
 
 const { formatSmartDate } = useDateFormatter()
 
 function handleViewProfile() {
-  emit('viewProfile', props.memberId)
-  isOpen.value = false
+  if (props.memberId) {
+    emit('viewProfile', props.memberId)
+  }
+}
+
+function handleKick() {
+  if (props.memberId) {
+    emit('kick', props.memberId)
+  }
 }
 </script>

@@ -18,18 +18,16 @@
           }"
         >
           <div class="absolute -bottom-10 left-6">
-            <Avatar class="size-20 border-4 border-background shadow-lg">
-              <AvatarFallback
-                class="text-2xl font-bold text-white"
-                :style="{ backgroundColor: `hsl(${memberHue}, 50%, 45%)` }"
-              >
-                {{ getInitials(member.nickname) }}
-              </AvatarFallback>
-            </Avatar>
+            <MemberAvatar
+              class="border-4 border-background"
+              :nickname="member.nickname"
+              :member-id="props.memberId ?? ''"
+              size="xl"
+            />
           </div>
         </div>
 
-        <div class="px-6 pb-6 pt-14">
+        <div class="px-6 pb-6 pt-9">
           <div class="mb-4">
             <div class="flex items-center gap-2">
               <EditableNickname
@@ -77,16 +75,17 @@
           <Separator />
 
           <div class="mt-4 space-y-4">
-            <div v-if="member.joined_at">
-              <h3 class="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            <div v-if="member.joined_at" class="rounded-lg bg-muted/50 p-3">
+              <div
+                class="mb-1 text-[11px] font-medium uppercase tracking-wide text-muted-foreground"
+              >
                 Member Since
-              </h3>
+              </div>
               <div class="flex items-center gap-2 text-sm">
                 <Calendar class="size-4 text-muted-foreground" />
-                <span>{{ formatFullDate(member.joined_at) }}</span>
+                {{ formatSmartDate(member.joined_at) }}
               </div>
             </div>
-
             <div v-if="member.server_role?.permissions_list?.length">
               <h3 class="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 Permissions
@@ -151,9 +150,7 @@
           </div>
 
           <template v-if="!isMe && hasAnyAction">
-            <Separator class="my-4" />
-
-            <div class="grid grid-cols-2 gap-2">
+            <div class="grid grid-cols-2 gap-2 mt-4">
               <PermissionGuard
                 v-if="member.user_id"
                 action="MANAGE_RESTRICTIONS"
@@ -208,7 +205,6 @@
 import { computed, ref } from 'vue'
 import { toast } from 'vue-sonner'
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
@@ -237,7 +233,6 @@ import { useServerPermissions } from '@/composables/useServerPermissions'
 import PermissionGuard from '@/components/common/PermissionGuard.vue'
 import EditableNickname from '@/components/common/EditableNickname.vue'
 import AddRestrictionDialog from '@/components/server/restrictions/AddRestrictionDialog.vue'
-import { getInitials } from '@/lib/utils/user'
 import { hashToHue } from '@/lib/utils/colors'
 import type { ServerID } from '@/types/user'
 import {
@@ -249,6 +244,7 @@ import {
   useUpdateMemberMutation,
 } from '@/api/queries/server'
 import { useDateFormatter } from '@/lib/utils/date'
+import MemberAvatar from './MemberAvatar.vue'
 
 const props = defineProps<{
   serverId: ServerID
@@ -302,7 +298,7 @@ const hasAnyAction = computed(() => {
   )
 })
 
-const { formatSmartDate, formatFullDate } = useDateFormatter()
+const { formatSmartDate } = useDateFormatter()
 
 function formatPermissionCode(code: string): string {
   return code
