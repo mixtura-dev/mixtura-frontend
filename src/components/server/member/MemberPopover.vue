@@ -18,7 +18,6 @@
       </div>
 
       <template v-else-if="member">
-        <!-- Banner -->
         <div class="relative">
           <div
             class="h-14"
@@ -27,8 +26,7 @@
             }"
           />
 
-          <!-- Avatar -->
-          <div class="absolute -bottom-5 left-4">
+          <div class="absolute -bottom-6 left-4">
             <MemberAvatar
               :member-id="memberId!"
               :nickname="member.nickname"
@@ -38,7 +36,6 @@
             />
           </div>
 
-          <!-- Badges -->
           <div class="absolute right-2 top-2 flex gap-1">
             <Badge v-if="isMe" variant="secondary" class="px-1.5 py-0 text-[10px]"> You </Badge>
             <Badge
@@ -52,9 +49,7 @@
           </div>
         </div>
 
-        <!-- Content -->
         <div class="px-4 pb-3 pt-7">
-          <!-- Name & Role -->
           <div class="mb-2">
             <h3 class="truncate text-base font-semibold leading-tight">
               {{ member.nickname }}
@@ -70,7 +65,6 @@
             </div>
           </div>
 
-          <!-- Quick Info -->
           <div class="rounded-md bg-muted/50 p-2 text-xs text-muted-foreground">
             <div v-if="member.joined_at" class="flex items-center gap-2">
               <Calendar class="size-3.5" />
@@ -85,7 +79,6 @@
             </div>
           </div>
 
-          <!-- Restrictions Preview -->
           <PermissionGuard action="VIEW_RESTRICTIONS">
             <div v-if="restrictions?.length" class="mt-2">
               <div
@@ -101,7 +94,6 @@
             </div>
           </PermissionGuard>
 
-          <!-- Actions -->
           <div class="mt-3 flex gap-2">
             <Button
               variant="secondary"
@@ -178,7 +170,6 @@ function updateAnchorPosition() {
   }
 }
 
-// Закрываем при скролле
 function handleScroll() {
   open.value = false
 }
@@ -196,7 +187,6 @@ watch(
 watch(open, (isOpen) => {
   if (isOpen) {
     updateAnchorPosition()
-    // Слушаем скролл на capturing phase чтобы поймать скролл в любом контейнере
     window.addEventListener('scroll', handleScroll, true)
     window.addEventListener('resize', handleScroll)
   } else {

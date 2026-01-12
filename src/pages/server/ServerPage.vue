@@ -116,7 +116,6 @@
       </template>
     </aside>
 
-    <!-- Основной контент -->
     <main class="flex min-h-0 min-w-0 flex-1 flex-col">
       <div v-if="isLoadingCurrentMember" class="flex h-full items-center justify-center">
         <Loader2 class="size-8 animate-spin text-muted-foreground" />
@@ -124,15 +123,11 @@
 
       <template v-else>
         <div class="min-h-0 flex-1 overflow-y-auto p-6">
-          <div class="mx-auto max-w-3xl">
-            <h2 class="text-lg font-semibold">Welcome to {{ server?.name }}</h2>
-            <p class="mt-1 text-muted-foreground">This is the main content area of your server.</p>
-          </div>
+          <div class="mx-auto max-w-3xl"></div>
         </div>
       </template>
     </main>
 
-    <!-- Правый сайдбар с участниками -->
     <MemberListSidebar
       v-if="showMemberList && serverId"
       :server-id="serverId"
@@ -140,7 +135,6 @@
       @close="showMemberList = false"
     />
 
-    <!-- Диалоги -->
     <MemberProfileDialog
       v-model:open="showProfileDialog"
       :server-id="serverId"
