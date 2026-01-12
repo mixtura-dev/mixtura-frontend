@@ -6,36 +6,35 @@
         <h3 class="font-semibold text-lg">{{ role.name }}</h3>
         <Badge variant="outline">
           <ArrowUpDown class="size-3 mr-1" />
-          Position {{ role.position }}
+          {{ t('server.roleEditor.position') }} {{ role.position }}
         </Badge>
       </div>
       <Button variant="destructive" size="sm" :disabled="isDeleting" @click="handleDelete">
         <Trash2 v-if="!isDeleting" class="mr-1 size-3" />
         <Loader2 v-else class="mr-1 size-3 animate-spin" />
-        Delete
+        {{ t('server.roleEditor.deleteButton') }}
       </Button>
     </div>
 
     <Tabs default-value="general" class="flex-1 flex flex-col min-h-0">
       <TabsList class="grid w-full grid-cols-2 shrink-0">
-        <TabsTrigger value="general">General</TabsTrigger>
-        <TabsTrigger value="permissions">Permissions</TabsTrigger>
+        <TabsTrigger value="general">{{ t('server.roleEditor.tabs.general') }}</TabsTrigger>
+        <TabsTrigger value="permissions">{{ t('server.roleEditor.tabs.permissions') }}</TabsTrigger>
       </TabsList>
 
       <TabsContent value="general" class="space-y-4 mt-4">
         <div class="space-y-2">
-          <Label>Role Name</Label>
-          <Input v-model="form.name" placeholder="Role name" />
+          <Label>{{ t('server.roleEditor.roleName') }}</Label>
+          <Input v-model="form.name" :placeholder="t('server.roleEditor.roleNamePlaceholder')" />
         </div>
-
         <div class="rounded-lg border bg-muted/30 p-3 text-sm text-muted-foreground">
           <GripVertical class="inline size-4 mr-1 -mt-0.5" />
-          To change the role's position, drag it in the roles list on the left.
+          {{ t('server.roleEditor.reorderHint') }}
         </div>
 
         <Button class="w-full" :disabled="!hasNameChanged || isSaving" @click="saveName">
           <Loader2 v-if="isSaving" class="mr-2 size-4 animate-spin" />
-          Save Changes
+          {{ t('server.roleEditor.saveChanges') }}
         </Button>
       </TabsContent>
 
@@ -48,8 +47,19 @@
               class="flex items-center justify-between rounded-lg border p-3 hover:bg-muted/50 transition-colors"
             >
               <div class="flex-1 min-w-0 pr-4">
-                <p class="font-medium text-sm">{{ permission.label }}</p>
-                <p class="text-xs text-muted-foreground">{{ permission.description }}</p>
+                <p class="font-medium text-sm">
+                  {{
+                    t(`server.roleEditor.permissions.${permission.code}.label`, permission.label)
+                  }}
+                </p>
+                <p class="text-xs text-muted-foreground">
+                  {{
+                    t(
+                      `server.roleEditor.permissions.${permission.code}.description`,
+                      permission.description,
+                    )
+                  }}
+                </p>
               </div>
               <Switch
                 :checked="hasPermission(permission.code)"
@@ -66,7 +76,7 @@
             @click="savePermissions"
           >
             <Loader2 v-if="isSavingPermissions" class="mr-2 size-4 animate-spin" />
-            Save Permissions
+            {{ t('server.roleEditor.savePermissions') }}
           </Button>
         </div>
       </TabsContent>
@@ -77,6 +87,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, watch } from 'vue'
 import { toast } from 'vue-sonner'
+import { useI18n } from 'vue-i18n'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -93,6 +104,7 @@ import {
 } from '@/api/queries/server'
 import { PERMISSION_CODES } from '@/types/permissions'
 import type { ServerID } from '@/types/user'
+import { formatCodeForDisplay } from '@/lib/utils/formatters'
 
 interface ServerRole {
   id: string
@@ -110,6 +122,8 @@ const emit = defineEmits<{
   updated: []
   deleted: []
 }>()
+
+const { t } = useI18n()
 
 const form = reactive({
   name: props.role.name,
@@ -143,52 +157,52 @@ const permissionCodeToId = computed(() => {
 const allPermissions = computed(() => [
   {
     code: PERMISSION_CODES.ADMINISTRATOR,
-    label: 'Administrator',
+    label: formatCodeForDisplay(PERMISSION_CODES.ADMINISTRATOR),
     description: 'Full access to all server settings and actions',
   },
   {
     code: PERMISSION_CODES.MANAGE_SERVER,
-    label: 'Manage Server',
+    label: formatCodeForDisplay(PERMISSION_CODES.MANAGE_SERVER),
     description: 'Edit server settings, name, and icon',
   },
   {
     code: PERMISSION_CODES.MANAGE_ROLES,
-    label: 'Manage Roles',
+    label: formatCodeForDisplay(PERMISSION_CODES.MANAGE_ROLES),
     description: 'Create, edit, and delete server roles',
   },
   {
     code: PERMISSION_CODES.MANAGE_INVITES,
-    label: 'Manage Invites',
+    label: formatCodeForDisplay(PERMISSION_CODES.MANAGE_INVITES),
     description: 'Create and revoke invite links',
   },
   {
     code: PERMISSION_CODES.KICK_MEMBERS,
-    label: 'Kick Members',
+    label: formatCodeForDisplay(PERMISSION_CODES.KICK_MEMBERS),
     description: 'Remove members from the server',
   },
   {
     code: PERMISSION_CODES.MANAGE_NICKNAMES,
-    label: 'Manage Nicknames',
+    label: formatCodeForDisplay(PERMISSION_CODES.MANAGE_NICKNAMES),
     description: "Change other members' nicknames",
   },
   {
     code: PERMISSION_CODES.VIEW_RESTRICTIONS,
-    label: 'View Restrictions',
+    label: formatCodeForDisplay(PERMISSION_CODES.VIEW_RESTRICTIONS),
     description: 'View member restrictions and bans',
   },
   {
     code: PERMISSION_CODES.MANAGE_RESTRICTIONS,
-    label: 'Manage Restrictions',
+    label: formatCodeForDisplay(PERMISSION_CODES.MANAGE_RESTRICTIONS),
     description: 'Add and remove member restrictions',
   },
   {
     code: PERMISSION_CODES.CREATE_VIRTUAL_MEMBER,
-    label: 'Create Virtual Members',
+    label: formatCodeForDisplay(PERMISSION_CODES.CREATE_VIRTUAL_MEMBER),
     description: 'Create placeholder members',
   },
   {
     code: PERMISSION_CODES.MIGRATE_VIRTUAL_MEMBER,
-    label: 'Migrate Virtual Members',
+    label: formatCodeForDisplay(PERMISSION_CODES.MIGRATE_VIRTUAL_MEMBER),
     description: 'Transfer virtual members to real users',
   },
 ])
@@ -245,10 +259,10 @@ function saveName() {
     },
     {
       onSuccess: () => {
-        toast.success('Role updated')
+        toast.success(t('server.roleEditor.toast.roleUpdated'))
         emit('updated')
       },
-      onError: () => toast.error('Failed to update role'),
+      onError: () => toast.error(t('server.roleEditor.toast.roleUpdateFailed')),
     },
   )
 }
@@ -264,10 +278,10 @@ function savePermissions() {
     },
     {
       onSuccess: () => {
-        toast.success('Permissions updated')
+        toast.success(t('server.roleEditor.toast.permissionsUpdated'))
         emit('updated')
       },
-      onError: () => toast.error('Failed to update permissions'),
+      onError: () => toast.error(t('server.roleEditor.toast.permissionsUpdateFailed')),
     },
   )
 }
@@ -280,10 +294,10 @@ function handleDelete() {
     },
     {
       onSuccess: () => {
-        toast.success('Role deleted')
+        toast.success(t('server.roleEditor.toast.roleDeleted'))
         emit('deleted')
       },
-      onError: () => toast.error('Failed to delete role'),
+      onError: () => toast.error(t('server.roleEditor.toast.roleDeleteFailed')),
     },
   )
 }

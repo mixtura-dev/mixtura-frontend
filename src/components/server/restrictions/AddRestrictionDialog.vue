@@ -2,42 +2,47 @@
   <Dialog v-model:open="open">
     <DialogContent class="max-w-md">
       <DialogHeader>
-        <DialogTitle>Add Restriction</DialogTitle>
-        <DialogDescription> Add a new restriction to the member </DialogDescription>
+        <DialogTitle>{{ t('server.addRestriction.title') }}</DialogTitle>
+        <DialogDescription> {{ t('server.addRestriction.description') }} </DialogDescription>
       </DialogHeader>
 
       <form @submit.prevent="handleSubmit" class="space-y-4">
         <div class="space-y-2">
-          <Label>Restriction Type</Label>
+          <Label>{{ t('server.addRestriction.restrictionType') }}</Label>
           <Select v-model="form.restriction_id">
             <SelectTrigger>
-              <SelectValue placeholder="Select restriction type" />
+              <SelectValue :placeholder="t('server.addRestriction.selectRestrictionType')" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem v-for="type in restrictionTypes" :key="type.id" :value="type.id">
-                {{ formatRestrictionName(type.code) }}
+                {{
+                  t(
+                    `server.addRestriction.restrictionCodes.${type.code}`,
+                    formatCodeForDisplay(type.code),
+                  )
+                }}
               </SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div class="space-y-2">
-          <Label>Reason</Label>
+          <Label>{{ t('server.addRestriction.reason') }}</Label>
           <Textarea
             v-model="form.reason"
-            placeholder="Enter reason for this restriction"
+            :placeholder="t('server.addRestriction.enterReason')"
             rows="3"
           />
         </div>
 
         <div class="space-y-2">
-          <Label>Duration</Label>
+          <Label>{{ t('server.addRestriction.duration') }}</Label>
           <div class="flex gap-2">
             <Input
               v-model.number="form.duration"
               type="number"
               min="1"
-              placeholder="Duration"
+              :placeholder="t('server.addRestriction.durationPlaceholder')"
               class="flex-1"
               :disabled="form.duration_unit === 'permanent'"
             />
@@ -46,21 +51,33 @@
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="minutes">Minutes</SelectItem>
-                <SelectItem value="hours">Hours</SelectItem>
-                <SelectItem value="days">Days</SelectItem>
-                <SelectItem value="weeks">Weeks</SelectItem>
-                <SelectItem value="permanent">Permanent</SelectItem>
+                <SelectItem value="minutes">{{
+                  t('server.addRestriction.durationUnits.minutes')
+                }}</SelectItem>
+                <SelectItem value="hours">{{
+                  t('server.addRestriction.durationUnits.hours')
+                }}</SelectItem>
+                <SelectItem value="days">{{
+                  t('server.addRestriction.durationUnits.days')
+                }}</SelectItem>
+                <SelectItem value="weeks">{{
+                  t('server.addRestriction.durationUnits.weeks')
+                }}</SelectItem>
+                <SelectItem value="permanent">{{
+                  t('server.addRestriction.durationUnits.permanent')
+                }}</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
 
         <DialogFooter>
-          <Button type="button" variant="outline" @click="open = false"> Cancel </Button>
+          <Button type="button" variant="outline" @click="open = false">
+            {{ t('server.addRestriction.cancel') }}
+          </Button>
           <Button type="submit" :disabled="!isValid || isPending">
             <Loader2 v-if="isPending" class="mr-2 size-4 animate-spin" />
-            Add Restriction
+            {{ t('server.addRestriction.addRestrictionButton') }}
           </Button>
         </DialogFooter>
       </form>
@@ -71,6 +88,8 @@
 <script setup lang="ts">
 import { reactive, computed } from 'vue'
 import { toast } from 'vue-sonner'
+import { useI18n } from 'vue-i18n'
+
 import {
   Dialog,
   DialogContent,
@@ -94,6 +113,7 @@ import { Loader2 } from 'lucide-vue-next'
 
 import type { ServerID } from '@/types/user'
 import { useAddRestrictionMutation, useGlobalRestrictionsQuery } from '@/api/queries/server'
+import { formatCodeForDisplay } from '@/lib/utils/formatters' // <-- Импорт новой утилиты
 
 type DurationUnit = 'minutes' | 'hours' | 'days' | 'weeks' | 'permanent'
 
@@ -107,6 +127,8 @@ const emit = defineEmits<{
 }>()
 
 const open = defineModel<boolean>('open', { required: true })
+
+const { t } = useI18n()
 
 const form = reactive({
   restriction_id: '',
@@ -124,26 +146,20 @@ const isValid = computed(
   () =>
     form.restriction_id &&
     form.reason.trim() &&
-    (form.duration_unit === 'permanent' || form.duration > 0),
+    (form.duration_unit === 'permanent' || (form.duration && form.duration > 0)),
 )
-
-function formatRestrictionName(code: string): string {
-  return code
-    .split('_')
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-    .join(' ')
-}
 
 function calculateExpirationDate(): string {
   if (form.duration_unit === 'permanent') {
     return new Date(Date.now() + 100 * 365 * 24 * 60 * 60 * 1000).toISOString()
   }
 
-  const multipliers: Record<string, number> = {
+  const multipliers: Record<DurationUnit, number> = {
     minutes: 60 * 1000,
     hours: 60 * 60 * 1000,
     days: 24 * 60 * 60 * 1000,
     weeks: 7 * 24 * 60 * 60 * 1000,
+    permanent: 0,
   }
 
   const ms = form.duration * multipliers[form.duration_unit]
@@ -165,11 +181,11 @@ function handleSubmit() {
     },
     {
       onSuccess: () => {
-        toast.success('Restriction added')
+        toast.success(t('addRestriction.toast.success'))
         emit('added')
         resetForm()
       },
-      onError: () => toast.error('Failed to add restriction'),
+      onError: () => toast.error(t('addRestriction.toast.error')),
     },
   )
 }

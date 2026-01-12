@@ -2,10 +2,9 @@
   <Dialog v-model:open="open">
     <DialogContent class="max-w-5xl! w-full max-h-[85vh] flex flex-col">
       <DialogHeader class="relative">
-        <DialogTitle>Manage Server Roles</DialogTitle>
+        <DialogTitle>{{ $t('server.rolesManagement.title') }}</DialogTitle>
         <DialogDescription>
-          Create and manage roles with permissions for server administration. Drag roles to reorder
-          their hierarchy.
+          {{ $t('server.rolesManagement.description') }}
         </DialogDescription>
 
         <Transition name="fade">
@@ -22,7 +21,7 @@
       <div class="flex flex-1 min-h-0 gap-4">
         <div class="w-64 shrink-0 border-r pr-4">
           <div class="flex items-center justify-between mb-3">
-            <h3 class="text-sm font-medium">Roles Hierarchy</h3>
+            <h3 class="text-sm font-medium">{{ $t('server.rolesManagement.rolesHierarchy') }}</h3>
             <Button variant="ghost" size="icon" class="size-6" @click="showCreateDialog = true">
               <Plus class="size-4" />
             </Button>
@@ -30,7 +29,7 @@
 
           <p class="text-xs text-muted-foreground mb-3">
             <ArrowUpDown class="inline size-3 mr-1" />
-            Drag to reorder. Higher = more authority.
+            {{ $t('server.rolesManagement.dragToReorderHint') }}
           </p>
 
           <div v-if="isLoading" class="flex justify-center py-4">
@@ -67,7 +66,7 @@
             </draggable>
 
             <div v-if="!localRoles.length" class="py-8 text-center text-sm text-muted-foreground">
-              No roles yet
+              {{ $t('server.rolesManagement.noRolesYet') }}
             </div>
           </ScrollArea>
         </div>
@@ -87,8 +86,8 @@
             class="flex h-full flex-col items-center justify-center text-muted-foreground"
           >
             <Shield class="size-12 mb-3 opacity-50" />
-            <p>Select a role to edit</p>
-            <p class="text-sm">or create a new one</p>
+            <p>{{ $t('server.rolesManagement.selectRoleToEdit') }}</p>
+            <p class="text-sm">{{ $t('server.rolesManagement.orCreateNewOne') }}</p>
           </div>
         </div>
       </div>

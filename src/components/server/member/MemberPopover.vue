@@ -37,14 +37,16 @@
           </div>
 
           <div class="absolute right-2 top-2 flex gap-1">
-            <Badge v-if="isMe" variant="secondary" class="px-1.5 py-0 text-[10px]"> You </Badge>
+            <Badge v-if="isMe" variant="secondary" class="px-1.5 py-0 text-[10px]">
+              {{ t('server.memberCardPopover.youBadge') }}
+            </Badge>
             <Badge
               v-if="!member.user_id"
               variant="outline"
               class="bg-background/80 px-1.5 py-0 text-[10px]"
             >
               <Ghost class="mr-0.5 size-2.5" />
-              Virtual
+              {{ t('server.memberCardPopover.virtualBadge') }}
             </Badge>
           </div>
         </div>
@@ -68,14 +70,24 @@
           <div class="rounded-md bg-muted/50 p-2 text-xs text-muted-foreground">
             <div v-if="member.joined_at" class="flex items-center gap-2">
               <Calendar class="size-3.5" />
-              <span>Joined {{ formatSmartDate(member.joined_at) }}</span>
+              <span
+                >{{ t('server.memberCardPopover.joinedPrefix') }}
+                {{ formatSmartDate(member.joined_at) }}</span
+              >
             </div>
             <div
               v-if="member.server_role?.permissions_list?.length"
               class="mt-1 flex items-center gap-2"
             >
               <Key class="size-3.5" />
-              <span>{{ member.server_role.permissions_list.length }} permissions</span>
+              <span>
+                {{
+                  t(
+                    'server.memberCardPopover.permissionsSuffix',
+                    member.server_role.permissions_list.length,
+                  )
+                }}
+              </span>
             </div>
           </div>
 
@@ -86,9 +98,7 @@
               >
                 <Ban class="size-3.5" />
                 <span>
-                  {{ restrictions.length }} active restriction{{
-                    restrictions.length > 1 ? 's' : ''
-                  }}
+                  {{ t('server.memberCardPopover.restrictionsSummary', restrictions.length) }}
                 </span>
               </div>
             </div>
@@ -101,7 +111,7 @@
               class="h-7 flex-1 text-xs"
               @click="handleViewProfile"
             >
-              View Profile
+              {{ t('server.memberCardPopover.viewProfileButton') }}
             </Button>
             <PermissionGuard action="KICK_MEMBER" :target-member-id="memberId ?? undefined">
               <Button
@@ -112,6 +122,7 @@
                 @click="handleKick"
               >
                 <UserX class="size-3.5" />
+                <!-- Можно было бы добавить тултип с t('server.memberCardPopover.kickButton') -->
               </Button>
             </PermissionGuard>
           </div>
@@ -122,7 +133,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, onUnmounted } from 'vue'
+import { computed, ref, watch, onUnmounted, useTemplateRef } from 'vue'
+import { useI18n } from 'vue-i18n' // <-- Импорт useI18n
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverAnchor, PopoverContent } from '@/components/ui/popover'
@@ -148,7 +160,9 @@ const emit = defineEmits<{
 
 const open = defineModel<boolean>('open', { required: true })
 
-const virtualAnchorRef = ref<HTMLElement | null>(null)
+const { t } = useI18n() // <-- Получаем функцию перевода
+
+const virtualAnchorRef = useTemplateRef('virtualAnchorRef')
 const anchorRect = ref({ top: 0, left: 0, width: 0, height: 0 })
 
 const anchorStyles = computed(() => ({

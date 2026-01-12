@@ -136,12 +136,12 @@
     />
 
     <MemberProfileDialog
+      :key="selectedMemberId ?? 'none'"
       v-model:open="showProfileDialog"
       :server-id="serverId"
       :member-id="selectedMemberId"
       @migrate="handleMigrateMember"
     />
-
     <RolesManagementDialog v-model:open="showRolesDialog" :server-id="serverId" />
 
     <RestrictionsManagementDialog v-model:open="showRestrictionsDialog" :server-id="serverId" />
@@ -159,8 +159,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, computed, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -190,11 +190,13 @@ import RestrictionsManagementDialog from '@/components/server/restrictions/Restr
 import CreateVirtualMemberDialog from '@/components/server/member/CreateVirtualMemberDialog.vue'
 import MigrateMemberDialog from '@/components/server/member/MigrateMemberDialog.vue'
 import { useCurrentMemberQuery, useServerQuery } from '@/api/queries/server'
-import ServerInviteDialog from '@/components/workspace/ServerInviteDialog.vue'
 import { useServerPermissions } from '@/composables/useServerPermissions'
+import { toast } from 'vue-sonner'
 import MemberAvatar from '@/components/server/member/MemberAvatar.vue'
+import ServerInviteDialog from '@/components/server/invites/ServerInviteDialog.vue'
 
 const route = useRoute()
+const router = useRouter()
 const { can } = useServerPermissions()
 
 const serverId = computed(() => route.params.serverId as string)
@@ -219,8 +221,26 @@ const showInviteDialog = ref(false)
 const selectedMemberId = ref<string | null>(null)
 const migratingMemberId = ref<string | null>(null)
 
-const { data: server } = useServerQuery(serverId)
-const { data: currentMember, isLoading: isLoadingCurrentMember } = useCurrentMemberQuery(serverId)
+const { data: server, isError: isServerError } = useServerQuery(serverId)
+
+const {
+  data: currentMember,
+  isLoading: isLoadingCurrentMember,
+  isError: isMemberError,
+} = useCurrentMemberQuery(serverId)
+
+watch(
+  [isServerError, isMemberError, isLoadingCurrentMember],
+  ([serverError, memberError, loading]) => {
+    if (loading) return
+
+    if (serverError || memberError) {
+      toast.error('Server not found or access denied')
+      router.replace('/')
+    }
+  },
+  { immediate: true },
+)
 
 function handleSelectMember(memberId: string) {
   selectedMemberId.value = memberId

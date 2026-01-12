@@ -2,29 +2,34 @@
   <Dialog v-model:open="open">
     <DialogContent class="max-w-md">
       <DialogHeader>
-        <DialogTitle>Create Server Role</DialogTitle>
+        <DialogTitle>{{ t('server.createRole.title') }}</DialogTitle>
         <DialogDescription>
-          Create a new role with permissions for server administration. The role will be added at
-          the bottom of the hierarchy.
+          {{ t('server.createRole.description') }}
         </DialogDescription>
       </DialogHeader>
 
       <form @submit.prevent="handleSubmit" class="space-y-4">
         <div class="space-y-2">
-          <Label>Role Name</Label>
-          <Input v-model="form.name" placeholder="e.g., Moderator, Admin" :maxlength="32" />
+          <Label>{{ t('server.createRole.roleName') }}</Label>
+          <Input
+            v-model="form.name"
+            :placeholder="t('server.createRole.roleNamePlaceholder')"
+            :maxlength="32"
+          />
         </div>
 
         <div class="rounded-lg border bg-muted/30 p-3 text-sm text-muted-foreground">
           <Info class="inline size-4 mr-1 -mt-0.5" />
-          After creating, drag the role in the list to set its position in the hierarchy.
+          {{ t('server.createRole.positionHint') }}
         </div>
 
         <DialogFooter>
-          <Button type="button" variant="outline" @click="open = false"> Cancel </Button>
+          <Button type="button" variant="outline" @click="open = false">
+            {{ t('server.createRole.cancel') }}
+          </Button>
           <Button type="submit" :disabled="!isValid || isPending">
             <Loader2 v-if="isPending" class="mr-2 size-4 animate-spin" />
-            Create Role
+            {{ t('server.createRole.createRoleButton') }}
           </Button>
         </DialogFooter>
       </form>
@@ -35,6 +40,7 @@
 <script setup lang="ts">
 import { reactive, computed } from 'vue'
 import { toast } from 'vue-sonner'
+import { useI18n } from 'vue-i18n'
 import {
   Dialog,
   DialogContent,
@@ -60,6 +66,8 @@ const emit = defineEmits<{
 
 const open = defineModel<boolean>('open', { required: true })
 
+const { t } = useI18n()
+
 const form = reactive({
   name: '',
 })
@@ -81,12 +89,12 @@ function handleSubmit() {
     },
     {
       onSuccess: (data) => {
-        toast.success('Role created')
+        toast.success(t('server.createRole.toast.success'))
         emit('created', data.id)
         form.name = ''
         open.value = false
       },
-      onError: () => toast.error('Failed to create role'),
+      onError: () => toast.error(t('server.createRole.toast.error')),
     },
   )
 }

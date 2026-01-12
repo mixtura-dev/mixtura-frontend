@@ -2,13 +2,17 @@
   <Dialog v-model:open="open">
     <DialogContent class="max-w-lg">
       <DialogHeader>
-        <DialogTitle>Manage Restrictions</DialogTitle>
-        <DialogDescription> View and manage member restrictions </DialogDescription>
+        <DialogTitle>{{ t('server.manageRestrictions.title') }}</DialogTitle>
+        <DialogDescription> {{ t('server.manageRestrictions.description') }} </DialogDescription>
       </DialogHeader>
 
       <div class="relative">
         <Search class="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-        <Input v-model="searchQuery" placeholder="Search members..." class="pl-9" />
+        <Input
+          v-model="searchQuery"
+          :placeholder="t('server.manageRestrictions.searchPlaceholder')"
+          class="pl-9"
+        />
       </div>
 
       <ScrollArea class="h-[400px]">
@@ -21,33 +25,29 @@
           class="py-8 text-center text-muted-foreground"
         >
           <Users class="mx-auto mb-2 size-8 opacity-50" />
-          <p>No members found</p>
-          <p v-if="!searchQuery" class="text-sm">Only real users can have restrictions</p>
+          <p>{{ t('server.manageRestrictions.noMembersFound') }}</p>
+          <p v-if="!searchQuery" class="text-sm">
+            {{ t('server.manageRestrictions.onlyRealUsersHint') }}
+          </p>
         </div>
 
         <div v-else class="space-y-2">
           <div v-for="member in filteredMembers" :key="member.id" class="rounded-lg border p-3">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-3">
-                <Avatar class="size-10">
-                  <AvatarFallback
-                    :style="{ backgroundColor: `hsl(${hashToHue(member.id)}, 50%, 45%)` }"
-                  >
-                    {{ getInitials(member.nickname) }}
-                  </AvatarFallback>
-                </Avatar>
+                <MemberAvatar :member-id="member.id" :nickname="member.nickname" />
                 <div>
                   <div class="flex items-center gap-2">
                     <p class="font-medium">{{ member.nickname }}</p>
                     <Badge v-if="isCurrentMember(member.id)" variant="secondary" class="text-xs">
-                      You
+                      {{ t('server.manageRestrictions.youBadge') }}
                     </Badge>
                   </div>
                   <p class="text-xs text-muted-foreground">
                     {{
                       isCurrentMember(member.id)
-                        ? 'Cannot manage your own restrictions'
-                        : 'Click to manage restrictions'
+                        ? t('server.manageRestrictions.cannotManageOwnRestrictions')
+                        : t('server.manageRestrictions.clickToManageRestrictions')
                     }}
                   </p>
                 </div>
@@ -58,7 +58,7 @@
                 :disabled="isCurrentMember(member.id)"
                 @click="selectMember(member)"
               >
-                Manage
+                {{ t('server.manageRestrictions.manageButton') }}
               </Button>
             </div>
           </div>
@@ -84,6 +84,8 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n' // <-- Импорт useI18n
+
 import {
   Dialog,
   DialogContent,
@@ -94,22 +96,22 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Loader2, Search, Users } from 'lucide-vue-next'
 import MemberRestrictionsDialog from './MemberRestrictionsDialog.vue'
 import AddRestrictionDialog from './AddRestrictionDialog.vue'
-import { getInitials } from '@/lib/utils/user'
-import { hashToHue } from '@/lib/utils/colors'
 import type { MemberListItem, ServerID } from '@/types/user'
 import { useServerMembersQuery } from '@/api/queries/server'
 import { useCurrentMemberStore } from '@/stores/currentMember.store'
+import MemberAvatar from '../member/MemberAvatar.vue'
 
 const props = defineProps<{
   serverId: ServerID
 }>()
 
 const open = defineModel<boolean>('open', { required: true })
+
+const { t } = useI18n() // <-- Получаем функцию перевода
 
 const currentMemberStore = useCurrentMemberStore()
 

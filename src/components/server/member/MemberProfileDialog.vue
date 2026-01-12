@@ -1,7 +1,6 @@
 <template>
   <Dialog v-model:open="open">
     <DialogContent class="max-w-md overflow-hidden p-0">
-      <!-- Показываем loader только при первой загрузке, не при рефетче -->
       <div v-if="isLoading && !member" class="flex items-center justify-center py-16">
         <Loader2 class="size-8 animate-spin text-muted-foreground" />
       </div>
@@ -69,10 +68,9 @@
                 <Shield class="mr-1 size-3" />
                 {{ member.server_role.name }}
               </Badge>
-
               <Badge v-if="!member.user_id" variant="secondary">
                 <Ghost class="mr-1 size-3" />
-                Virtual User
+                {{ t('server.memberProfileDialog.virtualUserBadge') }}
               </Badge>
             </div>
           </div>
@@ -84,7 +82,7 @@
               <div
                 class="mb-1 text-[11px] font-medium uppercase tracking-wide text-muted-foreground"
               >
-                Member Since
+                {{ t('server.memberProfileDialog.memberSince') }}
               </div>
               <div class="flex items-center gap-2 text-sm">
                 <Calendar class="size-4 text-muted-foreground" />
@@ -103,7 +101,12 @@
                   variant="secondary"
                   class="text-xs"
                 >
-                  {{ formatPermissionCode(perm.code) }}
+                  {{
+                    t(
+                      `server.roleEditor.permissions.${perm.code}.label`,
+                      formatCodeForDisplay(perm.code),
+                    )
+                  }}
                 </Badge>
               </div>
             </div>
@@ -122,13 +125,18 @@
                     <div class="flex items-center gap-2">
                       <Ban class="size-4 text-destructive" />
                       <div>
-                        <p class="text-sm font-medium">{{ restriction.restriction.code }}</p>
+                        {{
+                          t(
+                            `server.addRestriction.restrictionCodes.${restriction.restriction.code}`,
+                            formatCodeForDisplay(restriction.restriction.code),
+                          )
+                        }}
                         <p class="text-xs text-muted-foreground">{{ restriction.reason }}</p>
                       </div>
                     </div>
                     <div class="flex items-center gap-2">
                       <span class="text-xs text-muted-foreground">
-                        {{ formatSmartDate(restriction.expiration_date) }}
+                        {{ formatDateTime(restriction.expiration_date) }}
                       </span>
                       <PermissionGuard action="MANAGE_RESTRICTIONS" :target-member-id="memberId">
                         <Button
@@ -161,7 +169,7 @@
               >
                 <Button variant="outline" class="w-full" @click="showAddRestrictionDialog = true">
                   <Ban class="mr-2 size-4" />
-                  Add Restriction
+                  {{ t('server.memberProfileDialog.addRestrictionButton') }}
                 </Button>
               </PermissionGuard>
 
@@ -172,7 +180,7 @@
               >
                 <Button variant="outline" class="w-full" @click="handleMigrate">
                   <ArrowRightLeft class="mr-2 size-4" />
-                  Migrate
+                  {{ t('server.memberProfileDialog.migrateButton') }}
                 </Button>
               </PermissionGuard>
 
@@ -185,7 +193,7 @@
                 >
                   <Loader2 v-if="isKicking" class="mr-2 size-4 animate-spin" />
                   <UserX v-else class="mr-2 size-4" />
-                  Kick
+                  {{ t('server.memberProfileDialog.kickButton') }}
                 </Button>
               </PermissionGuard>
             </div>
@@ -248,6 +256,10 @@ import {
 } from '@/api/queries/server'
 import { useDateFormatter } from '@/lib/utils/date'
 import MemberAvatar from './MemberAvatar.vue'
+import { useI18n } from 'vue-i18n'
+import { formatCodeForDisplay } from '@/lib/utils/formatters'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   serverId: ServerID
@@ -268,7 +280,6 @@ const removingRestrictionId = ref<string | null>(null)
 const serverId = computed(() => props.serverId)
 const memberId = computed(() => props.memberId ?? '')
 
-// Добавили isFetching для индикации рефетча
 const { data: member, isLoading, isError, isFetching } = useServerMemberQuery(serverId, memberId)
 const { data: restrictions } = useMemberRestrictionsQuery(serverId, memberId)
 const { data: serverRoles } = useServerRolesQuery(serverId)
@@ -302,27 +313,20 @@ const hasAnyAction = computed(() => {
   )
 })
 
-const { formatSmartDate } = useDateFormatter()
-
-function formatPermissionCode(code: string): string {
-  return code
-    .split('_')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(' ')
-}
+const { formatSmartDate, formatDateTime } = useDateFormatter()
 
 function handleSaveNickname(newNickname: string) {
-  if (!memberId.value) return
+  if (!props.memberId) return
 
   updateMember(
     {
       serverId: props.serverId,
-      memberId: memberId.value,
+      memberId: props.memberId,
       data: { name: newNickname },
     },
     {
-      onSuccess: () => toast.success('Nickname updated'),
-      onError: () => toast.error('Failed to update nickname'),
+      onSuccess: () => toast.success(t('server.memberProfileDialog.toast.nicknameUpdated')),
+      onError: () => toast.error(t('server.memberProfileDialog.toast.nicknameUpdateFailed')),
     },
   )
 }
@@ -337,25 +341,25 @@ function handleChangeRole(roleId: string) {
       data: { server_role_id: roleId },
     },
     {
-      onError: () => toast.error('Failed to update role'),
+      onError: () => toast.error(t('server.memberProfileDialog.toast.roleUpdateFailed')),
     },
   )
 }
 
 function handleRemoveRestriction(restrictionId: string) {
-  if (!memberId.value) return
+  if (!props.memberId) return
 
   removingRestrictionId.value = restrictionId
 
   removeRestriction(
     {
       serverId: props.serverId,
-      memberId: memberId.value,
+      memberId: props.memberId,
       restrictionId,
     },
     {
-      onSuccess: () => toast.success('Restriction removed'),
-      onError: () => toast.error('Failed to remove restriction'),
+      onSuccess: () => toast.success(t('server.memberProfileDialog.toast.restrictionRemoved')),
+      onError: () => toast.error(t('server.memberProfileDialog.toast.restrictionRemoveFailed')),
       onSettled: () => {
         removingRestrictionId.value = null
       },
@@ -368,25 +372,25 @@ function handleRestrictionAdded() {
 }
 
 function handleMigrate() {
-  if (memberId.value) {
-    emit('migrate', memberId.value)
+  if (props.memberId) {
+    emit('migrate', props.memberId)
     open.value = false
   }
 }
 
 function handleKick() {
-  if (!memberId.value || !member.value) return
+  if (!props.memberId || !member.value) return
 
   const nickname = member.value.nickname
 
   kickMember(
-    { serverId: props.serverId, memberId: memberId.value },
+    { serverId: props.serverId, memberId: props.memberId },
     {
       onSuccess: () => {
-        toast.success(`${nickname} has been kicked`)
+        toast.success(t('server.memberProfileDialog.toast.kickSuccess', { nickname }))
         open.value = false
       },
-      onError: () => toast.error('Failed to kick member'),
+      onError: () => toast.error(t('server.memberProfileDialog.toast.kickFailed')),
     },
   )
 }

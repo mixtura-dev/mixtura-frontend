@@ -1,9 +1,17 @@
-// src/lib/utils/date.ts
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
 
 export function useDateFormatter() {
   const { t, locale } = useI18n()
+
+  const shortDateFormatter = computed(
+    () =>
+      new Intl.DateTimeFormat(locale.value, {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      }),
+  )
 
   const shortDateTimeFormatter = computed(
     () =>
@@ -11,6 +19,18 @@ export function useDateFormatter() {
         month: 'short',
         day: 'numeric',
         year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+  )
+
+  const fullDateFormatter = computed(
+    () =>
+      new Intl.DateTimeFormat(locale.value, {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
       }),
   )
 
@@ -21,17 +41,35 @@ export function useDateFormatter() {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
       }),
   )
+
+  function isPermanent(date: Date): boolean {
+    const now = new Date()
+    const diffYears = date.getFullYear() - now.getFullYear()
+    return diffYears > 50
+  }
 
   function formatSmartDate(dateString: string | null | undefined): string {
     if (!dateString) return t('dates.unknown', 'Unknown')
     try {
       const date = new Date(dateString)
       if (isNaN(date.getTime())) return t('dates.unknown', 'Unknown')
-      const now = new Date()
-      const diffYears = date.getFullYear() - now.getFullYear()
-      if (diffYears > 50) return t('dates.permanent', 'Permanent')
+      if (isPermanent(date)) return t('dates.permanent', 'Permanent')
+      return shortDateFormatter.value.format(date)
+    } catch {
+      return t('dates.unknown', 'Unknown')
+    }
+  }
+
+  function formatDateTime(dateString: string | null | undefined): string {
+    if (!dateString) return t('dates.unknown', 'Unknown')
+    try {
+      const date = new Date(dateString)
+      if (isNaN(date.getTime())) return t('dates.unknown', 'Unknown')
+      if (isPermanent(date)) return t('dates.permanent', 'Permanent')
       return shortDateTimeFormatter.value.format(date)
     } catch {
       return t('dates.unknown', 'Unknown')
@@ -43,6 +81,19 @@ export function useDateFormatter() {
     try {
       const date = new Date(dateString)
       if (isNaN(date.getTime())) return t('dates.unknown', 'Unknown')
+      if (isPermanent(date)) return t('dates.permanent', 'Permanent')
+      return fullDateFormatter.value.format(date)
+    } catch {
+      return t('dates.unknown', 'Unknown')
+    }
+  }
+
+  function formatFullDateTime(dateString: string | null | undefined): string {
+    if (!dateString) return t('dates.unknown', 'Unknown')
+    try {
+      const date = new Date(dateString)
+      if (isNaN(date.getTime())) return t('dates.unknown', 'Unknown')
+      if (isPermanent(date)) return t('dates.permanent', 'Permanent')
       return fullDateTimeFormatter.value.format(date)
     } catch {
       return t('dates.unknown', 'Unknown')
@@ -51,6 +102,8 @@ export function useDateFormatter() {
 
   return {
     formatSmartDate,
+    formatDateTime,
     formatFullDate,
+    formatFullDateTime,
   }
 }

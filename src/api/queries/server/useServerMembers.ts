@@ -37,9 +37,10 @@ export const useServerMemberQuery = (serverId: MaybeRef<ServerID>, memberId: May
   return useQuery({
     queryKey: computed(() => queryKeys.servers.member(sId.value, mId.value)),
     queryFn: () => getMember(sId.value, mId.value),
-    enabled: computed(() => Boolean(sId.value) && Boolean(mId.value) && mId.value.length > 0),
+    enabled: computed(() => !!sId.value && !!mId.value),
   })
 }
+
 export const useMemberRestrictionsQuery = (
   serverId: MaybeRef<ServerID>,
   memberId: MaybeRef<string>,
@@ -50,7 +51,7 @@ export const useMemberRestrictionsQuery = (
   return useQuery({
     queryKey: computed(() => queryKeys.servers.restrictions(sId.value, mId.value)),
     queryFn: () => getRestrictions(sId.value, mId.value),
-    enabled: computed(() => Boolean(sId.value) && Boolean(mId.value) && mId.value.length > 0),
+    enabled: computed(() => !!sId.value && !!mId.value),
   })
 }
 const PAGE_SIZE = 50
@@ -131,17 +132,12 @@ export const useUpdateMemberMutation = () => {
       data: RequestBody<'/api/server/{server_id}/members/{member_id}', 'patch'>
     }) => updateMember(serverId, memberId, data),
     onSuccess: (_, { serverId, memberId }) => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.servers.member(serverId, memberId),
-        refetchType: 'active',
-      })
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.servers.members(serverId),
-        refetchType: 'active',
-      })
+      queryClient.invalidateQueries({ queryKey: queryKeys.servers.member(serverId, memberId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.servers.members(serverId) })
     },
   })
 }
+
 export const useCreateVirtualMemberMutation = () => {
   const queryClient = useQueryClient()
 

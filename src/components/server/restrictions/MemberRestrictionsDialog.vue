@@ -2,9 +2,9 @@
   <Dialog v-model:open="open">
     <DialogContent class="max-w-md">
       <DialogHeader>
-        <DialogTitle>Member Restrictions</DialogTitle>
+        <DialogTitle>{{ t('server.memberRestrictionsDialog.title') }}</DialogTitle>
         <DialogDescription v-if="member">
-          Managing restrictions for {{ member.nickname }}
+          {{ t('server.memberRestrictionsDialog.description', { nickname: member.nickname }) }}
         </DialogDescription>
       </DialogHeader>
 
@@ -15,7 +15,7 @@
       <template v-else>
         <div v-if="!restrictions?.length" class="py-8 text-center text-muted-foreground">
           <Ban class="mx-auto mb-2 size-8 opacity-50" />
-          <p>No active restrictions</p>
+          <p>{{ t('server.memberRestrictionsDialog.noActiveRestrictions') }}</p>
         </div>
 
         <div v-else class="space-y-2 max-h-[300px] overflow-y-auto">
@@ -27,10 +27,18 @@
             <div class="flex items-center gap-3">
               <Ban class="size-5 text-destructive shrink-0" />
               <div class="min-w-0">
-                <p class="font-medium text-sm">{{ restriction.restriction.code }}</p>
+                <p class="font-medium text-sm">
+                  {{
+                    t(
+                      `server.addRestriction.restrictionCodes.${restriction.restriction.code}`,
+                      formatCodeForDisplay(restriction.restriction.code),
+                    )
+                  }}
+                </p>
                 <p class="text-xs text-muted-foreground truncate">{{ restriction.reason }}</p>
                 <p class="text-xs text-muted-foreground">
-                  Expires: {{ formatDate(restriction.expiration_date) }}
+                  {{ t('server.memberRestrictionsDialog.expires')
+                  }}{{ formatDateTime(restriction.expiration_date) }}
                 </p>
               </div>
             </div>
@@ -48,10 +56,12 @@
         </div>
 
         <DialogFooter>
-          <Button variant="outline" @click="open = false">Close</Button>
+          <Button variant="outline" @click="open = false">{{
+            t('server.memberRestrictionsDialog.close')
+          }}</Button>
           <Button @click="$emit('add-restriction')">
             <Plus class="mr-2 size-4" />
-            Add Restriction
+            {{ t('server.memberRestrictionsDialog.addRestrictionButton') }}
           </Button>
         </DialogFooter>
       </template>
@@ -62,6 +72,8 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { toast } from 'vue-sonner'
+import { useI18n } from 'vue-i18n'
+
 import {
   Dialog,
   DialogContent,
@@ -75,6 +87,8 @@ import { Ban, Loader2, Plus, Trash2 } from 'lucide-vue-next'
 
 import type { MemberListItem, ServerID } from '@/types/user'
 import { useMemberRestrictionsQuery, useRemoveRestrictionMutation } from '@/api/queries/server'
+import { useDateFormatter } from '@/lib/utils/date'
+import { formatCodeForDisplay } from '@/lib/utils/formatters'
 
 const props = defineProps<{
   serverId: ServerID
@@ -86,6 +100,8 @@ defineEmits<{
 }>()
 
 const open = defineModel<boolean>('open', { required: true })
+
+const { t } = useI18n()
 
 const isRemoving = ref<string | null>(null)
 
@@ -101,23 +117,7 @@ watch(open, (isOpen) => {
   }
 })
 
-function formatDate(dateString: string): string {
-  const date = new Date(dateString)
-  const now = new Date()
-  const diffYears = date.getFullYear() - now.getFullYear()
-
-  if (diffYears > 50) {
-    return 'Never (Permanent)'
-  }
-
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(date)
-}
+const { formatDateTime } = useDateFormatter()
 
 function handleRemove(restrictionId: string) {
   if (!props.member) return
@@ -132,10 +132,10 @@ function handleRemove(restrictionId: string) {
     },
     {
       onSuccess: () => {
-        toast.success('Restriction removed')
+        toast.success(t('server.memberRestrictionsDialog.toast.removedSuccess'))
       },
       onError: () => {
-        toast.error('Failed to remove restriction')
+        toast.error(t('server.memberRestrictionsDialog.toast.removedError'))
       },
       onSettled: () => {
         isRemoving.value = null

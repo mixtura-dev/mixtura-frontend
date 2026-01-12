@@ -2,8 +2,10 @@
   <Dialog v-model:open="open">
     <DialogContent class="sm:max-w-md">
       <DialogHeader>
-        <DialogTitle>Invite members</DialogTitle>
-        <DialogDescription> Create an invite link for {{ server?.name }} </DialogDescription>
+        <DialogTitle>{{ t('server.serverInvites.title') }}</DialogTitle>
+        <DialogDescription>
+          {{ t('server.serverInvites.description', { serverName: server?.name }) }}
+        </DialogDescription>
       </DialogHeader>
 
       <div v-if="isLoadingInvites" class="flex items-center justify-center py-8">
@@ -12,7 +14,7 @@
 
       <div v-else class="space-y-4">
         <div v-if="invites?.length" class="space-y-2">
-          <Label class="text-sm font-medium">Active invites</Label>
+          <Label class="text-sm font-medium">{{ t('server.serverInvites.activeInvites') }}</Label>
           <ScrollArea class="max-h-48">
             <div class="space-y-2 pr-4">
               <div
@@ -50,34 +52,37 @@
 
         <div v-else class="py-4 text-center text-muted-foreground">
           <LinkIcon class="mx-auto mb-2 size-8 opacity-50" />
-          <p class="text-sm">No active invites</p>
+          <p class="text-sm">{{ t('server.serverInvites.noActiveInvites') }}</p>
         </div>
 
         <Separator />
 
-        <!-- Create new invite -->
         <div class="space-y-2">
-          <Label class="text-sm font-medium">Create new invite</Label>
+          <Label class="text-sm font-medium">{{ t('server.serverInvites.createNewInvite') }}</Label>
           <div class="flex gap-2">
             <Input
               v-model.number="useLimit"
               type="number"
               min="1"
-              placeholder="Max uses (optional)"
+              :placeholder="t('server.serverInvites.maxUsesPlaceholder')"
               class="flex-1"
             />
             <Button :disabled="isCreating" @click="handleCreateInvite">
               <Loader2 v-if="isCreating" class="mr-2 size-4 animate-spin" />
               <Plus v-else class="mr-2 size-4" />
-              Create
+              {{ t('server.serverInvites.createButton') }}
             </Button>
           </div>
-          <p class="text-xs text-muted-foreground">Leave empty for unlimited uses.</p>
+          <p class="text-xs text-muted-foreground">
+            {{ t('server.serverInvites.unlimitedUsesHint') }}
+          </p>
         </div>
       </div>
 
       <DialogFooter>
-        <Button variant="outline" @click="open = false">Close</Button>
+        <Button variant="outline" @click="open = false">{{
+          t('server.serverInvites.close')
+        }}</Button>
       </DialogFooter>
     </DialogContent>
   </Dialog>
@@ -85,6 +90,7 @@
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import {
   Dialog,
   DialogContent,
@@ -115,6 +121,8 @@ const props = defineProps<{
 }>()
 
 const open = defineModel<boolean>('open', { required: true })
+
+const { t } = useI18n()
 
 const useLimit = ref<number | undefined>(undefined)
 const deletingInviteId = ref<string | null>(null)
@@ -152,14 +160,16 @@ function handleCreateInvite() {
     },
     {
       onSuccess: (data) => {
-        toast.success('Invite created')
         if (data?.key) {
           copyInviteLink(data.key)
+          toast.success(t('server.serverInvites.toast.inviteCreatedAndCopied'))
+        } else {
+          toast.success(t('server.serverInvites.toast.inviteCreated'))
         }
         useLimit.value = undefined
       },
       onError: () => {
-        toast.error('Failed to create invite')
+        toast.error(t('server.serverInvites.toast.createFailed'))
       },
     },
   )
@@ -174,10 +184,10 @@ function handleDeleteInvite(inviteId: string) {
     { serverId: props.server.id, inviteId },
     {
       onSuccess: () => {
-        toast.success('Invite deleted')
+        toast.success(t('server.serverInvites.toast.inviteDeleted'))
       },
       onError: () => {
-        toast.error('Failed to delete invite')
+        toast.error(t('server.serverInvites.toast.deleteFailed'))
       },
       onSettled: () => {
         deletingInviteId.value = null
@@ -189,6 +199,6 @@ function handleDeleteInvite(inviteId: string) {
 function copyInviteLink(key: string) {
   const link = `${window.location.origin}/invite/${key}`
   copy(link)
-  toast.success('Invite link copied')
+  toast.success(t('server.serverInvites.toast.linkCopied'))
 }
 </script>
