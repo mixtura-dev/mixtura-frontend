@@ -15,13 +15,22 @@ import { computed, toValue, type MaybeRefOrGetter } from 'vue'
 export function useApplicationsQuery(
   serverId: MaybeRefOrGetter<ServerID>,
   eventId: MaybeRefOrGetter<string>,
+  params?: MaybeRefOrGetter<{
+    status?: 'PENDING' | 'APPROVED' | 'REJECTED' | 'WAITLIST' | null
+    page?: number
+    page_size?: number
+  }>,
 ) {
   const sId = computed(() => toValue(serverId))
   const eId = computed(() => toValue(eventId))
+  const p = computed(() => toValue(params))
 
   return useQuery({
-    queryKey: computed(() => queryKeys.events.applications.list(sId.value, eId.value)),
-    queryFn: () => listApplications(sId.value, eId.value),
+    queryKey: computed(() => [
+      ...queryKeys.events.applications.list(sId.value, eId.value),
+      p.value,
+    ]),
+    queryFn: () => listApplications(sId.value, eId.value, p.value),
     enabled: computed(() => !!sId.value && !!eId.value),
   })
 }

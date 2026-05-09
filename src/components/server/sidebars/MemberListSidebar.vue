@@ -16,9 +16,6 @@
           @input="handleSearch"
         />
       </div>
-      <Button variant="ghost" size="icon" class="size-8 shrink-0" @click="emit('close')">
-        <PanelRightClose class="size-4" />
-      </Button>
     </header>
 
     <div v-if="isLoading && !allMembers.length" class="flex flex-1 items-center justify-center">
@@ -65,8 +62,7 @@ import { ref, computed, watch } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import { toast } from 'vue-sonner'
 import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Loader2, PanelRightClose, Search, Users } from 'lucide-vue-next'
+import { Loader2, Search, Users } from 'lucide-vue-next'
 import { useServerMembersInfiniteQuery, useKickMemberMutation } from '@/api/queries/server'
 import { getErrorMessage } from '@/composables/useApiError'
 import type { ServerID } from '@/types/user'

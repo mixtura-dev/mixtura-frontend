@@ -4277,8 +4277,8 @@
     "/api/server/{server_id}/events/": {
       "get": {
         "tags": ["Event Core"],
-        "summary": "List Public Events",
-        "operationId": "list_public_events_api_server__server_id__events__get",
+        "summary": "List Events",
+        "operationId": "list_events_api_server__server_id__events__get",
         "parameters": [
           {
             "name": "server_id",
@@ -4291,23 +4291,19 @@
             }
           },
           {
-            "name": "page",
-            "in": "query",
+            "name": "token",
+            "in": "cookie",
             "required": false,
             "schema": {
-              "type": "integer",
-              "default": 1,
-              "title": "Page"
-            }
-          },
-          {
-            "name": "page_size",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "default": 50,
-              "title": "Page Size"
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Token"
             }
           }
         ],
@@ -4321,7 +4317,7 @@
                   "items": {
                     "$ref": "#/components/schemas/EventCardResponse"
                   },
-                  "title": "Response List Public Events Api Server  Server Id  Events  Get"
+                  "title": "Response List Events Api Server  Server Id  Events  Get"
                 }
               }
             }
@@ -4386,88 +4382,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EventCardResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/server/{server_id}/events/private": {
-      "get": {
-        "tags": ["Event Core"],
-        "summary": "List Private Events",
-        "operationId": "list_private_events_api_server__server_id__events_private_get",
-        "parameters": [
-          {
-            "name": "server_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "title": "Server Id"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "default": 1,
-              "title": "Page"
-            }
-          },
-          {
-            "name": "page_size",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "default": 50,
-              "title": "Page Size"
-            }
-          },
-          {
-            "name": "token",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Token"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/EventDetailResponse"
-                  },
-                  "title": "Response List Private Events Api Server  Server Id  Events Private Get"
+                  "$ref": "#/components/schemas/EventDetailResponse"
                 }
               }
             }
@@ -4534,15 +4449,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "anyOf": [
-                    {
-                      "$ref": "#/components/schemas/EventCardResponse"
-                    },
-                    {
-                      "$ref": "#/components/schemas/EventDetailResponse"
-                    }
-                  ],
-                  "title": "Response Get Event Api Server  Server Id  Events  Event Id  Get"
+                  "$ref": "#/components/schemas/EventDetailResponse"
                 }
               }
             }
@@ -4970,6 +4877,399 @@
         }
       }
     },
+    "/api/server/{server_id}/events/{event_id}/integrations": {
+      "post": {
+        "tags": ["Event Core"],
+        "summary": "Add Integration",
+        "operationId": "add_integration_api_server__server_id__events__event_id__integrations_post",
+        "parameters": [
+          {
+            "name": "server_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Server Id"
+            }
+          },
+          {
+            "name": "event_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Event Id"
+            }
+          },
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddIntegrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDetailResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/server/{server_id}/events/{event_id}/integrations/{integration_id}": {
+      "delete": {
+        "tags": ["Event Core"],
+        "summary": "Remove Integration",
+        "operationId": "remove_integration_api_server__server_id__events__event_id__integrations__integration_id__delete",
+        "parameters": [
+          {
+            "name": "server_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Server Id"
+            }
+          },
+          {
+            "name": "event_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Event Id"
+            }
+          },
+          {
+            "name": "integration_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Integration Id"
+            }
+          },
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDetailResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/server/{server_id}/events/{event_id}/roles": {
+      "post": {
+        "tags": ["Event Core"],
+        "summary": "Add Game Role",
+        "operationId": "add_game_role_api_server__server_id__events__event_id__roles_post",
+        "parameters": [
+          {
+            "name": "server_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Server Id"
+            }
+          },
+          {
+            "name": "event_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Event Id"
+            }
+          },
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddGameRoleRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDetailResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/server/{server_id}/events/{event_id}/roles/{selected_role_id}": {
+      "patch": {
+        "tags": ["Event Core"],
+        "summary": "Update Game Role",
+        "operationId": "update_game_role_api_server__server_id__events__event_id__roles__selected_role_id__patch",
+        "parameters": [
+          {
+            "name": "server_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Server Id"
+            }
+          },
+          {
+            "name": "event_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Event Id"
+            }
+          },
+          {
+            "name": "selected_role_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Selected Role Id"
+            }
+          },
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGameRoleRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDetailResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Event Core"],
+        "summary": "Remove Game Role",
+        "operationId": "remove_game_role_api_server__server_id__events__event_id__roles__selected_role_id__delete",
+        "parameters": [
+          {
+            "name": "server_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Server Id"
+            }
+          },
+          {
+            "name": "event_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Event Id"
+            }
+          },
+          {
+            "name": "selected_role_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Selected Role Id"
+            }
+          },
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDetailResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/server/{server_id}/events/{event_id}/organizers": {
       "get": {
         "tags": ["Event Organizer"],
@@ -5275,9 +5575,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "title": "Response Submit Application Api Server  Server Id  Events  Event Id  Applications Post"
+                  "$ref": "#/components/schemas/SubmitApplicationResponse"
                 }
               }
             }
@@ -5336,6 +5634,26 @@
             }
           },
           {
+            "name": "sort_by",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "created_at",
+              "title": "Sort By"
+            }
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "desc",
+              "title": "Sort Order"
+            }
+          },
+          {
             "name": "page",
             "in": "query",
             "required": false,
@@ -5380,8 +5698,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "additionalProperties": true
+                    "$ref": "#/components/schemas/ApplicationListItemResponse"
                   },
                   "title": "Response List Applications Api Server  Server Id  Events  Event Id  Applications Get"
                 }
@@ -5450,9 +5767,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "title": "Response Get Application Api Server  Server Id  Events Applications  Application Id  Get"
+                  "$ref": "#/components/schemas/ApplicationDetailResponse"
                 }
               }
             }
@@ -5529,9 +5844,390 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "title": "Response Review Application Api Server  Server Id  Events Applications  Application Id  Review Patch"
+                  "$ref": "#/components/schemas/ReviewApplicationResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/server/{server_id}/events/{event_id}/applications/form": {
+      "get": {
+        "tags": ["Event Application"],
+        "summary": "Get Application Form Settings",
+        "operationId": "get_application_form_settings_api_server__server_id__events__event_id__applications_form_get",
+        "parameters": [
+          {
+            "name": "server_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Server Id"
+            }
+          },
+          {
+            "name": "event_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Event Id"
+            }
+          },
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplicationFormSettingsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/server/{server_id}/events/{event_id}/applications/fields": {
+      "post": {
+        "tags": ["Event Application"],
+        "summary": "Add Custom Field",
+        "operationId": "add_custom_field_api_server__server_id__events__event_id__applications_fields_post",
+        "parameters": [
+          {
+            "name": "server_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Server Id"
+            }
+          },
+          {
+            "name": "event_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Event Id"
+            }
+          },
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCustomFieldRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDetailResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/server/{server_id}/events/{event_id}/applications/fields/{field_id}": {
+      "patch": {
+        "tags": ["Event Application"],
+        "summary": "Update Custom Field",
+        "operationId": "update_custom_field_api_server__server_id__events__event_id__applications_fields__field_id__patch",
+        "parameters": [
+          {
+            "name": "server_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Server Id"
+            }
+          },
+          {
+            "name": "event_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Event Id"
+            }
+          },
+          {
+            "name": "field_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Field Id"
+            }
+          },
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCustomFieldRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDetailResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Event Application"],
+        "summary": "Remove Custom Field",
+        "operationId": "remove_custom_field_api_server__server_id__events__event_id__applications_fields__field_id__delete",
+        "parameters": [
+          {
+            "name": "server_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Server Id"
+            }
+          },
+          {
+            "name": "event_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Event Id"
+            }
+          },
+          {
+            "name": "field_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Field Id"
+            }
+          },
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDetailResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/server/{server_id}/events/{event_id}/applications/time_settings": {
+      "patch": {
+        "tags": ["Event Application"],
+        "summary": "Update Time Settings",
+        "operationId": "update_time_settings_api_server__server_id__events__event_id__applications_time_settings_patch",
+        "parameters": [
+          {
+            "name": "server_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Server Id"
+            }
+          },
+          {
+            "name": "event_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Event Id"
+            }
+          },
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTimeSettingsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDetailResponse"
                 }
               }
             }
@@ -6863,6 +7559,72 @@
   },
   "components": {
     "schemas": {
+      "AddCustomFieldRequest": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "is_private": {
+            "type": "boolean",
+            "title": "Is Private",
+            "default": false
+          },
+          "is_required": {
+            "type": "boolean",
+            "title": "Is Required",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": ["name"],
+        "title": "AddCustomFieldRequest"
+      },
+      "AddGameRoleRequest": {
+        "properties": {
+          "game_role_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Game Role Id"
+          },
+          "override_max_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Override Max Count"
+          },
+          "override_min_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Override Min Count"
+          }
+        },
+        "type": "object",
+        "required": ["game_role_id"],
+        "title": "AddGameRoleRequest"
+      },
+      "AddIntegrationRequest": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": ["name"],
+        "title": "AddIntegrationRequest"
+      },
       "AddOrganizerRequest": {
         "properties": {
           "member_id": {
@@ -6875,10 +7637,379 @@
         "required": ["member_id"],
         "title": "AddOrganizerRequest"
       },
+      "ApplicationCustomFieldResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "is_private": {
+            "type": "boolean",
+            "title": "Is Private"
+          },
+          "is_required": {
+            "type": "boolean",
+            "title": "Is Required"
+          }
+        },
+        "type": "object",
+        "required": ["id", "name", "is_private", "is_required"],
+        "title": "ApplicationCustomFieldResponse"
+      },
+      "ApplicationDetailResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "event_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Event Id"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Member Id"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ApplicationStatusResponse"
+          },
+          "role_priorities": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Role Priorities"
+          },
+          "filled_fields": {
+            "items": {
+              "$ref": "#/components/schemas/ApplicationFilledFieldResponse"
+            },
+            "type": "array",
+            "title": "Filled Fields"
+          },
+          "integrations": {
+            "items": {
+              "$ref": "#/components/schemas/ApplicationIntegrationResponse"
+            },
+            "type": "array",
+            "title": "Integrations"
+          },
+          "event_player_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Event Player Id"
+          }
+        },
+        "type": "object",
+        "required": ["id", "event_id", "member_id", "status"],
+        "title": "ApplicationDetailResponse"
+      },
+      "ApplicationFilledFieldResponse": {
+        "properties": {
+          "custom_field_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Custom Field Id"
+          },
+          "value": {
+            "type": "string",
+            "title": "Value"
+          }
+        },
+        "type": "object",
+        "required": ["custom_field_id", "value"],
+        "title": "ApplicationFilledFieldResponse"
+      },
+      "ApplicationFormFieldResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "is_private": {
+            "type": "boolean",
+            "title": "Is Private"
+          },
+          "is_required": {
+            "type": "boolean",
+            "title": "Is Required"
+          }
+        },
+        "type": "object",
+        "required": ["id", "name", "is_private", "is_required"],
+        "title": "ApplicationFormFieldResponse"
+      },
+      "ApplicationFormIntegrationResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": ["id", "name"],
+        "title": "ApplicationFormIntegrationResponse"
+      },
+      "ApplicationFormRoleResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "game_role_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Game Role Id"
+          },
+          "override_max_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Override Max Count"
+          },
+          "override_min_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Override Min Count"
+          }
+        },
+        "type": "object",
+        "required": ["id", "game_role_id"],
+        "title": "ApplicationFormRoleResponse"
+      },
+      "ApplicationFormSettingsResponse": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Event Id"
+          },
+          "event_name": {
+            "type": "string",
+            "title": "Event Name"
+          },
+          "required_integrations": {
+            "items": {
+              "$ref": "#/components/schemas/ApplicationFormIntegrationResponse"
+            },
+            "type": "array",
+            "title": "Required Integrations"
+          },
+          "available_roles": {
+            "items": {
+              "$ref": "#/components/schemas/ApplicationFormRoleResponse"
+            },
+            "type": "array",
+            "title": "Available Roles"
+          },
+          "custom_fields": {
+            "items": {
+              "$ref": "#/components/schemas/ApplicationFormFieldResponse"
+            },
+            "type": "array",
+            "title": "Custom Fields"
+          },
+          "time_settings": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ApplicationFormTimeSettingsResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": ["event_id", "event_name"],
+        "title": "ApplicationFormSettingsResponse"
+      },
+      "ApplicationFormTimeSettingsResponse": {
+        "properties": {
+          "start_time": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start Time"
+          },
+          "end_time": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End Time"
+          }
+        },
+        "type": "object",
+        "title": "ApplicationFormTimeSettingsResponse"
+      },
+      "ApplicationIntegrationResponse": {
+        "properties": {
+          "user_provider_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "User Provider Id"
+          }
+        },
+        "type": "object",
+        "required": ["user_provider_id"],
+        "title": "ApplicationIntegrationResponse"
+      },
+      "ApplicationListItemResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Member Id"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ApplicationStatusResponse"
+          },
+          "is_approved": {
+            "type": "boolean",
+            "title": "Is Approved"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "user": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ApplicationListItemUserResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": ["id", "member_id", "status", "is_approved", "created_at"],
+        "title": "ApplicationListItemResponse"
+      },
+      "ApplicationListItemUserResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "username": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Username"
+          }
+        },
+        "type": "object",
+        "required": ["id"],
+        "title": "ApplicationListItemUserResponse"
+      },
       "ApplicationStatus": {
         "type": "string",
         "enum": ["PENDING", "APPROVED", "REJECTED", "WAITLIST"],
         "title": "ApplicationStatus"
+      },
+      "ApplicationStatusResponse": {
+        "type": "string",
+        "enum": ["PENDING", "APPROVED", "REJECTED", "WAITLIST"],
+        "title": "ApplicationStatusResponse"
+      },
+      "ApplicationTimeSettingsResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "start_time": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start Time"
+          },
+          "end_time": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End Time"
+          }
+        },
+        "type": "object",
+        "required": ["id"],
+        "title": "ApplicationTimeSettingsResponse"
       },
       "Body_update_banner_api_server__server_id__banner_put": {
         "properties": {
@@ -7022,18 +8153,6 @@
           "allow_multiple_drafts": {
             "type": "boolean",
             "title": "Allow Multiple Drafts"
-          },
-          "rating_set_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Rating Set Id"
           }
         },
         "type": "object",
@@ -7144,6 +8263,10 @@
           "match_type": {
             "$ref": "#/components/schemas/EventMatchType"
           },
+          "use_application": {
+            "type": "boolean",
+            "title": "Use Application"
+          },
           "is_public": {
             "type": "boolean",
             "title": "Is Public"
@@ -7169,6 +8292,7 @@
           "id",
           "name",
           "match_type",
+          "use_application",
           "is_public",
           "team_size",
           "team_formation",
@@ -7229,6 +8353,48 @@
             "type": "string",
             "format": "uuid",
             "title": "Server Id"
+          },
+          "organizers": {
+            "items": {
+              "$ref": "#/components/schemas/OrganizerResponse"
+            },
+            "type": "array",
+            "title": "Organizers",
+            "default": []
+          },
+          "required_integrations": {
+            "items": {
+              "$ref": "#/components/schemas/RequiredIntegrationResponse"
+            },
+            "type": "array",
+            "title": "Required Integrations",
+            "default": []
+          },
+          "selected_game_roles": {
+            "items": {
+              "$ref": "#/components/schemas/SelectedGameRoleResponse"
+            },
+            "type": "array",
+            "title": "Selected Game Roles",
+            "default": []
+          },
+          "time_settings": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ApplicationTimeSettingsResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "custom_fields": {
+            "items": {
+              "$ref": "#/components/schemas/ApplicationCustomFieldResponse"
+            },
+            "type": "array",
+            "title": "Custom Fields",
+            "default": []
           }
         },
         "type": "object",
@@ -7715,6 +8881,23 @@
         "type": "object",
         "required": ["provider", "code"],
         "title": "OAuthConfirm"
+      },
+      "OrganizerResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Member Id"
+          }
+        },
+        "type": "object",
+        "required": ["id", "member_id"],
+        "title": "OrganizerResponse"
       },
       "PasswordConfirmRequest": {
         "properties": {
@@ -8222,6 +9405,22 @@
         "required": ["id", "nickname", "user_id"],
         "title": "ReducedMemberResponse"
       },
+      "RequiredIntegrationResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": ["id", "name"],
+        "title": "RequiredIntegrationResponse"
+      },
       "RestrictionResponse": {
         "properties": {
           "id": {
@@ -8247,6 +9446,33 @@
         "type": "object",
         "required": ["status"],
         "title": "ReviewApplicationRequest"
+      },
+      "ReviewApplicationResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ApplicationStatusResponse"
+          },
+          "player_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Player Id"
+          }
+        },
+        "type": "object",
+        "required": ["id", "status"],
+        "title": "ReviewApplicationResponse"
       },
       "RunTeamFormationRequest": {
         "properties": {
@@ -8306,6 +9532,45 @@
         },
         "type": "object",
         "title": "RunTeamFormationRequest"
+      },
+      "SelectedGameRoleResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "game_role_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Game Role Id"
+          },
+          "override_max_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Override Max Count"
+          },
+          "override_min_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Override Min Count"
+          }
+        },
+        "type": "object",
+        "required": ["id", "game_role_id"],
+        "title": "SelectedGameRoleResponse"
       },
       "ServerCreateRequest": {
         "properties": {
@@ -8813,6 +10078,37 @@
         "type": "object",
         "title": "SubmitApplicationRequest"
       },
+      "SubmitApplicationResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ApplicationStatusResponse"
+          },
+          "auto_approved": {
+            "type": "boolean",
+            "title": "Auto Approved"
+          },
+          "player_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Player Id"
+          }
+        },
+        "type": "object",
+        "required": ["id", "status", "auto_approved"],
+        "title": "SubmitApplicationResponse"
+      },
       "TeamFormation": {
         "type": "string",
         "enum": ["DRAFT", "BALANCE", "MANUAL"],
@@ -8987,6 +10283,45 @@
         ],
         "title": "TeamFormationVariantTeamResponse"
       },
+      "UpdateCustomFieldRequest": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "is_private": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Private"
+          },
+          "is_required": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Required"
+          }
+        },
+        "type": "object",
+        "title": "UpdateCustomFieldRequest"
+      },
       "UpdateEventRequest": {
         "properties": {
           "name": {
@@ -9063,22 +10398,38 @@
               }
             ],
             "title": "Allow Multiple Drafts"
-          },
-          "rating_set_id": {
+          }
+        },
+        "type": "object",
+        "title": "UpdateEventRequest"
+      },
+      "UpdateGameRoleRequest": {
+        "properties": {
+          "override_max_count": {
             "anyOf": [
               {
-                "type": "string",
-                "format": "uuid"
+                "type": "integer"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Rating Set Id"
+            "title": "Override Max Count"
+          },
+          "override_min_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Override Min Count"
           }
         },
         "type": "object",
-        "title": "UpdateEventRequest"
+        "title": "UpdateGameRoleRequest"
       },
       "UpdatePlayerStatusRequest": {
         "properties": {
@@ -9149,6 +10500,36 @@
         "type": "object",
         "required": ["name", "position"],
         "title": "UpdateServerRoleRequest"
+      },
+      "UpdateTimeSettingsRequest": {
+        "properties": {
+          "start_time": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start Time"
+          },
+          "end_time": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End Time"
+          }
+        },
+        "type": "object",
+        "title": "UpdateTimeSettingsRequest"
       },
       "UserModel": {
         "properties": {

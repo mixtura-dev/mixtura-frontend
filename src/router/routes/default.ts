@@ -5,6 +5,10 @@ const ServersPage = () => import('@/pages/server/ServersPage.vue')
 const ServersCreatePage = () => import('@/pages/server/ServersCreatePage.vue')
 const ServerOverviewPage = () => import('@/pages/server/overview/ServerOverviewPage.vue')
 const ServerEventsPage = () => import('@/pages/server/events/ServerEventsPage.vue')
+const ServerEventDetailPage = () => import('@/pages/server/events/ServerEventDetailPage.vue')
+const EventOverviewTab = () => import('@/pages/server/events/tabs/EventOverviewTab.vue')
+const EventApplicationsTab = () => import('@/pages/server/events/tabs/EventApplicationsTab.vue')
+const EventMatchesTab = () => import('@/pages/server/events/tabs/EventMatchesTab.vue')
 const SettingPage = () => import('@/pages/WorkspaceSettingsPage.vue')
 const BalancerPage = () => import('@/pages/BalancerPage.vue')
 const AccountPage = () => import('@/pages/AccountPage.vue')
@@ -34,6 +38,31 @@ export const defaultRoutes = {
           name: 'server-overview',
           component: ServerOverviewPage,
           meta: { title: 'Server Overview', requiresAuth: true },
+        },
+        {
+          path: 'events/:eventId',
+          component: ServerEventDetailPage,
+          children: [
+            { path: '', redirect: { name: 'server-event-overview' } },
+            {
+              path: 'overview',
+              name: 'server-event-overview',
+              component: EventOverviewTab,
+              meta: { title: 'Event Overview', requiresAuth: true },
+            },
+            {
+              path: 'applications',
+              name: 'server-event-applications',
+              component: EventApplicationsTab,
+              meta: { title: 'Event Applications', requiresAuth: true },
+            },
+            {
+              path: 'matches',
+              name: 'server-event-matches',
+              component: EventMatchesTab,
+              meta: { title: 'Event Matches', requiresAuth: true },
+            },
+          ],
         },
         {
           path: 'events',

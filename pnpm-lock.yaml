@@ -17,6 +17,9 @@ importers:
       '@tanstack/vue-query':
         specifier: ^5.85.5
         version: 5.90.3(vue@3.5.22(typescript@5.8.3))
+      '@tanstack/vue-table':
+        specifier: ^8.21.3
+        version: 8.21.3(vue@3.5.22(typescript@5.8.3))
       '@tanstack/vue-virtual':
         specifier: ^3.13.18
         version: 3.13.18(vue@3.5.22(typescript@5.8.3))
@@ -1067,6 +1070,10 @@ packages:
   '@tanstack/query-core@5.90.3':
     resolution: {integrity: sha512-HtPOnCwmx4dd35PfXU8jjkhwYrsHfuqgC8RCJIwWglmhIUIlzPP0ZcEkDAc+UtAWCiLm7T8rxeEfHZlz3hYMCA==}
 
+  '@tanstack/table-core@8.21.3':
+    resolution: {integrity: sha512-ldZXEhOBb8Is7xLs01fR3YEc3DERiz5silj8tnGkFZytt1abEvl/GhUmCE0PMLaMPTa3Jk4HbKmRlHmu+gCftg==}
+    engines: {node: '>=12'}
+
   '@tanstack/virtual-core@3.13.18':
     resolution: {integrity: sha512-Mx86Hqu1k39icq2Zusq+Ey2J6dDWTjDvEv43PJtRCoEYTLyfaPnxIQ6iy7YAOK0NV/qOEmZQ/uCufrppZxTgcg==}
 
@@ -1078,6 +1085,12 @@ packages:
     peerDependenciesMeta:
       '@vue/composition-api':
         optional: true
+
+  '@tanstack/vue-table@8.21.3':
+    resolution: {integrity: sha512-rusRyd77c5tDPloPskctMyPLFEQUeBzxdQ+2Eow4F7gDPlPOB1UnnhzfpdvqZ8ZyX2rRNGmqNnQWm87OI2OQPw==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      vue: '>=3.2'
 
   '@tanstack/vue-virtual@3.13.18':
     resolution: {integrity: sha512-6pT8HdHtTU5Z+t906cGdCroUNA5wHjFXsNss9gwk7QAr1VNZtz9IQCs2Nhx0gABK48c+OocHl2As+TMg8+Hy4A==}
@@ -4855,6 +4868,8 @@ snapshots:
 
   '@tanstack/query-core@5.90.3': {}
 
+  '@tanstack/table-core@8.21.3': {}
+
   '@tanstack/virtual-core@3.13.18': {}
 
   '@tanstack/vue-query@5.90.3(vue@3.5.22(typescript@5.8.3))':
@@ -4864,6 +4879,11 @@ snapshots:
       '@vue/devtools-api': 6.6.4
       vue: 3.5.22(typescript@5.8.3)
       vue-demi: 0.14.10(vue@3.5.22(typescript@5.8.3))
+
+  '@tanstack/vue-table@8.21.3(vue@3.5.22(typescript@5.8.3))':
+    dependencies:
+      '@tanstack/table-core': 8.21.3
+      vue: 3.5.22(typescript@5.8.3)
 
   '@tanstack/vue-virtual@3.13.18(vue@3.5.22(typescript@5.8.3))':
     dependencies:
