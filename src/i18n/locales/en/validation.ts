@@ -1,4 +1,5 @@
 export default {
+  required: 'Required',
   token: {
     invalid: 'Code must be 6 digits',
   },

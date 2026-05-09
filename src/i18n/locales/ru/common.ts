@@ -1,4 +1,6 @@
 export default {
+  yes: 'Да',
+  no: 'Нет',
   or: 'или',
   error: 'Ошибка',
   save: 'Сохранить',

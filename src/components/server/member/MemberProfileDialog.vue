@@ -44,7 +44,7 @@
 
             <div class="mt-2 flex flex-wrap gap-1.5">
               <DropdownMenu v-if="canChangeRole && !isMe && member.user_id">
-                <DropdownMenuTrigger as-child>
+                <DropdownMenuTrigger as-child :disabled="availableServerRoles.length <= 0">
                   <Badge variant="outline" class="cursor-pointer hover:bg-muted">
                     <Shield class="mr-1 size-3" />
                     {{ member.server_role?.name ?? 'No Role' }}

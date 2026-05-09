@@ -1,4 +1,6 @@
 export default {
+  yes: 'Yes',
+  no: 'No',
   or: 'or',
   error: 'Error',
   save: 'Save',

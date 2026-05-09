@@ -912,28 +912,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List Public Events */
-        get: operations["list_public_events_api_server__server_id__events__get"];
+        /** List Events */
+        get: operations["list_events_api_server__server_id__events__get"];
         put?: never;
         /** Create Event */
         post: operations["create_event_api_server__server_id__events__post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/server/{server_id}/events/private": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List Private Events */
-        get: operations["list_private_events_api_server__server_id__events_private_get"];
-        put?: never;
-        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1043,6 +1026,75 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/server/{server_id}/events/{event_id}/integrations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Integration */
+        post: operations["add_integration_api_server__server_id__events__event_id__integrations_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/server/{server_id}/events/{event_id}/integrations/{integration_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove Integration */
+        delete: operations["remove_integration_api_server__server_id__events__event_id__integrations__integration_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/server/{server_id}/events/{event_id}/roles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Game Role */
+        post: operations["add_game_role_api_server__server_id__events__event_id__roles_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/server/{server_id}/events/{event_id}/roles/{selected_role_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove Game Role */
+        delete: operations["remove_game_role_api_server__server_id__events__event_id__roles__selected_role_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Game Role */
+        patch: operations["update_game_role_api_server__server_id__events__event_id__roles__selected_role_id__patch"];
+        trace?: never;
+    };
     "/api/server/{server_id}/events/{event_id}/organizers": {
         parameters: {
             query?: never;
@@ -1128,6 +1180,75 @@ export interface paths {
         head?: never;
         /** Review Application */
         patch: operations["review_application_api_server__server_id__events_applications__application_id__review_patch"];
+        trace?: never;
+    };
+    "/api/server/{server_id}/events/{event_id}/applications/form": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Application Form Settings */
+        get: operations["get_application_form_settings_api_server__server_id__events__event_id__applications_form_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/server/{server_id}/events/{event_id}/applications/fields": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Custom Field */
+        post: operations["add_custom_field_api_server__server_id__events__event_id__applications_fields_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/server/{server_id}/events/{event_id}/applications/fields/{field_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove Custom Field */
+        delete: operations["remove_custom_field_api_server__server_id__events__event_id__applications_fields__field_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Custom Field */
+        patch: operations["update_custom_field_api_server__server_id__events__event_id__applications_fields__field_id__patch"];
+        trace?: never;
+    };
+    "/api/server/{server_id}/events/{event_id}/applications/time_settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Time Settings */
+        patch: operations["update_time_settings_api_server__server_id__events__event_id__applications_time_settings_patch"];
         trace?: never;
     };
     "/api/server/{server_id}/events/{event_id}/players": {
@@ -1378,6 +1499,38 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AddCustomFieldRequest */
+        AddCustomFieldRequest: {
+            /** Name */
+            name: string;
+            /**
+             * Is Private
+             * @default false
+             */
+            is_private: boolean;
+            /**
+             * Is Required
+             * @default false
+             */
+            is_required: boolean;
+        };
+        /** AddGameRoleRequest */
+        AddGameRoleRequest: {
+            /**
+             * Game Role Id
+             * Format: uuid
+             */
+            game_role_id: string;
+            /** Override Max Count */
+            override_max_count?: number | null;
+            /** Override Min Count */
+            override_min_count?: number | null;
+        };
+        /** AddIntegrationRequest */
+        AddIntegrationRequest: {
+            /** Name */
+            name: string;
+        };
         /** AddOrganizerRequest */
         AddOrganizerRequest: {
             /**
@@ -1386,11 +1539,186 @@ export interface components {
              */
             member_id: string;
         };
+        /** ApplicationCustomFieldResponse */
+        ApplicationCustomFieldResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /** Is Private */
+            is_private: boolean;
+            /** Is Required */
+            is_required: boolean;
+        };
+        /** ApplicationDetailResponse */
+        ApplicationDetailResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Event Id
+             * Format: uuid
+             */
+            event_id: string;
+            /**
+             * Member Id
+             * Format: uuid
+             */
+            member_id: string;
+            status: components["schemas"]["ApplicationStatusResponse"];
+            /** Role Priorities */
+            role_priorities?: {
+                [key: string]: number;
+            };
+            /** Filled Fields */
+            filled_fields?: components["schemas"]["ApplicationFilledFieldResponse"][];
+            /** Integrations */
+            integrations?: components["schemas"]["ApplicationIntegrationResponse"][];
+            /** Event Player Id */
+            event_player_id?: string | null;
+        };
+        /** ApplicationFilledFieldResponse */
+        ApplicationFilledFieldResponse: {
+            /**
+             * Custom Field Id
+             * Format: uuid
+             */
+            custom_field_id: string;
+            /** Value */
+            value: string;
+        };
+        /** ApplicationFormFieldResponse */
+        ApplicationFormFieldResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /** Is Private */
+            is_private: boolean;
+            /** Is Required */
+            is_required: boolean;
+        };
+        /** ApplicationFormIntegrationResponse */
+        ApplicationFormIntegrationResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+        };
+        /** ApplicationFormRoleResponse */
+        ApplicationFormRoleResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Game Role Id
+             * Format: uuid
+             */
+            game_role_id: string;
+            /** Override Max Count */
+            override_max_count?: number | null;
+            /** Override Min Count */
+            override_min_count?: number | null;
+        };
+        /** ApplicationFormSettingsResponse */
+        ApplicationFormSettingsResponse: {
+            /**
+             * Event Id
+             * Format: uuid
+             */
+            event_id: string;
+            /** Event Name */
+            event_name: string;
+            /** Required Integrations */
+            required_integrations?: components["schemas"]["ApplicationFormIntegrationResponse"][];
+            /** Available Roles */
+            available_roles?: components["schemas"]["ApplicationFormRoleResponse"][];
+            /** Custom Fields */
+            custom_fields?: components["schemas"]["ApplicationFormFieldResponse"][];
+            time_settings?: components["schemas"]["ApplicationFormTimeSettingsResponse"] | null;
+        };
+        /** ApplicationFormTimeSettingsResponse */
+        ApplicationFormTimeSettingsResponse: {
+            /** Start Time */
+            start_time?: string | null;
+            /** End Time */
+            end_time?: string | null;
+        };
+        /** ApplicationIntegrationResponse */
+        ApplicationIntegrationResponse: {
+            /**
+             * User Provider Id
+             * Format: uuid
+             */
+            user_provider_id: string;
+        };
+        /** ApplicationListItemResponse */
+        ApplicationListItemResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Member Id
+             * Format: uuid
+             */
+            member_id: string;
+            status: components["schemas"]["ApplicationStatusResponse"];
+            /** Is Approved */
+            is_approved: boolean;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            user?: components["schemas"]["ApplicationListItemUserResponse"] | null;
+        };
+        /** ApplicationListItemUserResponse */
+        ApplicationListItemUserResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Username */
+            username?: string | null;
+        };
         /**
          * ApplicationStatus
          * @enum {string}
          */
         ApplicationStatus: "PENDING" | "APPROVED" | "REJECTED" | "WAITLIST";
+        /**
+         * ApplicationStatusResponse
+         * @enum {string}
+         */
+        ApplicationStatusResponse: "PENDING" | "APPROVED" | "REJECTED" | "WAITLIST";
+        /** ApplicationTimeSettingsResponse */
+        ApplicationTimeSettingsResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Start Time */
+            start_time?: string | null;
+            /** End Time */
+            end_time?: string | null;
+        };
         /** Body_update_banner_api_server__server_id__banner_put */
         Body_update_banner_api_server__server_id__banner_put: {
             /** Banner */
@@ -1452,8 +1780,6 @@ export interface components {
             team_formation: components["schemas"]["TeamFormation"];
             /** Allow Multiple Drafts */
             allow_multiple_drafts: boolean;
-            /** Rating Set Id */
-            rating_set_id?: string | null;
         };
         /** CreateServerRoleRequest */
         CreateServerRoleRequest: {
@@ -1508,6 +1834,8 @@ export interface components {
             /** Name */
             name: string;
             match_type: components["schemas"]["EventMatchType"];
+            /** Use Application */
+            use_application: boolean;
             /** Is Public */
             is_public: boolean;
             /** Team Size */
@@ -1547,6 +1875,27 @@ export interface components {
              * Format: uuid
              */
             server_id: string;
+            /**
+             * Organizers
+             * @default []
+             */
+            organizers: components["schemas"]["OrganizerResponse"][];
+            /**
+             * Required Integrations
+             * @default []
+             */
+            required_integrations: components["schemas"]["RequiredIntegrationResponse"][];
+            /**
+             * Selected Game Roles
+             * @default []
+             */
+            selected_game_roles: components["schemas"]["SelectedGameRoleResponse"][];
+            time_settings?: components["schemas"]["ApplicationTimeSettingsResponse"] | null;
+            /**
+             * Custom Fields
+             * @default []
+             */
+            custom_fields: components["schemas"]["ApplicationCustomFieldResponse"][];
         };
         /**
          * EventMatchType
@@ -1761,6 +2110,19 @@ export interface components {
             provider: string;
             /** Code */
             code: string;
+        };
+        /** OrganizerResponse */
+        OrganizerResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Member Id
+             * Format: uuid
+             */
+            member_id: string;
         };
         /** PasswordConfirmRequest */
         PasswordConfirmRequest: {
@@ -1977,6 +2339,16 @@ export interface components {
             /** User Id */
             user_id: string | null;
         };
+        /** RequiredIntegrationResponse */
+        RequiredIntegrationResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+        };
         /** RestrictionResponse */
         RestrictionResponse: {
             /**
@@ -1990,6 +2362,17 @@ export interface components {
         /** ReviewApplicationRequest */
         ReviewApplicationRequest: {
             status: components["schemas"]["ApplicationStatus"];
+        };
+        /** ReviewApplicationResponse */
+        ReviewApplicationResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            status: components["schemas"]["ApplicationStatusResponse"];
+            /** Player Id */
+            player_id?: string | null;
         };
         /** RunTeamFormationRequest */
         RunTeamFormationRequest: {
@@ -2006,6 +2389,23 @@ export interface components {
             } | null;
             /** Team Count */
             team_count?: number | null;
+        };
+        /** SelectedGameRoleResponse */
+        SelectedGameRoleResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Game Role Id
+             * Format: uuid
+             */
+            game_role_id: string;
+            /** Override Max Count */
+            override_max_count?: number | null;
+            /** Override Min Count */
+            override_min_count?: number | null;
         };
         /** ServerCreateRequest */
         ServerCreateRequest: {
@@ -2224,6 +2624,19 @@ export interface components {
                 [key: string]: number;
             };
         };
+        /** SubmitApplicationResponse */
+        SubmitApplicationResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            status: components["schemas"]["ApplicationStatusResponse"];
+            /** Auto Approved */
+            auto_approved: boolean;
+            /** Player Id */
+            player_id?: string | null;
+        };
         /**
          * TeamFormation
          * @enum {string}
@@ -2318,6 +2731,15 @@ export interface components {
             /** Calculated Ratings */
             calculated_ratings: number[];
         };
+        /** UpdateCustomFieldRequest */
+        UpdateCustomFieldRequest: {
+            /** Name */
+            name?: string | null;
+            /** Is Private */
+            is_private?: boolean | null;
+            /** Is Required */
+            is_required?: boolean | null;
+        };
         /** UpdateEventRequest */
         UpdateEventRequest: {
             /** Name */
@@ -2332,8 +2754,13 @@ export interface components {
             team_formation?: components["schemas"]["TeamFormation"] | null;
             /** Allow Multiple Drafts */
             allow_multiple_drafts?: boolean | null;
-            /** Rating Set Id */
-            rating_set_id?: string | null;
+        };
+        /** UpdateGameRoleRequest */
+        UpdateGameRoleRequest: {
+            /** Override Max Count */
+            override_max_count?: number | null;
+            /** Override Min Count */
+            override_min_count?: number | null;
         };
         /** UpdatePlayerStatusRequest */
         UpdatePlayerStatusRequest: {
@@ -2363,6 +2790,13 @@ export interface components {
             name: string | null;
             /** Position */
             position: number | null;
+        };
+        /** UpdateTimeSettingsRequest */
+        UpdateTimeSettingsRequest: {
+            /** Start Time */
+            start_time?: string | null;
+            /** End Time */
+            end_time?: string | null;
         };
         /** UserModel */
         UserModel: {
@@ -4787,17 +5221,16 @@ export interface operations {
             };
         };
     };
-    list_public_events_api_server__server_id__events__get: {
+    list_events_api_server__server_id__events__get: {
         parameters: {
-            query?: {
-                page?: number;
-                page_size?: number;
-            };
+            query?: never;
             header?: never;
             path: {
                 server_id: string;
             };
-            cookie?: never;
+            cookie?: {
+                token?: string | null;
+            };
         };
         requestBody?: never;
         responses: {
@@ -4844,43 +5277,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EventCardResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_private_events_api_server__server_id__events_private_get: {
-        parameters: {
-            query?: {
-                page?: number;
-                page_size?: number;
-            };
-            header?: never;
-            path: {
-                server_id: string;
-            };
-            cookie?: {
-                token?: string | null;
-            };
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EventDetailResponse"][];
+                    "application/json": components["schemas"]["EventDetailResponse"];
                 };
             };
             /** @description Validation Error */
@@ -4914,7 +5311,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EventCardResponse"] | components["schemas"]["EventDetailResponse"];
+                    "application/json": components["schemas"]["EventDetailResponse"];
                 };
             };
             /** @description Validation Error */
@@ -5136,6 +5533,191 @@ export interface operations {
             };
         };
     };
+    add_integration_api_server__server_id__events__event_id__integrations_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                server_id: string;
+                event_id: string;
+            };
+            cookie?: {
+                token?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddIntegrationRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventDetailResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remove_integration_api_server__server_id__events__event_id__integrations__integration_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                server_id: string;
+                event_id: string;
+                integration_id: string;
+            };
+            cookie?: {
+                token?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventDetailResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_game_role_api_server__server_id__events__event_id__roles_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                server_id: string;
+                event_id: string;
+            };
+            cookie?: {
+                token?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddGameRoleRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventDetailResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remove_game_role_api_server__server_id__events__event_id__roles__selected_role_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                server_id: string;
+                event_id: string;
+                selected_role_id: string;
+            };
+            cookie?: {
+                token?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventDetailResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_game_role_api_server__server_id__events__event_id__roles__selected_role_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                server_id: string;
+                event_id: string;
+                selected_role_id: string;
+            };
+            cookie?: {
+                token?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateGameRoleRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventDetailResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     list_organizers_api_server__server_id__events__event_id__organizers_get: {
         parameters: {
             query?: {
@@ -5254,6 +5836,8 @@ export interface operations {
         parameters: {
             query?: {
                 status?: components["schemas"]["ApplicationStatus"] | null;
+                sort_by?: string;
+                sort_order?: string;
                 page?: number;
                 page_size?: number;
             };
@@ -5274,9 +5858,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["ApplicationListItemResponse"][];
                 };
             };
             /** @description Validation Error */
@@ -5314,9 +5896,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
+                    "application/json": components["schemas"]["SubmitApplicationResponse"];
                 };
             };
             /** @description Validation Error */
@@ -5350,9 +5930,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
+                    "application/json": components["schemas"]["ApplicationDetailResponse"];
                 };
             };
             /** @description Validation Error */
@@ -5390,9 +5968,191 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
+                    "application/json": components["schemas"]["ReviewApplicationResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_application_form_settings_api_server__server_id__events__event_id__applications_form_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                server_id: string;
+                event_id: string;
+            };
+            cookie?: {
+                token?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApplicationFormSettingsResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_custom_field_api_server__server_id__events__event_id__applications_fields_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                server_id: string;
+                event_id: string;
+            };
+            cookie?: {
+                token?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddCustomFieldRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventDetailResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remove_custom_field_api_server__server_id__events__event_id__applications_fields__field_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                server_id: string;
+                event_id: string;
+                field_id: string;
+            };
+            cookie?: {
+                token?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventDetailResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_custom_field_api_server__server_id__events__event_id__applications_fields__field_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                server_id: string;
+                event_id: string;
+                field_id: string;
+            };
+            cookie?: {
+                token?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateCustomFieldRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventDetailResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_time_settings_api_server__server_id__events__event_id__applications_time_settings_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                server_id: string;
+                event_id: string;
+            };
+            cookie?: {
+                token?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateTimeSettingsRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventDetailResponse"];
                 };
             };
             /** @description Validation Error */

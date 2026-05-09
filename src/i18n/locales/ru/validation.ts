@@ -1,4 +1,5 @@
 export default {
+  required: 'Обязательное поле',
   token: {
     invalid: 'Код должен содержать 6 цифр',
   },
