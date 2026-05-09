@@ -1,9 +1,10 @@
-import ServerPage from '@/pages/server/ServerPage.vue'
-
+const ServerPage = () => import('@/pages/server/ServerPage.vue')
 const DefaultLayout = () => import('@/layouts/DefaultLayout.vue')
 const HomePage = () => import('@/pages/HomePage.vue')
 const ServersPage = () => import('@/pages/server/ServersPage.vue')
 const ServersCreatePage = () => import('@/pages/server/ServersCreatePage.vue')
+const ServerOverviewPage = () => import('@/pages/server/overview/ServerOverviewPage.vue')
+const ServerEventsPage = () => import('@/pages/server/events/ServerEventsPage.vue')
 const SettingPage = () => import('@/pages/WorkspaceSettingsPage.vue')
 const BalancerPage = () => import('@/pages/BalancerPage.vue')
 const AccountPage = () => import('@/pages/AccountPage.vue')
@@ -26,6 +27,21 @@ export const defaultRoutes = {
     {
       path: 'servers/:serverId',
       component: ServerPage,
+      children: [
+        { path: '', redirect: { name: 'server-overview' } },
+        {
+          path: 'overview',
+          name: 'server-overview',
+          component: ServerOverviewPage,
+          meta: { title: 'Server Overview', requiresAuth: true },
+        },
+        {
+          path: 'events',
+          name: 'server-events',
+          component: ServerEventsPage,
+          meta: { title: 'Server Events', requiresAuth: true },
+        },
+      ],
     },
     { path: 'settings', component: SettingPage, meta: { title: 'Settings', requiresAuth: true } },
     { path: 'account', component: AccountPage, meta: { title: 'Account', requiresAuth: true } },
