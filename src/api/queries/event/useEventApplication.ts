@@ -1,10 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { queryKeys } from './keys'
 import {
+  addCustomField,
+  deleteCustomField,
   getApplication,
+  getApplicationForm,
   listApplications,
   reviewApplication,
   submitApplication,
+  updateCustomField,
+  updateTimeSettings,
 } from '@/api/endpoints/event/eventApplication'
 import type { RequestBody } from '@/types/auth'
 import type { ServerID } from '@/types/user'
@@ -96,6 +101,116 @@ export function useReviewApplicationMutation() {
       queryClient.invalidateQueries({
         queryKey: queryKeys.events.applications.list(serverId, eventId),
       })
+    },
+  })
+}
+
+export function useApplicationFormQuery(
+  serverId: MaybeRefOrGetter<ServerID>,
+  eventId: MaybeRefOrGetter<string>,
+) {
+  const sId = computed(() => toValue(serverId))
+  const eId = computed(() => toValue(eventId))
+
+  return useQuery({
+    queryKey: computed(() => queryKeys.events.applications.form(sId.value, eId.value)),
+    queryFn: () => getApplicationForm(sId.value, eId.value),
+    enabled: computed(() => !!sId.value && !!eId.value),
+  })
+}
+
+export function useUpdateTimeSettingsMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({
+      serverId,
+      eventId,
+      data,
+    }: {
+      serverId: ServerID
+      eventId: string
+      data: RequestBody<
+        '/api/server/{server_id}/events/{event_id}/applications/time_settings',
+        'patch'
+      >
+    }) => updateTimeSettings(serverId, eventId, data),
+    onSuccess: (_, { serverId, eventId }) => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.events.applications.form(serverId, eventId),
+      })
+      queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(serverId, eventId) })
+    },
+  })
+}
+
+export function useAddCustomFieldMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({
+      serverId,
+      eventId,
+      data,
+    }: {
+      serverId: ServerID
+      eventId: string
+      data: RequestBody<'/api/server/{server_id}/events/{event_id}/applications/fields', 'post'>
+    }) => addCustomField(serverId, eventId, data),
+    onSuccess: (_, { serverId, eventId }) => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.events.applications.form(serverId, eventId),
+      })
+      queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(serverId, eventId) })
+    },
+  })
+}
+
+export function useUpdateCustomFieldMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({
+      serverId,
+      eventId,
+      fieldId,
+      data,
+    }: {
+      serverId: ServerID
+      eventId: string
+      fieldId: string
+      data: RequestBody<
+        '/api/server/{server_id}/events/{event_id}/applications/fields/{field_id}',
+        'patch'
+      >
+    }) => updateCustomField(serverId, eventId, fieldId, data),
+    onSuccess: (_, { serverId, eventId }) => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.events.applications.form(serverId, eventId),
+      })
+      queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(serverId, eventId) })
+    },
+  })
+}
+
+export function useDeleteCustomFieldMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({
+      serverId,
+      eventId,
+      fieldId,
+    }: {
+      serverId: ServerID
+      eventId: string
+      fieldId: string
+    }) => deleteCustomField(serverId, eventId, fieldId),
+    onSuccess: (_, { serverId, eventId }) => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.events.applications.form(serverId, eventId),
+      })
+      queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(serverId, eventId) })
     },
   })
 }

@@ -11,6 +11,8 @@ export const queryKeys = {
         [...queryKeys.events.detail(serverId, eventId), 'applications'] as const,
       detail: (serverId: string, applicationId: string) =>
         [...queryKeys.events.all, 'applications', serverId, applicationId] as const,
+      form: (serverId: string, eventId: string) =>
+        [...queryKeys.events.detail(serverId, eventId), 'applicationForm'] as const,
     },
     organizers: {
       list: (serverId: string, eventId: string) =>

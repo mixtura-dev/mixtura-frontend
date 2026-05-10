@@ -2,21 +2,14 @@ import { baseApi } from '@/api/axios'
 import type { RequestBody, SuccessResponse } from '@/types/auth'
 import type { ServerID } from '@/types/user'
 
-export const eventHealth = (): Promise<
-  SuccessResponse<'/api/server/events/health', 'get'>
-> => baseApi.get('/api/server/events/health').then((res) => res.data)
+export const eventHealth = (): Promise<SuccessResponse<'/api/server/events/health', 'get'>> =>
+  baseApi.get('/api/server/events/health').then((res) => res.data)
 
 export const listPublicEvents = (
   serverId: ServerID,
   params?: { page?: number; page_size?: number },
 ): Promise<SuccessResponse<'/api/server/{server_id}/events/', 'get'>> =>
   baseApi.get(`/api/server/${serverId}/events/`, { params }).then((res) => res.data)
-
-export const listPrivateEvents = (
-  serverId: ServerID,
-  params?: { page?: number; page_size?: number },
-): Promise<SuccessResponse<'/api/server/{server_id}/events/private', 'get'>> =>
-  baseApi.get(`/api/server/${serverId}/events/private`, { params }).then((res) => res.data)
 
 export const createEvent = (
   serverId: ServerID,
@@ -46,7 +39,9 @@ export const activateEvent = (
 export const openRegistration = (
   serverId: ServerID,
   eventId: string,
-): Promise<SuccessResponse<'/api/server/{server_id}/events/{event_id}/registration/open', 'post'>> =>
+): Promise<
+  SuccessResponse<'/api/server/{server_id}/events/{event_id}/registration/open', 'post'>
+> =>
   baseApi
     .post(`/api/server/${serverId}/events/${eventId}/registration/open`)
     .then((res) => res.data)
@@ -56,7 +51,10 @@ export const closeRegistration = (
   eventId: string,
 ): Promise<
   SuccessResponse<'/api/server/{server_id}/events/{event_id}/registration/close', 'post'>
-> => baseApi.post(`/api/server/${serverId}/events/${eventId}/registration/close`).then((res) => res.data)
+> =>
+  baseApi
+    .post(`/api/server/${serverId}/events/${eventId}/registration/close`)
+    .then((res) => res.data)
 
 export const cancelEvent = (
   serverId: ServerID,
@@ -69,3 +67,56 @@ export const completeEvent = (
   eventId: string,
 ): Promise<SuccessResponse<'/api/server/{server_id}/events/{event_id}/complete', 'post'>> =>
   baseApi.post(`/api/server/${serverId}/events/${eventId}/complete`).then((res) => res.data)
+
+export const addIntegration = (
+  serverId: ServerID,
+  eventId: string,
+  data: RequestBody<'/api/server/{server_id}/events/{event_id}/integrations', 'post'>,
+): Promise<SuccessResponse<'/api/server/{server_id}/events/{event_id}/integrations', 'post'>> =>
+  baseApi
+    .post(`/api/server/${serverId}/events/${eventId}/integrations`, data)
+    .then((res) => res.data)
+
+export const removeIntegration = (
+  serverId: ServerID,
+  eventId: string,
+  integrationId: string,
+): Promise<
+  SuccessResponse<
+    '/api/server/{server_id}/events/{event_id}/integrations/{integration_id}',
+    'delete'
+  >
+> =>
+  baseApi
+    .delete(`/api/server/${serverId}/events/${eventId}/integrations/${integrationId}`)
+    .then((res) => res.data)
+
+export const addGameRole = (
+  serverId: ServerID,
+  eventId: string,
+  data: RequestBody<'/api/server/{server_id}/events/{event_id}/roles', 'post'>,
+): Promise<SuccessResponse<'/api/server/{server_id}/events/{event_id}/roles', 'post'>> =>
+  baseApi.post(`/api/server/${serverId}/events/${eventId}/roles`, data).then((res) => res.data)
+
+export const updateGameRole = (
+  serverId: ServerID,
+  eventId: string,
+  selectedRoleId: string,
+  data: RequestBody<'/api/server/{server_id}/events/{event_id}/roles/{selected_role_id}', 'patch'>,
+): Promise<
+  SuccessResponse<'/api/server/{server_id}/events/{event_id}/roles/{selected_role_id}', 'patch'>
+> =>
+  baseApi
+    .patch(`/api/server/${serverId}/events/${eventId}/roles/${selectedRoleId}`, data)
+    .then((res) => res.data)
+
+export const removeGameRole = (
+  serverId: ServerID,
+  eventId: string,
+  selectedRoleId: string,
+): Promise<
+  SuccessResponse<'/api/server/{server_id}/events/{event_id}/roles/{selected_role_id}', 'delete'>
+> =>
+  baseApi
+    .delete(`/api/server/${serverId}/events/${eventId}/roles/${selectedRoleId}`)
+    .then((res) => res.data)

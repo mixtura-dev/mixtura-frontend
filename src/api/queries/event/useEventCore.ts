@@ -2,16 +2,20 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { queryKeys } from './keys'
 import {
   activateEvent,
+  addGameRole,
+  addIntegration,
   cancelEvent,
   closeRegistration,
   completeEvent,
   createEvent,
   eventHealth,
   getEvent,
-  listPrivateEvents,
   listPublicEvents,
   openRegistration,
+  removeGameRole,
+  removeIntegration,
   updateEvent,
+  updateGameRole,
 } from '@/api/endpoints/event/eventCore'
 import type { RequestBody } from '@/types/auth'
 import type { ServerID } from '@/types/user'
@@ -33,16 +37,6 @@ export function usePublicEventsQuery(serverId: MaybeRefOrGetter<ServerID>) {
   return useQuery({
     queryKey: computed(() => queryKeys.events.list(id.value)),
     queryFn: () => listPublicEvents(id.value),
-    enabled: () => !!toValue(serverId),
-  })
-}
-
-export function usePrivateEventsQuery(serverId: MaybeRefOrGetter<ServerID>) {
-  const id = computed(() => toValue(serverId))
-
-  return useQuery({
-    queryKey: computed(() => queryKeys.events.private(id.value)),
-    queryFn: () => listPrivateEvents(id.value),
     enabled: () => !!toValue(serverId),
   })
 }
@@ -162,6 +156,106 @@ export function useCompleteEventMutation() {
       queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(serverId, eventId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.events.list(serverId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.events.private(serverId) })
+    },
+  })
+}
+
+export function useAddIntegrationMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({
+      serverId,
+      eventId,
+      data,
+    }: {
+      serverId: ServerID
+      eventId: string
+      data: RequestBody<'/api/server/{server_id}/events/{event_id}/integrations', 'post'>
+    }) => addIntegration(serverId, eventId, data),
+    onSuccess: (_, { serverId, eventId }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(serverId, eventId) })
+    },
+  })
+}
+
+export function useRemoveIntegrationMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({
+      serverId,
+      eventId,
+      integrationId,
+    }: {
+      serverId: ServerID
+      eventId: string
+      integrationId: string
+    }) => removeIntegration(serverId, eventId, integrationId),
+    onSuccess: (_, { serverId, eventId }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(serverId, eventId) })
+    },
+  })
+}
+
+export function useAddGameRoleMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({
+      serverId,
+      eventId,
+      data,
+    }: {
+      serverId: ServerID
+      eventId: string
+      data: RequestBody<'/api/server/{server_id}/events/{event_id}/roles', 'post'>
+    }) => addGameRole(serverId, eventId, data),
+    onSuccess: (_, { serverId, eventId }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(serverId, eventId) })
+    },
+  })
+}
+
+export function useUpdateGameRoleMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({
+      serverId,
+      eventId,
+      selectedRoleId,
+      data,
+    }: {
+      serverId: ServerID
+      eventId: string
+      selectedRoleId: string
+      data: RequestBody<
+        '/api/server/{server_id}/events/{event_id}/roles/{selected_role_id}',
+        'patch'
+      >
+    }) => updateGameRole(serverId, eventId, selectedRoleId, data),
+    onSuccess: (_, { serverId, eventId }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(serverId, eventId) })
+    },
+  })
+}
+
+export function useRemoveGameRoleMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({
+      serverId,
+      eventId,
+      selectedRoleId,
+    }: {
+      serverId: ServerID
+      eventId: string
+      selectedRoleId: string
+    }) => removeGameRole(serverId, eventId, selectedRoleId),
+    onSuccess: (_, { serverId, eventId }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(serverId, eventId) })
     },
   })
 }
