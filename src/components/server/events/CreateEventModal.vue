@@ -206,7 +206,7 @@ const onSubmit = handleSubmit((values) => {
                 {{ t('server.events.createEvent.useApplication') }}
               </FormLabel>
               <FormControl>
-                <Switch :checked="!!field.value" @update:checked="handleChange" />
+                <Switch :model-value="!!field.value" @update:model-value="handleChange" />
               </FormControl>
             </FormItem>
           </FormField>
@@ -217,7 +217,7 @@ const onSubmit = handleSubmit((values) => {
                 {{ t('server.events.createEvent.isPublic') }}
               </FormLabel>
               <FormControl>
-                <Switch :checked="!!field.value" @update:checked="handleChange" />
+                <Switch :model-value="!!field.value" @update:model-value="handleChange" />
               </FormControl>
             </FormItem>
           </FormField>
@@ -273,8 +273,8 @@ const onSubmit = handleSubmit((values) => {
             </FormLabel>
             <FormControl>
               <Switch
-                :checked="!!field.value"
-                @update:checked="handleChange"
+                :model-value="!!field.value"
+                @update:model-value="handleChange"
               />
             </FormControl>
           </FormItem>
