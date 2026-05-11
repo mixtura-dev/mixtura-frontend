@@ -21,11 +21,8 @@ import {
 } from '@/api/queries/event'
 import { useCurrentMemberStore } from '@/stores/currentMember.store'
 import { PERMISSION_CODES } from '@/types/permissions'
-import CreateEventModal from '@/components/server/events/CreateEventModal.vue'
+import EventSettingsModal from '@/components/server/events/EventSettingsModal.vue'
 import type { ServerID } from '@/types/user'
-import type { components } from '@/types/api'
-
-type EventDetail = components['schemas']['EventDetailResponse']
 
 const route = useRoute()
 const router = useRouter()
@@ -37,15 +34,13 @@ const eventId = computed(() => route.params.eventId as string)
 
 const { data: event, isLoading, isError } = useEventQuery(serverId, eventId)
 
-const eventDetail = computed(() => event.value as EventDetail | null)
-
 const isAdmin = computed(() => memberStore.hasPermission(PERMISSION_CODES.ADMINISTRATOR))
 const isTerminal = computed(
   () => event.value?.status === 'COMPLETED' || event.value?.status === 'CANCELLED',
 )
 const isSingle = computed(() => event.value?.match_type === 'SINGLE')
 
-const showEditModal = ref(false)
+const showSettingsModal = ref(false)
 
 const { mutate: activateEvent, isPending: isActivating } = useActivateEventMutation()
 const { mutate: openRegistration, isPending: isOpening } = useOpenRegistrationMutation()
@@ -168,8 +163,8 @@ const statusBadgeVariant = computed(() => {
             <Loader2 v-if="isCompleting" class="mr-2 size-4 animate-spin" />
             {{ t('server.events.actions.complete') }}
           </DropdownMenuItem>
-          <DropdownMenuItem :disabled="isPendingAction" @click="showEditModal = true">
-            {{ t('server.events.actions.update') }}
+          <DropdownMenuItem :disabled="isPendingAction" @click="showSettingsModal = true">
+            {{ t('server.events.actions.settings') }}
           </DropdownMenuItem>
           <DropdownMenuItem :disabled="isPendingAction" @click="handleCancel">
             <Loader2 v-if="isCancelling" class="mr-2 size-4 animate-spin" />
@@ -203,6 +198,12 @@ const statusBadgeVariant = computed(() => {
       {{ t('server.events.detail.readOnly') }}
     </p>
 
-    <CreateEventModal v-model:open="showEditModal" :server-id="serverId" :event="eventDetail" />
+    <EventSettingsModal
+      v-if="event"
+      v-model:open="showSettingsModal"
+      :server-id="serverId"
+      :event-id="eventId"
+      :event="event"
+    />
   </div>
 </template>

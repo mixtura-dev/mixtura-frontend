@@ -4,6 +4,7 @@ const showInviteDialog = ref(false)
 const showRolesDialog = ref(false)
 const showRestrictionsDialog = ref(false)
 const showCreateVirtualDialog = ref(false)
+const showGameRolesDialog = ref(false)
 
 export function useServerDialogs() {
   return {
@@ -11,5 +12,6 @@ export function useServerDialogs() {
     showRolesDialog,
     showRestrictionsDialog,
     showCreateVirtualDialog,
+    showGameRolesDialog,
   }
 }

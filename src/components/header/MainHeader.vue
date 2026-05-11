@@ -34,6 +34,13 @@
                 </DropdownMenuItem>
               </PermissionGuard>
 
+              <PermissionGuard action="MANAGE_SERVER">
+                <DropdownMenuItem @click="showGameRolesDialog = true">
+                  <Swords class="mr-2 size-4" />
+                  {{ $t('server.gameRoles.menuItem') }}
+                </DropdownMenuItem>
+              </PermissionGuard>
+
               <PermissionGuard action="CREATE_VIRTUAL">
                 <DropdownMenuSeparator />
                 <DropdownMenuItem @click="showCreateVirtualDialog = true">
@@ -78,12 +85,19 @@
         <ProfileMenu />
       </nav>
     </div>
+
+    <GameRolesDialog
+      v-if="serverId"
+      v-model:open="showGameRolesDialog"
+      :server-id="serverId as ServerID"
+    />
   </header>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import type { ServerID } from '@/types/user'
 import ProfileMenu from './ProfileMenu.vue'
 import {
   Ban,
@@ -93,6 +107,7 @@ import {
   PanelRightClose,
   PanelRightOpen,
   Shield,
+  Swords,
   UserPlus,
 } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
@@ -105,6 +120,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import PermissionGuard from '@/components/common/PermissionGuard.vue'
+import GameRolesDialog from '@/components/server/game-roles/GameRolesDialog.vue'
 import { useServerQuery } from '@/api/queries/server'
 import { useServerPermissions } from '@/composables/useServerPermissions'
 import { useMemberListToggle } from '@/composables/useMemberListToggle'
@@ -117,7 +133,7 @@ const serverId = computed(() => route.params.serverId as string)
 const { data: server } = useServerQuery(serverId)
 const { can } = useServerPermissions()
 const { showMemberList, toggle: toggleMemberList } = useMemberListToggle()
-const { showInviteDialog, showRolesDialog, showRestrictionsDialog, showCreateVirtualDialog } =
+const { showInviteDialog, showRolesDialog, showRestrictionsDialog, showCreateVirtualDialog, showGameRolesDialog } =
   useServerDialogs()
 
 const hasAnyServerPermission = computed(() => {
@@ -125,7 +141,8 @@ const hasAnyServerPermission = computed(() => {
     can('MANAGE_INVITES') ||
     can('CHANGE_ROLE') ||
     can('MANAGE_RESTRICTIONS') ||
-    can('CREATE_VIRTUAL')
+    can('CREATE_VIRTUAL') ||
+    can('MANAGE_SERVER')
   )
 })
 </script>

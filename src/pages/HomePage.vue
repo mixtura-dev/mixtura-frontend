@@ -5,60 +5,21 @@
         ref="screenshotRef"
         class="grid w-full h-fit grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-5"
       >
-        <div
-          class="team-container bg-background flex flex-col gap-2 p-4 border-2 border-dashed rounded-lg min-w-3xs"
-        >
-          <h2 class="text-xl font-semibold md:text-right">
-            {{ settings.state.teams.teamA.name }}
-          </h2>
-          <draggable v-model="teamAPlayers" group="teams" :swap="true" item-key="id">
-            <template #item="{ element, index }">
-              <PlayerItem
-                :name="element.name"
-                :roles="element.roles"
-                :rankPoints="element.rankPoints"
-                :teamColor="settings.state.teams.teamA.color"
-                :slotIndex="index"
-              />
-            </template>
-          </draggable>
-        </div>
+        <TeamContainer
+          v-model:players="teamAPlayers"
+          :team-name="settings.state.teams.teamA.name"
+          :team-color="settings.state.teams.teamA.color"
+          align-right
+        />
 
-        <span class="italic font-black text-2xl self-center justify-self-center">VS</span>
+        <span class="self-center justify-self-center text-2xl font-black italic">VS</span>
 
-        <div
-          class="team-container bg-background flex flex-col gap-2 p-4 border-2 border-dashed rounded-lg min-w-3xs"
-        >
-          <h2 class="text-xl font-semibold">
-            {{ settings.state.teams.teamB.name }}
-          </h2>
-          <draggable v-model="teamBPlayers" group="teams" item-key="id">
-            <template #item="{ element, index }">
-              <PlayerItem
-                :name="element.name"
-                :roles="element.roles"
-                :rankPoints="element.rankPoints"
-                :teamColor="settings.state.teams.teamB.color"
-                :slotIndex="index"
-              />
-            </template>
-          </draggable>
-        </div>
+        <TeamContainer
+          v-model:players="teamBPlayers"
+          :team-name="settings.state.teams.teamB.name"
+          :team-color="settings.state.teams.teamB.color"
+        />
       </div>
-
-      <Sheet>
-        <SheetTrigger>Open</SheetTrigger>
-        <SheetContent class="w-full">
-          <SheetHeader>
-            <SheetTitle>Match History</SheetTitle>
-          </SheetHeader>
-          <div class="p-4 pt-0 flex flex-col gap-4 overflow-y-scroll">
-            <ServerCardBase class="border p-4 rounded bg-accent" v-for="i in 100" :key="i">
-              Match {{ i }}
-            </ServerCardBase>
-          </div>
-        </SheetContent>
-      </Sheet>
 
       <div class="flex gap-3 flex-row py-4">
         <Button variant="secondary"> Balance teams </Button>
@@ -75,26 +36,16 @@ import { ref } from 'vue'
 import { useSettingsStore } from '@/stores/settingsStore.store'
 import { Button } from '@/components/ui/button'
 import { ClipboardIcon } from 'lucide-vue-next'
-import PlayerItem from '@/components/balancer/PlayerItem.vue'
-import type { PlayerRole, GameRole } from '@/types/balancer'
+import type { Player } from '@/types/balancer'
 
-import draggable from 'vuedraggable'
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import ServerCardBase from '@/components/workspace/ServerCardBase.vue'
 import { useScreenshot } from '@/composables/useScreenshot'
+import TeamContainer from '@/components/balancer/TeamContainer.vue'
 
 const screenshotRef = ref<HTMLElement | null>(null)
 
 const { makeScreenshot } = useScreenshot(screenshotRef)
 
 const settings = useSettingsStore()
-
-interface Player {
-  id: number
-  name: string
-  roles: PlayerRole[]
-  rankPoints: number
-}
 
 const teamAPlayers = ref<Player[]>([
   {

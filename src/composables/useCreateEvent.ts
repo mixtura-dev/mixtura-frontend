@@ -1,4 +1,4 @@
-import { computed } from 'vue'
+import { computed, toValue, type MaybeRefOrGetter } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { toast } from 'vue-sonner'
 import { useCreateEventMutation } from '@/api/queries/event'
@@ -9,7 +9,7 @@ import type { components } from '@/types/api'
 
 type CreateEventData = components['schemas']['CreateEventRequest']
 
-export function useCreateEvent(serverId: ServerID) {
+export function useCreateEvent(serverId: MaybeRefOrGetter<ServerID>) {
   const { t } = useI18n()
   const memberStore = useCurrentMemberStore()
 
@@ -28,7 +28,7 @@ export function useCreateEvent(serverId: ServerID) {
     }
 
     mutate(
-      { serverId, data },
+      { serverId: toValue(serverId), data },
       {
         onSuccess: () => {
           toast.success(t('server.events.createEvent.toast.success'))

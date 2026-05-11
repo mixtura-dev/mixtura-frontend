@@ -1,32 +1,42 @@
 <template>
-  <div class="player-card" draggable="false">
-    <div class="player-card__content" tabindex="0">
-      <div :style="{ '--team-color': teamColor }" class="player-card__team-color">
-        <component :is="bgIconComponent" class="player-card__bg-icon" />
-        <div class="player-card__rank">
+  <div
+    class="player-card-hover flex select-none items-center bg-background transition-colors duration-150"
+    draggable="false"
+  >
+    <div class="flex w-full items-center gap-3">
+      <div
+        class="relative flex h-[3.6rem] w-13 items-center justify-center"
+        :style="{ backgroundColor: teamColor }"
+      >
+        <component :is="bgIconComponent" class="absolute top-1 size-[2.3em] opacity-70" />
+        <div class="z-1 flex flex-col items-center leading-none">
           <img
-            class="player-card__rank-icon"
+            class="block size-[2.3rem] -mb-1"
             draggable="false"
             :src="`/img/ranks/${rankIconSrc}`"
             alt="Rank"
           />
-          <span class="player-card__rank-points">
-            {{ props.rankPoints }}
+          <span class="text-sm font-semibold text-white">
+            {{ rankPoints }}
           </span>
         </div>
       </div>
-      <div class="player-card__name">
-        <p class="player-card__name-text">
-          {{ props.name }}
+      <div class="min-w-0 flex-1 overflow-hidden">
+        <p class="truncate text-xl font-semibold">
+          {{ name }}
         </p>
       </div>
-
-      <div class="player-card__roles" role="list" :aria-label="`Roles for ${props.name}`">
+      <div
+        v-if="sortedRoles.length"
+        class="mr-2 flex items-end gap-1"
+        role="list"
+        :aria-label="`Roles for ${name}`"
+      >
         <component
           v-for="role in sortedRoles"
           :key="role.role"
           :is="getRoleIcon(role.role)"
-          :class="[role.isPrimary ? 'player-card__role--primary' : 'player-card__role--secondary']"
+          :class="[role.isPrimary ? 'size-6' : 'size-4 opacity-70']"
         />
       </div>
     </div>
@@ -35,14 +45,13 @@
 
 <script setup lang="ts">
 import type { GameRole, PlayerRole } from '@/types/balancer'
-import { computed, defineAsyncComponent } from 'vue'
+import { computed } from 'vue'
 import { RANK_THRESHOLDS } from '@/constants/rank'
 import { useSettingsStore } from '@/stores/settingsStore.store'
-
-const TankIcon = defineAsyncComponent(() => import('@/components/icons/TankIcon.vue'))
-const DpsIcon = defineAsyncComponent(() => import('@/components/icons/DpsIcon.vue'))
-const SupportIcon = defineAsyncComponent(() => import('@/components/icons/SupportIcon.vue'))
-const FlexIcon = defineAsyncComponent(() => import('@/components/icons/FlexIcon.vue'))
+import TankIcon from '@/components/icons/TankIcon.vue'
+import DpsIcon from '@/components/icons/DpsIcon.vue'
+import SupportIcon from '@/components/icons/SupportIcon.vue'
+import FlexIcon from '@/components/icons/FlexIcon.vue'
 
 interface Props {
   name: string
@@ -60,6 +69,7 @@ const props = withDefaults(defineProps<Props>(), {
 const sortedRoles = computed(() =>
   [...props.roles].sort((a, b) => Number(b.isPrimary) - Number(a.isPrimary)),
 )
+
 const settings = useSettingsStore()
 
 const bgRole = computed(() => {
@@ -68,6 +78,7 @@ const bgRole = computed(() => {
   if (props.slotIndex < tank + dps) return 'D'
   return 'H'
 })
+
 const bgIconComponent = computed(() => getRoleIcon(bgRole.value))
 
 const rankIconSrc = computed(
@@ -89,88 +100,15 @@ const getRoleIcon = (role: GameRole) => {
 </script>
 
 <style scoped>
-.player-card {
-  background-color: var(--color-background);
-  display: flex;
-  align-items: center;
-  user-select: none;
+@media (hover: hover) and (pointer: fine) {
+  .player-card-hover:hover {
+    background-color: hsl(var(--accent));
+  }
 }
 
-.player-card__content {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  gap: 0.75rem;
-  position: relative;
-}
-
-.player-card__team-color {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 3.25rem;
-  height: 3.6rem;
-  background-color: var(--team-color, #868686);
-}
-
-.player-card__bg-icon {
-  position: absolute;
-  opacity: 0.7;
-
-  top: 0.25rem;
-  width: 2.3em;
-  height: 2.3em;
-}
-
-.player-card__rank {
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  line-height: 1;
-}
-
-.player-card__rank-icon {
-  display: block;
-  width: 2.3rem;
-  height: 2.3rem;
-}
-
-.player-card__rank-points {
-  color: #ffffff;
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-
-.player-card__name {
-  flex: 1;
-  min-width: 0px;
-  overflow: hidden;
-}
-
-.player-card__name-text {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.player-card__roles {
-  display: flex;
-  gap: 0.25rem;
-  margin-right: 0.5rem;
-  align-items: end;
-}
-
-.player-card__role--primary {
-  height: 1.5em;
-  width: 1.5em;
-}
-
-.player-card__role--secondary {
-  height: 1em;
-  width: 1em;
-  opacity: 0.7;
+@media (prefers-reduced-motion: reduce) {
+  .player-card-hover {
+    transition: none;
+  }
 }
 </style>

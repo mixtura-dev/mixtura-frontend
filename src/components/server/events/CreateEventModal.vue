@@ -40,7 +40,7 @@ const props = defineProps<{
 const open = defineModel<boolean>('open', { required: true })
 
 const { t } = useI18n()
-const { handleCreate, isPending: isCreatePending } = useCreateEvent(props.serverId)
+const { handleCreate, isPending: isCreatePending } = useCreateEvent(() => props.serverId)
 const { mutate: updateEvent, isPending: isUpdatePending } = useUpdateEventMutation()
 
 const isEditMode = computed(() => !!props.event)

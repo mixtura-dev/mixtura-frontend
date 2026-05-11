@@ -10,6 +10,6 @@
       "@/components": ["./src/components/*"],
       "@/stores": ["./src/stores/*"]
     },
-    "ignoreDeprecations": "6.0"
+
   }
 }
