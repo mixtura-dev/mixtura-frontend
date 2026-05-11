@@ -25,6 +25,7 @@ export function useApplicationsQuery(
     page?: number
     page_size?: number
   }>,
+  enabled?: MaybeRefOrGetter<boolean>,
 ) {
   const sId = computed(() => toValue(serverId))
   const eId = computed(() => toValue(eventId))
@@ -36,7 +37,7 @@ export function useApplicationsQuery(
       p.value,
     ]),
     queryFn: () => listApplications(sId.value, eId.value, p.value),
-    enabled: computed(() => !!sId.value && !!eId.value),
+    enabled: computed(() => !!sId.value && !!eId.value && (toValue(enabled) ?? true)),
   })
 }
 

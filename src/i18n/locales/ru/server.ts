@@ -342,6 +342,22 @@ export default {
       applicationsEmpty: 'Здесь будут отображаться заявки и участники.',
       matchesEmpty: 'Здесь будут отображаться матчи.',
     },
+    application: {
+      submitButton: 'Подать заявку',
+      dialogTitle: 'Подача заявки',
+      rolePriorities: 'Приоритет ролей',
+      rolePrioritiesHint: 'Перетащите роли в порядке предпочтения. Первая роль — наивысший приоритет.',
+      integrationsRequired: 'Требуются подключённые аккаунты',
+      customFields: 'Дополнительные поля',
+      noRequirements: 'Для участия в эвенте не требуется дополнительных данных.',
+      unknownRole: 'Роль',
+      toast: {
+        submitted: 'Заявка отправлена на рассмотрение.',
+        autoApproved: 'Заявка одобрена автоматически!',
+        error: 'Не удалось отправить заявку.',
+      },
+      myApplicationStatus: 'Моя заявка',
+    },
     applications: {
       search: 'Поиск по имени...',
       empty: 'Нет данных',

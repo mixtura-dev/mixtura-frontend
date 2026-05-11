@@ -340,6 +340,22 @@ export default {
       applicationsEmpty: 'Applications and participants will be displayed here.',
       matchesEmpty: 'Matches will be displayed here.',
     },
+    application: {
+      submitButton: 'Submit Application',
+      dialogTitle: 'Submit Application',
+      rolePriorities: 'Role Priorities',
+      rolePrioritiesHint: 'Arrange roles in order of preference. The first role is the highest priority.',
+      integrationsRequired: 'Required connected accounts',
+      customFields: 'Additional Fields',
+      noRequirements: 'No additional data is required to participate.',
+      unknownRole: 'Role',
+      toast: {
+        submitted: 'Application has been submitted for review.',
+        autoApproved: 'Application has been auto-approved!',
+        error: 'Failed to submit application.',
+      },
+      myApplicationStatus: 'My Application',
+    },
     applications: {
       search: 'Search by name...',
       empty: 'No data',

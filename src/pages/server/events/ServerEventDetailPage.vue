@@ -18,10 +18,12 @@ import {
   useOpenRegistrationMutation,
   useCancelEventMutation,
   useCompleteEventMutation,
+  useApplicationsQuery,
 } from '@/api/queries/event'
 import { useCurrentMemberStore } from '@/stores/currentMember.store'
 import { PERMISSION_CODES } from '@/types/permissions'
 import EventSettingsModal from '@/components/server/events/EventSettingsModal.vue'
+import SubmitApplicationModal from '@/components/server/events/SubmitApplicationModal.vue'
 import type { ServerID } from '@/types/user'
 
 const route = useRoute()
@@ -41,6 +43,35 @@ const isTerminal = computed(
 const isSingle = computed(() => event.value?.match_type === 'SINGLE')
 
 const showSettingsModal = ref(false)
+
+const useApplicationsEnabled = computed(() => event.value?.use_application === true)
+const { data: applicationsData } = useApplicationsQuery(
+  serverId,
+  eventId,
+  undefined,
+  useApplicationsEnabled,
+)
+
+const myApplication = computed(() =>
+  applicationsData.value?.find((a) => a.member_id === memberStore.memberId) ?? null,
+)
+
+const canSubmitApplication = computed(() =>
+  event.value?.use_application === true
+  && event.value?.status === 'REGISTRATION'
+  && myApplication.value === null,
+)
+
+const myApplicationBadgeVariant = computed(() => {
+  switch (myApplication.value?.status) {
+    case 'APPROVED': return 'default' as const
+    case 'REJECTED': return 'destructive' as const
+    case 'WAITLIST': return 'secondary' as const
+    default: return 'outline' as const
+  }
+})
+
+const showSubmitModal = ref(false)
 
 const { mutate: activateEvent, isPending: isActivating } = useActivateEventMutation()
 const { mutate: openRegistration, isPending: isOpening } = useOpenRegistrationMutation()
@@ -140,12 +171,28 @@ const statusBadgeVariant = computed(() => {
         {{ event.status }}
       </Badge>
 
-      <DropdownMenu v-if="isAdmin && !isTerminal">
-        <DropdownMenuTrigger as-child>
-          <Button variant="ghost" size="icon" class="size-8 ml-auto">
-            <MoreVertical class="size-4" />
-          </Button>
-        </DropdownMenuTrigger>
+      <div class="ml-auto flex items-center gap-2">
+        <Badge
+          v-if="myApplication && event?.use_application"
+          :variant="myApplicationBadgeVariant"
+        >
+          {{ t(`server.events.applications.status.${myApplication.status.toLowerCase()}`) }}
+        </Badge>
+
+        <Button
+          v-if="canSubmitApplication"
+          size="sm"
+          @click="showSubmitModal = true"
+        >
+          {{ t('server.events.application.submitButton') }}
+        </Button>
+
+        <DropdownMenu v-if="isAdmin && !isTerminal">
+          <DropdownMenuTrigger as-child>
+            <Button variant="ghost" size="icon" class="size-8">
+              <MoreVertical class="size-4" />
+            </Button>
+          </DropdownMenuTrigger>
         <DropdownMenuContent align="end" class="w-44">
           <DropdownMenuItem :disabled="isPendingAction" @click="handleActivate">
             <Loader2 v-if="isActivating" class="mr-2 size-4 animate-spin" />
@@ -172,6 +219,7 @@ const statusBadgeVariant = computed(() => {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      </div>
     </div>
 
     <div class="overflow-x-auto -mx-4 px-4">
@@ -204,6 +252,13 @@ const statusBadgeVariant = computed(() => {
       :server-id="serverId"
       :event-id="eventId"
       :event="event"
+    />
+
+    <SubmitApplicationModal
+      v-if="event && showSubmitModal"
+      v-model:open="showSubmitModal"
+      :server-id="serverId"
+      :event-id="eventId"
     />
   </div>
 </template>
