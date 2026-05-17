@@ -1,3 +1,7 @@
 export * from './useEventCore'
 export * from './useEventApplication'
 export * from './useEventOrganizer'
+export * from './useEventPlayer'
+export * from './useEventDraft'
+export * from './useEventTeam'
+export * from './useEventMatch'

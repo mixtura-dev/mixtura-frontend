@@ -5341,8 +5341,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "additionalProperties": true
+                    "$ref": "#/components/schemas/OrganizerListItemResponse"
                   },
                   "title": "Response List Organizers Api Server  Server Id  Events  Event Id  Organizers Get"
                 }
@@ -5419,9 +5418,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "title": "Response Add Organizer Api Server  Server Id  Events  Event Id  Organizers Post"
+                  "$ref": "#/components/schemas/OrganizerItemResponse"
                 }
               }
             }
@@ -6332,10 +6329,84 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "additionalProperties": true
+                    "$ref": "#/components/schemas/EventPlayerResponse"
                   },
                   "title": "Response List Players Api Server  Server Id  Events  Event Id  Players Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Event Player"],
+        "summary": "Add Player",
+        "operationId": "add_player_api_server__server_id__events__event_id__players_post",
+        "parameters": [
+          {
+            "name": "server_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Server Id"
+            }
+          },
+          {
+            "name": "event_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Event Id"
+            }
+          },
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddPlayerRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventPlayerResponse"
                 }
               }
             }
@@ -6422,9 +6493,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "title": "Response Update Player Status Api Server  Server Id  Events  Event Id  Players  Member Id  Status Patch"
+                  "$ref": "#/components/schemas/PlayerUpdateResultResponse"
                 }
               }
             }
@@ -6519,6 +6588,93 @@
         }
       }
     },
+    "/api/server/{server_id}/events/{event_id}/players/{member_id}/roles": {
+      "put": {
+        "tags": ["Event Player"],
+        "summary": "Update Player Roles",
+        "operationId": "update_player_roles_api_server__server_id__events__event_id__players__member_id__roles_put",
+        "parameters": [
+          {
+            "name": "server_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Server Id"
+            }
+          },
+          {
+            "name": "event_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Event Id"
+            }
+          },
+          {
+            "name": "member_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Member Id"
+            }
+          },
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePlayerRolesRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventPlayerResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/server/{server_id}/events/{event_id}/drafts": {
       "post": {
         "tags": ["Event Draft"],
@@ -6578,9 +6734,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "title": "Response Create Draft Api Server  Server Id  Events  Event Id  Drafts Post"
+                  "$ref": "#/components/schemas/DraftDetailResponse"
                 }
               }
             }
@@ -6667,8 +6821,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "additionalProperties": true
+                    "$ref": "#/components/schemas/DraftItemResponse"
                   },
                   "title": "Response List Drafts Api Server  Server Id  Events  Event Id  Drafts Get"
                 }
@@ -6737,9 +6890,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "title": "Response Get Draft Api Server  Server Id  Events Drafts  Draft Id  Get"
+                  "$ref": "#/components/schemas/DraftDetailResponse"
                 }
               }
             }
@@ -6977,7 +7128,13 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TeamDetailResponse"
+                  },
+                  "title": "Response Choose Team Formation Variant Api Server  Server Id  Events Drafts  Draft Id  Team Formation Variants  Variant Id  Choose Post"
+                }
               }
             }
           },
@@ -7065,8 +7222,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "additionalProperties": true
+                    "$ref": "#/components/schemas/TeamItemResponse"
                   },
                   "title": "Response List Teams Api Server  Server Id  Events  Event Id  Teams Get"
                 }
@@ -7394,7 +7550,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RecordedMatchResultResponse"
+                  "$ref": "#/components/schemas/SingleMatchViewResponse"
                 }
               }
             }
@@ -7637,6 +7793,61 @@
         "required": ["member_id"],
         "title": "AddOrganizerRequest"
       },
+      "AddPlayerRequest": {
+        "properties": {
+          "member_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Member Id"
+          },
+          "application_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Application Id"
+          },
+          "custom_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Id"
+          },
+          "is_draft_pinned": {
+            "type": "boolean",
+            "title": "Is Draft Pinned",
+            "default": false
+          },
+          "roles": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PlayerRolePayload"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Roles"
+          }
+        },
+        "type": "object",
+        "required": ["member_id"],
+        "title": "AddPlayerRequest"
+      },
       "ApplicationCustomFieldResponse": {
         "properties": {
           "id": {
@@ -7682,10 +7893,10 @@
             "$ref": "#/components/schemas/ApplicationStatusResponse"
           },
           "role_priorities": {
-            "additionalProperties": {
-              "type": "integer"
+            "items": {
+              "$ref": "#/components/schemas/ApplicationRolePriorityResponse"
             },
-            "type": "object",
+            "type": "array",
             "title": "Role Priorities"
           },
           "filled_fields": {
@@ -7735,85 +7946,6 @@
         "required": ["custom_field_id", "value"],
         "title": "ApplicationFilledFieldResponse"
       },
-      "ApplicationFormFieldResponse": {
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Id"
-          },
-          "name": {
-            "type": "string",
-            "title": "Name"
-          },
-          "is_private": {
-            "type": "boolean",
-            "title": "Is Private"
-          },
-          "is_required": {
-            "type": "boolean",
-            "title": "Is Required"
-          }
-        },
-        "type": "object",
-        "required": ["id", "name", "is_private", "is_required"],
-        "title": "ApplicationFormFieldResponse"
-      },
-      "ApplicationFormIntegrationResponse": {
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Id"
-          },
-          "name": {
-            "type": "string",
-            "title": "Name"
-          }
-        },
-        "type": "object",
-        "required": ["id", "name"],
-        "title": "ApplicationFormIntegrationResponse"
-      },
-      "ApplicationFormRoleResponse": {
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Id"
-          },
-          "game_role_id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Game Role Id"
-          },
-          "override_max_count": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Override Max Count"
-          },
-          "override_min_count": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Override Min Count"
-          }
-        },
-        "type": "object",
-        "required": ["id", "game_role_id"],
-        "title": "ApplicationFormRoleResponse"
-      },
       "ApplicationFormSettingsResponse": {
         "properties": {
           "event_id": {
@@ -7827,21 +7959,21 @@
           },
           "required_integrations": {
             "items": {
-              "$ref": "#/components/schemas/ApplicationFormIntegrationResponse"
+              "$ref": "#/components/schemas/RequiredIntegrationResponse"
             },
             "type": "array",
             "title": "Required Integrations"
           },
           "available_roles": {
             "items": {
-              "$ref": "#/components/schemas/ApplicationFormRoleResponse"
+              "$ref": "#/components/schemas/SelectedGameRoleResponse"
             },
             "type": "array",
             "title": "Available Roles"
           },
           "custom_fields": {
             "items": {
-              "$ref": "#/components/schemas/ApplicationFormFieldResponse"
+              "$ref": "#/components/schemas/ApplicationCustomFieldResponse"
             },
             "type": "array",
             "title": "Custom Fields"
@@ -7849,7 +7981,7 @@
           "time_settings": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/ApplicationFormTimeSettingsResponse"
+                "$ref": "#/components/schemas/ApplicationTimeSettingsResponse"
               },
               {
                 "type": "null"
@@ -7861,46 +7993,57 @@
         "required": ["event_id", "event_name"],
         "title": "ApplicationFormSettingsResponse"
       },
-      "ApplicationFormTimeSettingsResponse": {
+      "ApplicationIntegrationItemResponse": {
         "properties": {
-          "start_time": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Start Time"
+          "integration_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Integration Id"
           },
-          "end_time": {
+          "provider_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Provider Id"
+          },
+          "provider_name": {
+            "type": "string",
+            "title": "Provider Name"
+          },
+          "account_name": {
             "anyOf": [
               {
-                "type": "string",
-                "format": "date-time"
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "End Time"
+            "title": "Account Name"
           }
         },
         "type": "object",
-        "title": "ApplicationFormTimeSettingsResponse"
+        "required": ["integration_id", "provider_id", "provider_name"],
+        "title": "ApplicationIntegrationItemResponse"
       },
       "ApplicationIntegrationResponse": {
         "properties": {
-          "user_provider_id": {
+          "integration_id": {
             "type": "string",
             "format": "uuid",
-            "title": "User Provider Id"
+            "title": "Integration Id"
+          },
+          "provider_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Provider Id"
+          },
+          "provider_name": {
+            "type": "string",
+            "title": "Provider Name"
           }
         },
         "type": "object",
-        "required": ["user_provider_id"],
+        "required": ["integration_id", "provider_id", "provider_name"],
         "title": "ApplicationIntegrationResponse"
       },
       "ApplicationListItemResponse": {
@@ -7936,6 +8079,22 @@
                 "type": "null"
               }
             ]
+          },
+          "roles": {
+            "items": {
+              "$ref": "#/components/schemas/ApplicationRoleItemResponse"
+            },
+            "type": "array",
+            "title": "Roles",
+            "default": []
+          },
+          "integrations": {
+            "items": {
+              "$ref": "#/components/schemas/ApplicationIntegrationItemResponse"
+            },
+            "type": "array",
+            "title": "Integrations",
+            "default": []
           }
         },
         "type": "object",
@@ -7964,6 +8123,50 @@
         "type": "object",
         "required": ["id"],
         "title": "ApplicationListItemUserResponse"
+      },
+      "ApplicationRoleItemResponse": {
+        "properties": {
+          "role_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Role Id"
+          },
+          "game_role_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Game Role Id"
+          },
+          "priority": {
+            "type": "integer",
+            "title": "Priority"
+          }
+        },
+        "type": "object",
+        "required": ["role_id", "priority"],
+        "title": "ApplicationRoleItemResponse"
+      },
+      "ApplicationRolePriorityResponse": {
+        "properties": {
+          "role_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Role Id"
+          },
+          "priority": {
+            "type": "integer",
+            "title": "Priority"
+          }
+        },
+        "type": "object",
+        "required": ["role_id", "priority"],
+        "title": "ApplicationRolePriorityResponse"
       },
       "ApplicationStatus": {
         "type": "string",
@@ -8221,6 +8424,81 @@
         "required": ["id", "member", "creator", "custom_ratings"],
         "title": "CustomResponse"
       },
+      "DraftDetailResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "event_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Event Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "drafted_players": {
+            "items": {
+              "$ref": "#/components/schemas/DraftedPlayerItemResponse"
+            },
+            "type": "array",
+            "title": "Drafted Players"
+          }
+        },
+        "type": "object",
+        "required": ["id", "event_id", "status"],
+        "title": "DraftDetailResponse"
+      },
+      "DraftItemResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "event_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Event Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          }
+        },
+        "type": "object",
+        "required": ["id", "event_id", "status"],
+        "title": "DraftItemResponse"
+      },
+      "DraftedPlayerItemResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "draft_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Draft Id"
+          },
+          "event_player_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Event Player Id"
+          },
+          "is_captain": {
+            "type": "boolean",
+            "title": "Is Captain"
+          }
+        },
+        "type": "object",
+        "required": ["id", "draft_id", "event_player_id", "is_captain"],
+        "title": "DraftedPlayerItemResponse"
+      },
       "EmailRequest": {
         "properties": {
           "email": {
@@ -8418,6 +8696,58 @@
         "enum": ["SINGLE", "TOURNAMENT"],
         "title": "EventMatchType"
       },
+      "EventPlayerResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "member": {
+            "$ref": "#/components/schemas/ReducedMemberResponse"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "is_draft_pinned": {
+            "type": "boolean",
+            "title": "Is Draft Pinned"
+          },
+          "application_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Application Id"
+          },
+          "custom": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CustomResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "roles": {
+            "items": {
+              "$ref": "#/components/schemas/PlayerRoleResponse"
+            },
+            "type": "array",
+            "title": "Roles"
+          }
+        },
+        "type": "object",
+        "required": ["id", "member", "status", "is_draft_pinned"],
+        "title": "EventPlayerResponse"
+      },
       "EventPlayerStatus": {
         "type": "string",
         "enum": ["REGISTERED", "SELECTED", "PLAYING", "COMPLETED", "BENCHED"],
@@ -8435,6 +8765,22 @@
           "CANCELLED"
         ],
         "title": "EventStatus"
+      },
+      "FilledFieldPayload": {
+        "properties": {
+          "custom_field_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Custom Field Id"
+          },
+          "value": {
+            "type": "string",
+            "title": "Value"
+          }
+        },
+        "type": "object",
+        "required": ["custom_field_id", "value"],
+        "title": "FilledFieldPayload"
       },
       "GameResponse": {
         "properties": {
@@ -8655,6 +9001,18 @@
         },
         "type": "object",
         "title": "HTTPValidationError"
+      },
+      "IntegrationPayload": {
+        "properties": {
+          "integration_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Integration Id"
+          }
+        },
+        "type": "object",
+        "required": ["integration_id"],
+        "title": "IntegrationPayload"
       },
       "InviteAdminResponse": {
         "properties": {
@@ -8882,6 +9240,38 @@
         "required": ["provider", "code"],
         "title": "OAuthConfirm"
       },
+      "OrganizerItemResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "event_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Event Id"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Member Id"
+          }
+        },
+        "type": "object",
+        "required": ["id", "event_id", "member_id"],
+        "title": "OrganizerItemResponse"
+      },
+      "OrganizerListItemResponse": {
+        "properties": {
+          "member": {
+            "$ref": "#/components/schemas/ReducedMemberResponse"
+          }
+        },
+        "type": "object",
+        "required": ["member"],
+        "title": "OrganizerListItemResponse"
+      },
       "OrganizerResponse": {
         "properties": {
           "id": {
@@ -8945,6 +9335,67 @@
         "required": ["id", "code"],
         "title": "PermissionResponse"
       },
+      "PlayerRolePayload": {
+        "properties": {
+          "game_role_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Game Role Id"
+          },
+          "priority": {
+            "type": "integer",
+            "title": "Priority"
+          }
+        },
+        "type": "object",
+        "required": ["game_role_id", "priority"],
+        "title": "PlayerRolePayload"
+      },
+      "PlayerRoleResponse": {
+        "properties": {
+          "game_role_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Game Role Id"
+          },
+          "priority": {
+            "type": "integer",
+            "title": "Priority"
+          }
+        },
+        "type": "object",
+        "required": ["game_role_id", "priority"],
+        "title": "PlayerRoleResponse"
+      },
+      "PlayerUpdateResultResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "member": {
+            "$ref": "#/components/schemas/ReducedMemberResponse"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "custom": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CustomResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": ["id", "member", "status"],
+        "title": "PlayerUpdateResultResponse"
+      },
       "Provider": {
         "properties": {
           "icon_url": {
@@ -8978,6 +9429,11 @@
       },
       "ProviderModel": {
         "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
           "name": {
             "type": "string",
             "title": "Name"
@@ -9006,7 +9462,7 @@
           }
         },
         "type": "object",
-        "required": ["name", "client_id", "client_username"],
+        "required": ["id", "name", "client_id", "client_username"],
         "title": "ProviderModel"
       },
       "Providers": {
@@ -9257,125 +9713,11 @@
             },
             "type": "object",
             "title": "Scores"
-          },
-          "winner_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Winner Id"
-          },
-          "is_draw": {
-            "type": "boolean",
-            "title": "Is Draw",
-            "default": false
-          },
-          "forfeit_team_ids": {
-            "items": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "type": "array",
-            "title": "Forfeit Team Ids"
-          },
-          "rating_settings": {
-            "anyOf": [
-              {
-                "additionalProperties": {
-                  "anyOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "integer"
-                    },
-                    {
-                      "type": "number"
-                    },
-                    {
-                      "type": "boolean"
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ]
-                },
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Rating Settings"
           }
         },
         "type": "object",
         "required": ["scores"],
         "title": "RecordMatchResultRequest"
-      },
-      "RecordedMatchResultResponse": {
-        "properties": {
-          "match": {
-            "$ref": "#/components/schemas/SingleMatchViewResponse"
-          },
-          "winner_team_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Winner Team Id"
-          },
-          "loser_team_ids": {
-            "items": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "type": "array",
-            "title": "Loser Team Ids"
-          },
-          "is_draw": {
-            "type": "boolean",
-            "title": "Is Draw",
-            "default": false
-          },
-          "forfeit_team_ids": {
-            "items": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "type": "array",
-            "title": "Forfeit Team Ids"
-          },
-          "team_ranks": {
-            "items": {
-              "type": "number"
-            },
-            "type": "array",
-            "title": "Team Ranks"
-          },
-          "rating_payload": {
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Rating Payload"
-          },
-          "rating_published": {
-            "type": "boolean",
-            "title": "Rating Published"
-          }
-        },
-        "type": "object",
-        "required": ["match", "team_ranks", "rating_payload", "rating_published"],
-        "title": "RecordedMatchResultResponse"
       },
       "ReducedMemberResponse": {
         "properties": {
@@ -9441,6 +9783,13 @@
         "properties": {
           "status": {
             "$ref": "#/components/schemas/ApplicationStatus"
+          },
+          "role_priorities": {
+            "items": {
+              "$ref": "#/components/schemas/RolePriorityPayload"
+            },
+            "type": "array",
+            "title": "Role Priorities"
           }
         },
         "type": "object",
@@ -9473,6 +9822,22 @@
         "type": "object",
         "required": ["id", "status"],
         "title": "ReviewApplicationResponse"
+      },
+      "RolePriorityPayload": {
+        "properties": {
+          "role_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Role Id"
+          },
+          "priority": {
+            "type": "integer",
+            "title": "Priority"
+          }
+        },
+        "type": "object",
+        "required": ["role_id", "priority"],
+        "title": "RolePriorityPayload"
       },
       "RunTeamFormationRequest": {
         "properties": {
@@ -10001,18 +10366,6 @@
             ],
             "title": "Completed At"
           },
-          "result_snapshot": {
-            "anyOf": [
-              {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Result Snapshot"
-          },
           "slots": {
             "items": {
               "$ref": "#/components/schemas/SingleMatchSlotViewResponse"
@@ -10046,32 +10399,25 @@
       },
       "SubmitApplicationRequest": {
         "properties": {
-          "integration_ids": {
+          "integrations": {
             "items": {
-              "type": "string",
-              "format": "uuid"
+              "$ref": "#/components/schemas/IntegrationPayload"
             },
             "type": "array",
-            "title": "Integration Ids"
+            "title": "Integrations"
           },
           "filled_fields": {
-            "additionalProperties": {
-              "type": "string"
+            "items": {
+              "$ref": "#/components/schemas/FilledFieldPayload"
             },
-            "propertyNames": {
-              "format": "uuid"
-            },
-            "type": "object",
+            "type": "array",
             "title": "Filled Fields"
           },
           "role_priorities": {
-            "additionalProperties": {
-              "type": "integer"
+            "items": {
+              "$ref": "#/components/schemas/RolePriorityPayload"
             },
-            "propertyNames": {
-              "format": "uuid"
-            },
-            "type": "object",
+            "type": "array",
             "title": "Role Priorities"
           }
         },
@@ -10093,21 +10439,47 @@
             "title": "Auto Approved"
           },
           "player_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "type": "string",
+            "format": "uuid",
             "title": "Player Id"
           }
         },
         "type": "object",
-        "required": ["id", "status", "auto_approved"],
+        "required": ["id", "status", "auto_approved", "player_id"],
         "title": "SubmitApplicationResponse"
+      },
+      "TeamDetailResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "event_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Event Id"
+          },
+          "draft_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Draft Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "players": {
+            "items": {
+              "$ref": "#/components/schemas/TeamPlayerItemResponse"
+            },
+            "type": "array",
+            "title": "Players"
+          }
+        },
+        "type": "object",
+        "required": ["id", "event_id", "draft_id", "name"],
+        "title": "TeamDetailResponse"
       },
       "TeamFormation": {
         "type": "string",
@@ -10283,6 +10655,70 @@
         ],
         "title": "TeamFormationVariantTeamResponse"
       },
+      "TeamItemResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "event_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Event Id"
+          },
+          "draft_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Draft Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": ["id", "event_id", "name"],
+        "title": "TeamItemResponse"
+      },
+      "TeamPlayerItemResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "team_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Team Id"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Member Id"
+          },
+          "game_role_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Game Role Id"
+          },
+          "rating": {
+            "type": "integer",
+            "title": "Rating"
+          }
+        },
+        "type": "object",
+        "required": ["id", "team_id", "member_id", "game_role_id", "rating"],
+        "title": "TeamPlayerItemResponse"
+      },
       "UpdateCustomFieldRequest": {
         "properties": {
           "name": {
@@ -10431,10 +10867,36 @@
         "type": "object",
         "title": "UpdateGameRoleRequest"
       },
+      "UpdatePlayerRolesRequest": {
+        "properties": {
+          "roles": {
+            "items": {
+              "$ref": "#/components/schemas/PlayerRolePayload"
+            },
+            "type": "array",
+            "title": "Roles"
+          }
+        },
+        "type": "object",
+        "required": ["roles"],
+        "title": "UpdatePlayerRolesRequest"
+      },
       "UpdatePlayerStatusRequest": {
         "properties": {
           "status": {
             "$ref": "#/components/schemas/EventPlayerStatus"
+          },
+          "custom_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Id"
           }
         },
         "type": "object",

@@ -8,7 +8,7 @@
 - Pinia stores, Vue Router 4 (file-based routes with middleware), TanStack Vue Query 5
 - vue-i18n (ru/en, custom plural rules for ru)
 - `reka-ui` (UI Lib), `vaul-vue` (drawer), `vue-sonner` (toasts), `lucide-vue-next` (icons)
-- `@unovis/vue` for charts, `vuedraggable` for drag-and-drop
+- `@unovis/vue` for charts, `@vue-dnd-kit/core` for drag-and-drop
 
 ## Commands
 

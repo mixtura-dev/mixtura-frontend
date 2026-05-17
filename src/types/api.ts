@@ -1261,7 +1261,8 @@ export interface paths {
         /** List Players */
         get: operations["list_players_api_server__server_id__events__event_id__players_get"];
         put?: never;
-        post?: never;
+        /** Add Player */
+        post: operations["add_player_api_server__server_id__events__event_id__players_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1297,6 +1298,23 @@ export interface paths {
         post?: never;
         /** Remove Player */
         delete: operations["remove_player_api_server__server_id__events__event_id__players__member_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/server/{server_id}/events/{event_id}/players/{member_id}/roles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Player Roles */
+        put: operations["update_player_roles_api_server__server_id__events__event_id__players__member_id__roles_put"];
+        post?: never;
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -1539,6 +1557,25 @@ export interface components {
              */
             member_id: string;
         };
+        /** AddPlayerRequest */
+        AddPlayerRequest: {
+            /**
+             * Member Id
+             * Format: uuid
+             */
+            member_id: string;
+            /** Application Id */
+            application_id?: string | null;
+            /** Custom Id */
+            custom_id?: string | null;
+            /**
+             * Is Draft Pinned
+             * @default false
+             */
+            is_draft_pinned: boolean;
+            /** Roles */
+            roles?: components["schemas"]["PlayerRolePayload"][] | null;
+        };
         /** ApplicationCustomFieldResponse */
         ApplicationCustomFieldResponse: {
             /**
@@ -1572,9 +1609,7 @@ export interface components {
             member_id: string;
             status: components["schemas"]["ApplicationStatusResponse"];
             /** Role Priorities */
-            role_priorities?: {
-                [key: string]: number;
-            };
+            role_priorities?: components["schemas"]["ApplicationRolePriorityResponse"][];
             /** Filled Fields */
             filled_fields?: components["schemas"]["ApplicationFilledFieldResponse"][];
             /** Integrations */
@@ -1592,47 +1627,6 @@ export interface components {
             /** Value */
             value: string;
         };
-        /** ApplicationFormFieldResponse */
-        ApplicationFormFieldResponse: {
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /** Name */
-            name: string;
-            /** Is Private */
-            is_private: boolean;
-            /** Is Required */
-            is_required: boolean;
-        };
-        /** ApplicationFormIntegrationResponse */
-        ApplicationFormIntegrationResponse: {
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /** Name */
-            name: string;
-        };
-        /** ApplicationFormRoleResponse */
-        ApplicationFormRoleResponse: {
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Game Role Id
-             * Format: uuid
-             */
-            game_role_id: string;
-            /** Override Max Count */
-            override_max_count?: number | null;
-            /** Override Min Count */
-            override_min_count?: number | null;
-        };
         /** ApplicationFormSettingsResponse */
         ApplicationFormSettingsResponse: {
             /**
@@ -1643,27 +1637,44 @@ export interface components {
             /** Event Name */
             event_name: string;
             /** Required Integrations */
-            required_integrations?: components["schemas"]["ApplicationFormIntegrationResponse"][];
+            required_integrations?: components["schemas"]["RequiredIntegrationResponse"][];
             /** Available Roles */
-            available_roles?: components["schemas"]["ApplicationFormRoleResponse"][];
+            available_roles?: components["schemas"]["SelectedGameRoleResponse"][];
             /** Custom Fields */
-            custom_fields?: components["schemas"]["ApplicationFormFieldResponse"][];
-            time_settings?: components["schemas"]["ApplicationFormTimeSettingsResponse"] | null;
+            custom_fields?: components["schemas"]["ApplicationCustomFieldResponse"][];
+            time_settings?: components["schemas"]["ApplicationTimeSettingsResponse"] | null;
         };
-        /** ApplicationFormTimeSettingsResponse */
-        ApplicationFormTimeSettingsResponse: {
-            /** Start Time */
-            start_time?: string | null;
-            /** End Time */
-            end_time?: string | null;
+        /** ApplicationIntegrationItemResponse */
+        ApplicationIntegrationItemResponse: {
+            /**
+             * Integration Id
+             * Format: uuid
+             */
+            integration_id: string;
+            /**
+             * Provider Id
+             * Format: uuid
+             */
+            provider_id: string;
+            /** Provider Name */
+            provider_name: string;
+            /** Account Name */
+            account_name?: string | null;
         };
         /** ApplicationIntegrationResponse */
         ApplicationIntegrationResponse: {
             /**
-             * User Provider Id
+             * Integration Id
              * Format: uuid
              */
-            user_provider_id: string;
+            integration_id: string;
+            /**
+             * Provider Id
+             * Format: uuid
+             */
+            provider_id: string;
+            /** Provider Name */
+            provider_name: string;
         };
         /** ApplicationListItemResponse */
         ApplicationListItemResponse: {
@@ -1686,6 +1697,16 @@ export interface components {
              */
             created_at: string;
             user?: components["schemas"]["ApplicationListItemUserResponse"] | null;
+            /**
+             * Roles
+             * @default []
+             */
+            roles: components["schemas"]["ApplicationRoleItemResponse"][];
+            /**
+             * Integrations
+             * @default []
+             */
+            integrations: components["schemas"]["ApplicationIntegrationItemResponse"][];
         };
         /** ApplicationListItemUserResponse */
         ApplicationListItemUserResponse: {
@@ -1696,6 +1717,28 @@ export interface components {
             id: string;
             /** Username */
             username?: string | null;
+        };
+        /** ApplicationRoleItemResponse */
+        ApplicationRoleItemResponse: {
+            /**
+             * Role Id
+             * Format: uuid
+             */
+            role_id: string;
+            /** Game Role Id */
+            game_role_id?: string | null;
+            /** Priority */
+            priority: number;
+        };
+        /** ApplicationRolePriorityResponse */
+        ApplicationRolePriorityResponse: {
+            /**
+             * Role Id
+             * Format: uuid
+             */
+            role_id: string;
+            /** Priority */
+            priority: number;
         };
         /**
          * ApplicationStatus
@@ -1806,6 +1849,58 @@ export interface components {
             /** Custom Ratings */
             custom_ratings: components["schemas"]["CustomRatingResponse"][];
         };
+        /** DraftDetailResponse */
+        DraftDetailResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Event Id
+             * Format: uuid
+             */
+            event_id: string;
+            /** Status */
+            status: string;
+            /** Drafted Players */
+            drafted_players?: components["schemas"]["DraftedPlayerItemResponse"][];
+        };
+        /** DraftItemResponse */
+        DraftItemResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Event Id
+             * Format: uuid
+             */
+            event_id: string;
+            /** Status */
+            status: string;
+        };
+        /** DraftedPlayerItemResponse */
+        DraftedPlayerItemResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Draft Id
+             * Format: uuid
+             */
+            draft_id: string;
+            /**
+             * Event Player Id
+             * Format: uuid
+             */
+            event_player_id: string;
+            /** Is Captain */
+            is_captain: boolean;
+        };
         /** EmailRequest */
         EmailRequest: {
             /**
@@ -1902,6 +1997,24 @@ export interface components {
          * @enum {string}
          */
         EventMatchType: "SINGLE" | "TOURNAMENT";
+        /** EventPlayerResponse */
+        EventPlayerResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            member: components["schemas"]["ReducedMemberResponse"];
+            /** Status */
+            status: string;
+            /** Is Draft Pinned */
+            is_draft_pinned: boolean;
+            /** Application Id */
+            application_id?: string | null;
+            custom?: components["schemas"]["CustomResponse"] | null;
+            /** Roles */
+            roles?: components["schemas"]["PlayerRoleResponse"][];
+        };
         /**
          * EventPlayerStatus
          * @enum {string}
@@ -1912,6 +2025,16 @@ export interface components {
          * @enum {string}
          */
         EventStatus: "CREATED" | "REGISTRATION" | "IDLE" | "FORMATION" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
+        /** FilledFieldPayload */
+        FilledFieldPayload: {
+            /**
+             * Custom Field Id
+             * Format: uuid
+             */
+            custom_field_id: string;
+            /** Value */
+            value: string;
+        };
         /** GameResponse */
         GameResponse: {
             /**
@@ -2003,6 +2126,14 @@ export interface components {
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** IntegrationPayload */
+        IntegrationPayload: {
+            /**
+             * Integration Id
+             * Format: uuid
+             */
+            integration_id: string;
         };
         /** InviteAdminResponse */
         InviteAdminResponse: {
@@ -2111,6 +2242,28 @@ export interface components {
             /** Code */
             code: string;
         };
+        /** OrganizerItemResponse */
+        OrganizerItemResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Event Id
+             * Format: uuid
+             */
+            event_id: string;
+            /**
+             * Member Id
+             * Format: uuid
+             */
+            member_id: string;
+        };
+        /** OrganizerListItemResponse */
+        OrganizerListItemResponse: {
+            member: components["schemas"]["ReducedMemberResponse"];
+        };
         /** OrganizerResponse */
         OrganizerResponse: {
             /**
@@ -2148,6 +2301,38 @@ export interface components {
             /** Code */
             code: string;
         };
+        /** PlayerRolePayload */
+        PlayerRolePayload: {
+            /**
+             * Game Role Id
+             * Format: uuid
+             */
+            game_role_id: string;
+            /** Priority */
+            priority: number;
+        };
+        /** PlayerRoleResponse */
+        PlayerRoleResponse: {
+            /**
+             * Game Role Id
+             * Format: uuid
+             */
+            game_role_id: string;
+            /** Priority */
+            priority: number;
+        };
+        /** PlayerUpdateResultResponse */
+        PlayerUpdateResultResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            member: components["schemas"]["ReducedMemberResponse"];
+            /** Status */
+            status: string;
+            custom?: components["schemas"]["CustomResponse"] | null;
+        };
         /** Provider */
         Provider: {
             /** Icon Url */
@@ -2165,6 +2350,11 @@ export interface components {
         };
         /** ProviderModel */
         ProviderModel: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
             /** Name */
             name: string;
             /** Client Id */
@@ -2290,42 +2480,6 @@ export interface components {
             scores: {
                 [key: string]: number;
             };
-            /** Winner Id */
-            winner_id?: string | null;
-            /**
-             * Is Draw
-             * @default false
-             */
-            is_draw: boolean;
-            /** Forfeit Team Ids */
-            forfeit_team_ids?: string[];
-            /** Rating Settings */
-            rating_settings?: {
-                [key: string]: string | number | boolean | null;
-            } | null;
-        };
-        /** RecordedMatchResultResponse */
-        RecordedMatchResultResponse: {
-            match: components["schemas"]["SingleMatchViewResponse"];
-            /** Winner Team Id */
-            winner_team_id?: string | null;
-            /** Loser Team Ids */
-            loser_team_ids?: string[];
-            /**
-             * Is Draw
-             * @default false
-             */
-            is_draw: boolean;
-            /** Forfeit Team Ids */
-            forfeit_team_ids?: string[];
-            /** Team Ranks */
-            team_ranks: number[];
-            /** Rating Payload */
-            rating_payload: {
-                [key: string]: unknown;
-            };
-            /** Rating Published */
-            rating_published: boolean;
         };
         /** ReducedMemberResponse */
         ReducedMemberResponse: {
@@ -2362,6 +2516,8 @@ export interface components {
         /** ReviewApplicationRequest */
         ReviewApplicationRequest: {
             status: components["schemas"]["ApplicationStatus"];
+            /** Role Priorities */
+            role_priorities?: components["schemas"]["RolePriorityPayload"][];
         };
         /** ReviewApplicationResponse */
         ReviewApplicationResponse: {
@@ -2373,6 +2529,16 @@ export interface components {
             status: components["schemas"]["ApplicationStatusResponse"];
             /** Player Id */
             player_id?: string | null;
+        };
+        /** RolePriorityPayload */
+        RolePriorityPayload: {
+            /**
+             * Role Id
+             * Format: uuid
+             */
+            role_id: string;
+            /** Priority */
+            priority: number;
         };
         /** RunTeamFormationRequest */
         RunTeamFormationRequest: {
@@ -2596,10 +2762,6 @@ export interface components {
             draft_id?: string | null;
             /** Completed At */
             completed_at?: string | null;
-            /** Result Snapshot */
-            result_snapshot?: {
-                [key: string]: unknown;
-            } | null;
             /** Slots */
             slots: components["schemas"]["SingleMatchSlotViewResponse"][];
         };
@@ -2613,16 +2775,12 @@ export interface components {
         };
         /** SubmitApplicationRequest */
         SubmitApplicationRequest: {
-            /** Integration Ids */
-            integration_ids?: string[];
+            /** Integrations */
+            integrations?: components["schemas"]["IntegrationPayload"][];
             /** Filled Fields */
-            filled_fields?: {
-                [key: string]: string;
-            };
+            filled_fields?: components["schemas"]["FilledFieldPayload"][];
             /** Role Priorities */
-            role_priorities?: {
-                [key: string]: number;
-            };
+            role_priorities?: components["schemas"]["RolePriorityPayload"][];
         };
         /** SubmitApplicationResponse */
         SubmitApplicationResponse: {
@@ -2634,8 +2792,33 @@ export interface components {
             status: components["schemas"]["ApplicationStatusResponse"];
             /** Auto Approved */
             auto_approved: boolean;
-            /** Player Id */
-            player_id?: string | null;
+            /**
+             * Player Id
+             * Format: uuid
+             */
+            player_id: string;
+        };
+        /** TeamDetailResponse */
+        TeamDetailResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Event Id
+             * Format: uuid
+             */
+            event_id: string;
+            /**
+             * Draft Id
+             * Format: uuid
+             */
+            draft_id: string;
+            /** Name */
+            name: string;
+            /** Players */
+            players?: components["schemas"]["TeamPlayerItemResponse"][];
         };
         /**
          * TeamFormation
@@ -2731,6 +2914,48 @@ export interface components {
             /** Calculated Ratings */
             calculated_ratings: number[];
         };
+        /** TeamItemResponse */
+        TeamItemResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Event Id
+             * Format: uuid
+             */
+            event_id: string;
+            /** Draft Id */
+            draft_id?: string | null;
+            /** Name */
+            name: string;
+        };
+        /** TeamPlayerItemResponse */
+        TeamPlayerItemResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Team Id
+             * Format: uuid
+             */
+            team_id: string;
+            /**
+             * Member Id
+             * Format: uuid
+             */
+            member_id: string;
+            /**
+             * Game Role Id
+             * Format: uuid
+             */
+            game_role_id: string;
+            /** Rating */
+            rating: number;
+        };
         /** UpdateCustomFieldRequest */
         UpdateCustomFieldRequest: {
             /** Name */
@@ -2762,9 +2987,16 @@ export interface components {
             /** Override Min Count */
             override_min_count?: number | null;
         };
+        /** UpdatePlayerRolesRequest */
+        UpdatePlayerRolesRequest: {
+            /** Roles */
+            roles: components["schemas"]["PlayerRolePayload"][];
+        };
         /** UpdatePlayerStatusRequest */
         UpdatePlayerStatusRequest: {
             status: components["schemas"]["EventPlayerStatus"];
+            /** Custom Id */
+            custom_id?: string | null;
         };
         /** UpdateResponse */
         UpdateResponse: {
@@ -5741,9 +5973,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["OrganizerListItemResponse"][];
                 };
             };
             /** @description Validation Error */
@@ -5781,9 +6011,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
+                    "application/json": components["schemas"]["OrganizerItemResponse"];
                 };
             };
             /** @description Validation Error */
@@ -6190,9 +6418,45 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["EventPlayerResponse"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_player_api_server__server_id__events__event_id__players_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                server_id: string;
+                event_id: string;
+            };
+            cookie?: {
+                token?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddPlayerRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventPlayerResponse"];
                 };
             };
             /** @description Validation Error */
@@ -6231,9 +6495,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
+                    "application/json": components["schemas"]["PlayerUpdateResultResponse"];
                 };
             };
             /** @description Validation Error */
@@ -6282,6 +6544,45 @@ export interface operations {
             };
         };
     };
+    update_player_roles_api_server__server_id__events__event_id__players__member_id__roles_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                server_id: string;
+                event_id: string;
+                member_id: string;
+            };
+            cookie?: {
+                token?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdatePlayerRolesRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventPlayerResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     list_drafts_api_server__server_id__events__event_id__drafts_get: {
         parameters: {
             query?: {
@@ -6305,9 +6606,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["DraftItemResponse"][];
                 };
             };
             /** @description Validation Error */
@@ -6345,9 +6644,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
+                    "application/json": components["schemas"]["DraftDetailResponse"];
                 };
             };
             /** @description Validation Error */
@@ -6381,9 +6678,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
+                    "application/json": components["schemas"]["DraftDetailResponse"];
                 };
             };
             /** @description Validation Error */
@@ -6493,7 +6788,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["TeamDetailResponse"][];
                 };
             };
             /** @description Validation Error */
@@ -6530,9 +6825,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["TeamItemResponse"][];
                 };
             };
             /** @description Validation Error */
@@ -6680,7 +6973,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["RecordedMatchResultResponse"];
+                    "application/json": components["schemas"]["SingleMatchViewResponse"];
                 };
             };
             /** @description Validation Error */
