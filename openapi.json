@@ -7890,7 +7890,7 @@
             "title": "Member Id"
           },
           "status": {
-            "$ref": "#/components/schemas/ApplicationStatusResponse"
+            "$ref": "#/components/schemas/ApplicationStatus"
           },
           "role_priorities": {
             "items": {
@@ -8059,11 +8059,7 @@
             "title": "Member Id"
           },
           "status": {
-            "$ref": "#/components/schemas/ApplicationStatusResponse"
-          },
-          "is_approved": {
-            "type": "boolean",
-            "title": "Is Approved"
+            "$ref": "#/components/schemas/ApplicationStatus"
           },
           "created_at": {
             "type": "string",
@@ -8098,7 +8094,7 @@
           }
         },
         "type": "object",
-        "required": ["id", "member_id", "status", "is_approved", "created_at"],
+        "required": ["id", "member_id", "status", "created_at"],
         "title": "ApplicationListItemResponse"
       },
       "ApplicationListItemUserResponse": {
@@ -8172,11 +8168,6 @@
         "type": "string",
         "enum": ["PENDING", "APPROVED", "REJECTED", "WAITLIST"],
         "title": "ApplicationStatus"
-      },
-      "ApplicationStatusResponse": {
-        "type": "string",
-        "enum": ["PENDING", "APPROVED", "REJECTED", "WAITLIST"],
-        "title": "ApplicationStatusResponse"
       },
       "ApplicationTimeSettingsResponse": {
         "properties": {
@@ -8491,12 +8482,19 @@
             "title": "Event Player Id"
           },
           "is_captain": {
-            "type": "boolean",
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Is Captain"
           }
         },
         "type": "object",
-        "required": ["id", "draft_id", "event_player_id", "is_captain"],
+        "required": ["id", "draft_id", "event_player_id"],
         "title": "DraftedPlayerItemResponse"
       },
       "EmailRequest": {
@@ -8707,8 +8705,7 @@
             "$ref": "#/components/schemas/ReducedMemberResponse"
           },
           "status": {
-            "type": "string",
-            "title": "Status"
+            "$ref": "#/components/schemas/EventPlayerStatus"
           },
           "is_draft_pinned": {
             "type": "boolean",
@@ -9378,8 +9375,7 @@
             "$ref": "#/components/schemas/ReducedMemberResponse"
           },
           "status": {
-            "type": "string",
-            "title": "Status"
+            "$ref": "#/components/schemas/EventPlayerStatus"
           },
           "custom": {
             "anyOf": [
@@ -9754,13 +9750,14 @@
             "format": "uuid",
             "title": "Id"
           },
-          "name": {
+          "provider_id": {
             "type": "string",
-            "title": "Name"
+            "format": "uuid",
+            "title": "Provider Id"
           }
         },
         "type": "object",
-        "required": ["id", "name"],
+        "required": ["id", "provider_id"],
         "title": "RequiredIntegrationResponse"
       },
       "RestrictionResponse": {
@@ -9804,7 +9801,7 @@
             "title": "Id"
           },
           "status": {
-            "$ref": "#/components/schemas/ApplicationStatusResponse"
+            "$ref": "#/components/schemas/ApplicationStatus"
           },
           "player_id": {
             "anyOf": [
@@ -10432,7 +10429,7 @@
             "title": "Id"
           },
           "status": {
-            "$ref": "#/components/schemas/ApplicationStatusResponse"
+            "$ref": "#/components/schemas/ApplicationStatus"
           },
           "auto_approved": {
             "type": "boolean",
@@ -10461,8 +10458,15 @@
             "title": "Event Id"
           },
           "draft_id": {
-            "type": "string",
-            "format": "uuid",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Draft Id"
           },
           "name": {
@@ -10478,7 +10482,7 @@
           }
         },
         "type": "object",
-        "required": ["id", "event_id", "draft_id", "name"],
+        "required": ["id", "event_id", "name"],
         "title": "TeamDetailResponse"
       },
       "TeamFormation": {
@@ -10711,7 +10715,7 @@
             "title": "Game Role Id"
           },
           "rating": {
-            "type": "integer",
+            "type": "number",
             "title": "Rating"
           }
         },

@@ -71,6 +71,12 @@ export const listCustoms = (
 ): Promise<SuccessResponse<'/api/server/{server_id}/members/{member_id}/customs/', 'get'>> =>
   baseApi.get(`/api/server/${serverId}/members/${memberId}/customs/`).then((res) => res.data)
 
+export const createCustom = (
+  serverId: ServerID,
+  memberId: string,
+): Promise<SuccessResponse<'/api/server/{server_id}/members/{member_id}/customs/', 'post'>> =>
+  baseApi.post(`/api/server/${serverId}/members/${memberId}/customs/`).then((res) => res.data)
+
 export const deleteCustom = (
   serverId: ServerID,
   memberId: string,

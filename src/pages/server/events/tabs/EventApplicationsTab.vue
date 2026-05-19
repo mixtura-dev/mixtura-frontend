@@ -7,6 +7,7 @@ import {
   getCoreRowModel, getSortedRowModel, getFilteredRowModel, useVueTable,
 } from '@tanstack/vue-table'
 import { useApplicationsQuery, useEventQuery } from '@/api/queries/event'
+import { useRoleSetQuery } from '@/api/queries/server/useServerRoles'
 import { useCurrentMemberStore } from '@/stores/currentMember.store'
 import { PERMISSION_CODES } from '@/types/permissions'
 import { valueUpdater } from '@/lib/utils'
@@ -23,6 +24,7 @@ const serverId = computed<ServerID>(() => route.params.serverId as ServerID)
 const eventId = computed(() => route.params.eventId as string)
 
 const { data: event } = useEventQuery(serverId, eventId)
+const { data: roleSet } = useRoleSetQuery(serverId)
 
 const canModerate = computed(() => {
   if (memberStore.hasPermission(PERMISSION_CODES.ADMINISTRATOR)) return true
@@ -51,9 +53,15 @@ const sorting = ref<SortingState>([])
 const columnFilters = ref<ColumnFiltersState>([])
 const columnVisibility = ref<VisibilityState>({})
 
-const columns = computed(() =>
-  createApplicationColumns(t, serverId.value, eventId.value, canModerate.value),
-)
+const columns = computed(() => {
+  const gameRolesMap = new Map<string, string>()
+  if (roleSet.value) {
+    for (const gameRole of roleSet.value.game_roles ?? []) {
+      gameRolesMap.set(gameRole.id, gameRole.name)
+    }
+  }
+  return createApplicationColumns(t, serverId.value, eventId.value, canModerate.value, gameRolesMap)
+})
 
 const table = useVueTable({
   get data() { return applications.value },

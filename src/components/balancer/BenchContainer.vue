@@ -1,24 +1,27 @@
 <template>
   <div
     ref="containerRef"
-    class="team-container flex min-w-3xs flex-col rounded-lg border-2 bg-background overflow-hidden transition-colors duration-150"
+    class="bench-container flex flex-col rounded-lg border-2 bg-muted/30 overflow-hidden min-w-3xs transition-colors duration-150"
     :class="{ 'border-dashed border-2': isDragOver }"
   >
-    <h2
-      :class="['text-xl rounded-t font-semibold text-white p-2']"
-      :style="{ backgroundColor: teamColor }"
-    >
-      {{ teamName }}
+    <h2 class="text-xl rounded-t font-semibold text-white p-2 bg-secondary">
+      Bench
     </h2>
-    <div class="flex flex-col">
+    <div class="flex flex-col p-1">
       <DraggablePlayer
         v-for="(player, index) in players"
         :key="player.id"
         :player="player"
         :index="index"
         :players="players"
-        :team-color="teamColor"
+        team-color="#6b7280"
       />
+      <div
+        v-if="players.length === 0"
+        class="text-center text-sm text-muted-foreground py-4"
+      >
+        Drag players here from teams
+      </div>
     </div>
     <div
       class="drop-zone flex items-center justify-center gap-2 py-6 border-t-2 border-dashed transition-all duration-150 cursor-pointer"
@@ -41,10 +44,6 @@ import type { Player } from '@/types/balancer'
 
 interface Props {
   players: Player[]
-  teamName: string
-  teamColor: string
-  alignRight?: boolean
-  maxPlayers?: number
 }
 
 interface SwapPayload {
@@ -63,9 +62,7 @@ interface MovePayload {
 
 type DropPayload = SwapPayload | MovePayload
 
-const props = withDefaults(defineProps<Props>(), {
-  maxPlayers: 5,
-})
+const props = defineProps<Props>()
 
 const emit = defineEmits<{
   drop: [payload: DropPayload]

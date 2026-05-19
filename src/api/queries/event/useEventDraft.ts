@@ -52,10 +52,7 @@ export function useTeamFormationQuery(
   const p = computed(() => toValue(params))
 
   return useQuery({
-    queryKey: computed(() => [
-      ...queryKeys.events.drafts.formation(sId.value, dId.value),
-      p.value,
-    ]),
+    queryKey: computed(() => [...queryKeys.events.drafts.formation(sId.value, dId.value), p.value]),
     queryFn: () => getTeamFormation(sId.value, dId.value, p.value),
     enabled: computed(() => !!sId.value && !!dId.value),
   })
@@ -74,6 +71,7 @@ export function useCreateDraftMutation() {
       eventId: string
       data: RequestBody<'/api/server/{server_id}/events/{event_id}/drafts', 'post'>
     }) => createDraft(serverId, eventId, data),
+
     onSuccess: (_, { serverId, eventId }) => {
       queryClient.invalidateQueries({
         queryKey: queryKeys.events.drafts.list(serverId, eventId),

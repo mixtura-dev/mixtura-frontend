@@ -1,4 +1,5 @@
 export default {
+  all: 'Все',
   yes: 'Да',
   no: 'Нет',
   or: 'или',

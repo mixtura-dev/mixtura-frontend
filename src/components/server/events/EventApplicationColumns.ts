@@ -29,6 +29,7 @@ export function createApplicationColumns(
   serverId: string,
   eventId: string,
   canModerate = true,
+  gameRolesMap: Map<string, string> = new Map(),
 ): ColumnDef<Application>[] {
   const columns: ColumnDef<Application>[] = [
     {
@@ -53,8 +54,19 @@ export function createApplicationColumns(
     {
       id: 'rolePriorities',
       header: () => t('server.events.applications.columns.rolePriorities'),
-      cell: () =>
-        h('span', { class: 'text-muted-foreground text-sm' }, '\u2014'),
+      cell: ({ row }) => {
+        const roles = row.original.roles ?? []
+        if (!roles.length) {
+          return h('span', { class: 'text-muted-foreground text-sm' }, '\u2014')
+        }
+        return h('div', { class: 'flex flex-col gap-1' }, roles.map((role) => {
+          const roleName = role.game_role_id ? (gameRolesMap.get(role.game_role_id) ?? '\u2014') : '\u2014'
+          return h('div', { class: 'flex items-center gap-2 text-sm' }, [
+            h('span', { class: 'font-medium' }, roleName),
+            h(Badge, { variant: 'outline', class: 'text-xs' }, () => `#${role.priority}`),
+          ])
+        }))
+      },
       enableSorting: false,
     },
     {

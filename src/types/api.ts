@@ -1607,7 +1607,7 @@ export interface components {
              * Format: uuid
              */
             member_id: string;
-            status: components["schemas"]["ApplicationStatusResponse"];
+            status: components["schemas"]["ApplicationStatus"];
             /** Role Priorities */
             role_priorities?: components["schemas"]["ApplicationRolePriorityResponse"][];
             /** Filled Fields */
@@ -1688,9 +1688,7 @@ export interface components {
              * Format: uuid
              */
             member_id: string;
-            status: components["schemas"]["ApplicationStatusResponse"];
-            /** Is Approved */
-            is_approved: boolean;
+            status: components["schemas"]["ApplicationStatus"];
             /**
              * Created At
              * Format: date-time
@@ -1745,11 +1743,6 @@ export interface components {
          * @enum {string}
          */
         ApplicationStatus: "PENDING" | "APPROVED" | "REJECTED" | "WAITLIST";
-        /**
-         * ApplicationStatusResponse
-         * @enum {string}
-         */
-        ApplicationStatusResponse: "PENDING" | "APPROVED" | "REJECTED" | "WAITLIST";
         /** ApplicationTimeSettingsResponse */
         ApplicationTimeSettingsResponse: {
             /**
@@ -1899,7 +1892,7 @@ export interface components {
              */
             event_player_id: string;
             /** Is Captain */
-            is_captain: boolean;
+            is_captain?: boolean | null;
         };
         /** EmailRequest */
         EmailRequest: {
@@ -2005,8 +1998,7 @@ export interface components {
              */
             id: string;
             member: components["schemas"]["ReducedMemberResponse"];
-            /** Status */
-            status: string;
+            status: components["schemas"]["EventPlayerStatus"];
             /** Is Draft Pinned */
             is_draft_pinned: boolean;
             /** Application Id */
@@ -2329,8 +2321,7 @@ export interface components {
              */
             id: string;
             member: components["schemas"]["ReducedMemberResponse"];
-            /** Status */
-            status: string;
+            status: components["schemas"]["EventPlayerStatus"];
             custom?: components["schemas"]["CustomResponse"] | null;
         };
         /** Provider */
@@ -2500,8 +2491,11 @@ export interface components {
              * Format: uuid
              */
             id: string;
-            /** Name */
-            name: string;
+            /**
+             * Provider Id
+             * Format: uuid
+             */
+            provider_id: string;
         };
         /** RestrictionResponse */
         RestrictionResponse: {
@@ -2526,7 +2520,7 @@ export interface components {
              * Format: uuid
              */
             id: string;
-            status: components["schemas"]["ApplicationStatusResponse"];
+            status: components["schemas"]["ApplicationStatus"];
             /** Player Id */
             player_id?: string | null;
         };
@@ -2789,7 +2783,7 @@ export interface components {
              * Format: uuid
              */
             id: string;
-            status: components["schemas"]["ApplicationStatusResponse"];
+            status: components["schemas"]["ApplicationStatus"];
             /** Auto Approved */
             auto_approved: boolean;
             /**
@@ -2810,11 +2804,8 @@ export interface components {
              * Format: uuid
              */
             event_id: string;
-            /**
-             * Draft Id
-             * Format: uuid
-             */
-            draft_id: string;
+            /** Draft Id */
+            draft_id?: string | null;
             /** Name */
             name: string;
             /** Players */

@@ -52,22 +52,27 @@ const { data: applicationsData } = useApplicationsQuery(
   useApplicationsEnabled,
 )
 
-const myApplication = computed(() =>
-  applicationsData.value?.find((a) => a.member_id === memberStore.memberId) ?? null,
+const myApplication = computed(
+  () => applicationsData.value?.find((a) => a.member_id === memberStore.memberId) ?? null,
 )
 
-const canSubmitApplication = computed(() =>
-  event.value?.use_application === true
-  && event.value?.status === 'REGISTRATION'
-  && myApplication.value === null,
+const canSubmitApplication = computed(
+  () =>
+    event.value?.use_application === true &&
+    event.value?.status === 'REGISTRATION' &&
+    myApplication.value === null,
 )
 
 const myApplicationBadgeVariant = computed(() => {
   switch (myApplication.value?.status) {
-    case 'APPROVED': return 'default' as const
-    case 'REJECTED': return 'destructive' as const
-    case 'WAITLIST': return 'secondary' as const
-    default: return 'outline' as const
+    case 'APPROVED':
+      return 'default' as const
+    case 'REJECTED':
+      return 'destructive' as const
+    case 'WAITLIST':
+      return 'secondary' as const
+    default:
+      return 'outline' as const
   }
 })
 
@@ -164,7 +169,7 @@ const statusBadgeVariant = computed(() => {
   <div v-else-if="isError || !event" class="flex h-full items-center justify-center">
     <p class="text-muted-foreground">{{ t('server.events.detail.notFound') }}</p>
   </div>
-  <div v-else class="flex flex-col gap-4 p-4">
+  <div v-else class="flex flex-col h-full gap-4 p-4">
     <div class="flex items-center gap-3">
       <h1 class="text-2xl font-bold">{{ event.name }}</h1>
       <Badge :variant="statusBadgeVariant">
@@ -172,18 +177,11 @@ const statusBadgeVariant = computed(() => {
       </Badge>
 
       <div class="ml-auto flex items-center gap-2">
-        <Badge
-          v-if="myApplication && event?.use_application"
-          :variant="myApplicationBadgeVariant"
-        >
+        <Badge v-if="myApplication && event?.use_application" :variant="myApplicationBadgeVariant">
           {{ t(`server.events.applications.status.${myApplication.status.toLowerCase()}`) }}
         </Badge>
 
-        <Button
-          v-if="canSubmitApplication"
-          size="sm"
-          @click="showSubmitModal = true"
-        >
+        <Button v-if="canSubmitApplication" size="sm" @click="showSubmitModal = true">
           {{ t('server.events.application.submitButton') }}
         </Button>
 
@@ -193,32 +191,32 @@ const statusBadgeVariant = computed(() => {
               <MoreVertical class="size-4" />
             </Button>
           </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" class="w-44">
-          <DropdownMenuItem :disabled="isPendingAction" @click="handleActivate">
-            <Loader2 v-if="isActivating" class="mr-2 size-4 animate-spin" />
-            {{ t('server.events.actions.activate') }}
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            v-if="event.status !== 'REGISTRATION'"
-            :disabled="isPendingAction"
-            @click="handleOpenRegistration"
-          >
-            <Loader2 v-if="isOpening" class="mr-2 size-4 animate-spin" />
-            {{ t('server.events.actions.openRegistration') }}
-          </DropdownMenuItem>
-          <DropdownMenuItem v-if="isSingle" :disabled="isPendingAction" @click="handleComplete">
-            <Loader2 v-if="isCompleting" class="mr-2 size-4 animate-spin" />
-            {{ t('server.events.actions.complete') }}
-          </DropdownMenuItem>
-          <DropdownMenuItem :disabled="isPendingAction" @click="showSettingsModal = true">
-            {{ t('server.events.actions.settings') }}
-          </DropdownMenuItem>
-          <DropdownMenuItem :disabled="isPendingAction" @click="handleCancel">
-            <Loader2 v-if="isCancelling" class="mr-2 size-4 animate-spin" />
-            {{ t('server.events.actions.cancel') }}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+          <DropdownMenuContent align="end" class="w-44">
+            <DropdownMenuItem :disabled="isPendingAction" @click="handleActivate">
+              <Loader2 v-if="isActivating" class="mr-2 size-4 animate-spin" />
+              {{ t('server.events.actions.activate') }}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              v-if="event.status !== 'REGISTRATION'"
+              :disabled="isPendingAction"
+              @click="handleOpenRegistration"
+            >
+              <Loader2 v-if="isOpening" class="mr-2 size-4 animate-spin" />
+              {{ t('server.events.actions.openRegistration') }}
+            </DropdownMenuItem>
+            <DropdownMenuItem v-if="isSingle" :disabled="isPendingAction" @click="handleComplete">
+              <Loader2 v-if="isCompleting" class="mr-2 size-4 animate-spin" />
+              {{ t('server.events.actions.complete') }}
+            </DropdownMenuItem>
+            <DropdownMenuItem :disabled="isPendingAction" @click="showSettingsModal = true">
+              {{ t('server.events.actions.settings') }}
+            </DropdownMenuItem>
+            <DropdownMenuItem :disabled="isPendingAction" @click="handleCancel">
+              <Loader2 v-if="isCancelling" class="mr-2 size-4 animate-spin" />
+              {{ t('server.events.actions.cancel') }}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
 
